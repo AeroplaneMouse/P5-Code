@@ -1,5 +1,10 @@
 import sqlite3
+import psycopg2 as postgres
 import csv
+
+from connect import connectDB, closeDB
+
+
 
 STATE_ITEMS = {
     1: "A_",
@@ -7,28 +12,6 @@ STATE_ITEMS = {
     3: "C_",
     4: "D_"
 }
-
-
-
-items = [
-    [1, -0.349],
-    [1, -0.273],
-    [1, -0.311],
-    [1, -14.392],
-    [2, -24.2284],
-    [2, -23.9291],
-    [2, -20.3591],
-    [2, -26.6102],
-
-    [4, 27.7197],
-    [4, 26.8555],
-    [4, 31.8808],
-    [4, 36.9798],
-    [4, 24.0482],
-    [3, 22.9607],
-    [3, 21.7276],
-    [3, 24.3652]
-]
 
 
 def LoadData(fileName):
@@ -106,14 +89,19 @@ def ImportDatabase(conn):
         print(row)
 
 
+conn = connectDB()
 
 
-conn = sqlite3.connect(':memory:')
 
-ImportCsvToDatabase("Vent-minute.csv", conn)
 
-ImportDatabase(conn)
-conn.close()
+closeDB(conn)
+
+#conn = sqlite3.connect(':memory:')
+
+# ImportCsvToDatabase("Vent-minute.csv", conn)
+
+# ImportDatabase(conn)
+# conn.close()
 
 
 
