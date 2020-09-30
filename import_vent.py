@@ -43,7 +43,6 @@ def GetState(item, strValue):
 
 
 def ImportCsvToDatabase(file, conn):
-    # conn = sqlite3.connect(':memory:')
     c = conn.cursor()
 
     # Create table
@@ -89,12 +88,17 @@ def ImportDatabase(conn):
         print(row)
 
 
-conn = connectDB()
+
+
+#conn = connectDB()
 
 
 
+LoadData('datasets/vent-minute.csv')
 
-closeDB(conn)
+
+
+#closeDB(conn)
 
 #conn = sqlite3.connect(':memory:')
 

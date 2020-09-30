@@ -2,7 +2,7 @@ import sqlite3
 import csv
 
 # Opens csv file (replace directory)
-with open('P5-Code/Weather.csv') as csvfile:
+with open('datasets/weather.csv') as csvfile:
     reader = csv.reader(csvfile, delimiter = ',')
     for row in reader:
         print(', '.join(row))
