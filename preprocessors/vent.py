@@ -1,4 +1,5 @@
 import pandas as pa
+import numpy as np
 from generators.stateGenerator import StateGenerator
 
 class VentPreprocessor:
@@ -41,13 +42,13 @@ class VentPreprocessor:
                 ignore_index=True
             )
 
-            # print(df)
-
             # Increment clientID every day
             clientID += 1
-            break
 
+            if clientID == 3:
+                break
 
+        print(df)
         return df
 
 
@@ -58,29 +59,34 @@ def GetState(value, stateGen):
         stateGen.GenerateStates()
 
     interval = stateGen.MinValue
-
     while interval < value:
         interval += stateGen.Increment
     interval -= stateGen.Increment
 
     return stateGen.LastStates[interval]
 
-def SwitchActiveState(newState, columnIndex, time, hRegister, df):
-    # Check if hRegister contains key for column
+def SwitchActiveState(newState, columnIndex, time, clientID, hRegister, df):
+    # Check if hRegister contains key for column. Then save end for active state
     if str(columnIndex) + 'CurState' in hRegister:
-        # Save active state
         index = hRegister[str(columnIndex) + 'CurIndex']
         df.at[index, 'End'] = time
     
-
     # Insert new state into df
-    index = df.insert()
+    lastIndex = None
+    if df.empty:
+        lastIndex = 0
+    else:
+        lastIndex = df.tail(1).index[0] + 1
+
+    # Insert new record
+    data = {'ClientID': [clientID], 'State': ['{}_{}'.format(columnIndex, newState)], "Start": [time], 'End': [np.nan]}
+    df = pa.concat([df, pa.DataFrame(data=data, index=[lastIndex])])
 
     # Update hRegister
     hRegister[str(columnIndex) + 'CurState'] = newState
-    hRegister[str(columnIndex) + 'CurIndex'] = index
+    hRegister[str(columnIndex) + 'CurIndex'] = lastIndex
 
-    return
+    return df
 
 # Creates temporal client sequence for one clientID(day)
 def CreateTimeSeries(clientID, data):
@@ -97,16 +103,25 @@ def CreateTimeSeries(clientID, data):
             state = GetState(cValue, stateGen)
 
             # Switch active state for current column
-            if str(c) + 'CurState' not in hRegister or state != hRegister[str(c) + 'CurrentState'] is KeyError:
-                SwitchActiveState(
+            if str(c) + 'CurState' not in hRegister or state != hRegister[str(c) + 'CurState']:
+                df = SwitchActiveState(
                     newState=state,
                     columnIndex=c,
                     time=timeIndex,
-                    hRegister=hRegister
+                    clientID=clientID,
+                    hRegister=hRegister,
+                    df=df
                 )
 
             # Increment column index
             c += 1
 
-            print(c)
-        break
+    # End remaining states
+    c = 0
+    time = data.tail(1).index[0]
+    for col in data.columns:
+        index = hRegister['{}CurIndex'.format(c)]
+        df.at[index, 'End'] = time
+        c += 1
+
+    return df
