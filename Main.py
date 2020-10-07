@@ -1,4 +1,12 @@
-import sqlite3
-import csv
+import pandas as pa
+import numpy as np
+from preprocessors.vent import VentPreprocessor
+
+def Main():
+    # Create preprocessor
+    vent = VentPreprocessor()
+    vent.CreateDataFrame('datasets/vent-minute-short.csv', ';')
 
 
+if __name__ == '__main__':
+    Main()
