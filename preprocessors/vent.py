@@ -1,4 +1,5 @@
 import pandas as pa
+from generators.stateGenerator import StateGenerator
 
 class VentPreprocessor:
     DataFrame = None
@@ -49,11 +50,63 @@ class VentPreprocessor:
 
         return df
 
-def CreateTimeSeries(clientID, data):
+
+# Maps a value to a state from the StateGenerator
+def GetState(value, stateGen):
+    # Generate states if none
+    if stateGen.LastStates is None:
+        stateGen.GenerateStates()
+
+    interval = stateGen.MinValue
+
+    while interval < value:
+        interval += stateGen.Increment
+    interval -= stateGen.Increment
+
+    return stateGen.LastStates[interval]
+
+def SwitchActiveState(newState, columnIndex, time, hRegister, df):
+    # Check if hRegister contains key for column
+    if str(columnIndex) + 'CurState' in hRegister:
+        # Save active state
+        index = hRegister[str(columnIndex) + 'CurIndex']
+        df.at[index, 'End'] = time
     
-    for d in data.iterrows():
-        print('Index: {:>30}'.format(str(d[0])))
-        
-        for column in d[1].array:
-            print(column)
+
+    # Insert new state into df
+    index = df.insert()
+
+    # Update hRegister
+    hRegister[str(columnIndex) + 'CurState'] = newState
+    hRegister[str(columnIndex) + 'CurIndex'] = index
+
+    return
+
+# Creates temporal client sequence for one clientID(day)
+def CreateTimeSeries(clientID, data):
+    stateGen = StateGenerator(minValue=-50, maxValue=50, increment=5)
+    hRegister = {}
+    df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
+
+    for row in data.iterrows():
+        timeIndex = row[0]
+
+        # Go through each column and compare active and current state
+        c = 0
+        for cValue in row[1].array:
+            state = GetState(cValue, stateGen)
+
+            # Switch active state for current column
+            if str(c) + 'CurState' not in hRegister or state != hRegister[str(c) + 'CurrentState'] is KeyError:
+                SwitchActiveState(
+                    newState=state,
+                    columnIndex=c,
+                    time=timeIndex,
+                    hRegister=hRegister
+                )
+
+            # Increment column index
+            c += 1
+
+            print(c)
         break

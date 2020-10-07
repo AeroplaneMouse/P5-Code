@@ -1,5 +1,7 @@
 import pandas as pa
 import numpy as np
+from models.State import State
+from models.StateSpan import StateSpan
 
 MIN_VALUE = -50
 MAX_VALUE = 50
@@ -8,36 +10,6 @@ INCREMENT = 5
 path = 'datasets/%s.csv'
 datasetName = 'vent-minute-short'
 
-
-
-##################################################
-
-class State:
-    def __init__(self, minValue, maxValue):
-        self.MinValue = minValue
-        self.MaxValue = maxValue
-
-    def __str__(self):
-        return str(self.MinValue) + ' -> ' + str(self.MaxValue)
-
-class StateSpan:
-    def __init__(self, clientID, state, startTime, endTime):
-        self.ClientID = clientID
-        self.State = state
-        self.Start = startTime
-        self.End = endTime
-
-    def __str__(self):
-        output = '{:>8} | {:>8} | {:>20} | {:>20}'.format(
-            str(self.ClientID),
-            str(self.State),
-            str(self.Start),
-            str(self.End)
-        )
-        return output
-
-
-##################################################
 
 
 # Create states
