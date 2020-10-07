@@ -7,6 +7,8 @@ def Main():
     vent = VentPreprocessor()
     vent.CreateDataFrame('datasets/vent-minute-short.csv', ';')
 
+    temporalVent = vent.GetTemporalDataFrame()
+
 
 if __name__ == '__main__':
     Main()
