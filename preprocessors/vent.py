@@ -47,7 +47,7 @@ class VentPreprocessor:
             if clientID == 3:
                 break
 
-        print(df)
+        # print(df)
         return df
 
 
