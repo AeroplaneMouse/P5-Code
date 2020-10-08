@@ -5,7 +5,6 @@ from generators.stateGenerator import StateGenerator
 class VentPreprocessor:
     DataFrame = None
 
-
     def CreateDataFrame(self, csvPath, seperator):
         # Load data from
         self.DataFrame = pa.read_csv(csvPath, sep=seperator)

@@ -15,7 +15,7 @@ class StateGenerator:
 
         while value < self.MaxValue:
             # states[value] = State(value, value + INCREMENT)
-            states[value] = str(value) + " -> " + str(value + self.Increment)
+            states[value] = str(value) + "->" + str(value + self.Increment)
             value += self.Increment
 
         self.LastStates = states
