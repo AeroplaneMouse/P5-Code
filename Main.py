@@ -1,5 +1,3 @@
-import pandas as pa
-import numpy as np
 from preprocessors.vent import VentPreprocessor
 from findSupport import MakeStateSupportList, FindSupport
 
