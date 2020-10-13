@@ -3,8 +3,6 @@ import numpy as np
 from generators.stateGenerator import StateGenerator
 
 class VentPreprocessor:
-    DataFrame = None
-
     def CreateDataFrame(self, csvPath, seperator):
         # Load data from
         self.DataFrame = pa.read_csv(csvPath, sep=seperator)
@@ -44,10 +42,6 @@ class VentPreprocessor:
             # Increment clientID every day
             clientID += 1
 
-            if clientID == 3:
-                break
-
-        # print(df)
         return df
 
 
