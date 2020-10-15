@@ -1,6 +1,7 @@
 # from CreateIndexSet import CreateIndexSet
 # from CreatePattern import CreatePattern
 
+
 #############################################
 # Mocks
 def CreateIndexSet(one, two, three):
@@ -56,5 +57,3 @@ def MineIndexSet(pattern, indexSet):
 		iSet = CreateIndexSet(s, p, rSet)
 		MineIndexSet(p, iSet)
 
-
-	return 
