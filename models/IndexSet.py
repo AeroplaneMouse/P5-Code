@@ -4,9 +4,9 @@ class IndexSet:
 		self.Records = indexRecords
 
 	def __str__(self):
-		output = '{:>5} {:>50} {:>5}'.format('pos', 'Time range', 'CS')
+		output = '{:>5} {:>80} {:>5}\n'.format('pos', 'Time range', 'CS')
 		
-		for r in Records:
+		for r in self.Records:
 			output += str(r)
 
 		return output

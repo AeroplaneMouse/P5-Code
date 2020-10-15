@@ -1,6 +1,3 @@
-import pandas as pa
-import numpy as np
-
 class StateSupport:
     def __init__(self, stateName, appearsIn):
         self.StateName = stateName
@@ -14,6 +11,10 @@ class StateSupport:
             self.Support
         )
 
+    def __repr__(self):
+        return self.__str__()
+
+
 def AlreadyCounted(stateName, stateSupportList):
     index = 0
     for element in stateSupportList:
@@ -23,15 +24,15 @@ def AlreadyCounted(stateName, stateSupportList):
 
     return None
 
-
-def MakeStateSupportList(temporalDB):
+# Creates a support list from the given client sequence
+def MakeStateSupportList(cs):
     stateSupportList = []
 
-    lastIndex = temporalDB.tail(1).index[0]
+    lastIndex = cs.tail(1).index[0]
 
     # Go through each clientID
-    for cID in range(1,temporalDB.ClientID[lastIndex] + 1):
-        currentClient = temporalDB.loc[temporalDB['ClientID'] == cID]
+    for cID in range(1,cs.ClientID[lastIndex] + 1):
+        currentClient = cs.loc[cs['ClientID'] == cID]
         
         for row in currentClient.iterrows():
             # Add new state
@@ -45,13 +46,11 @@ def MakeStateSupportList(temporalDB):
                     stateSupportList[index].AppearsIn.append(cID)
 
     return stateSupportList
-            
-        
 
-
-def FindSupport(temporalDB, stateSupportList):
-    lastIndex = temporalDB.tail(1).index[0]
-    clientCount = temporalDB.at[lastIndex, 'ClientID']
+# Computes the support for every state in the given support list
+def ComputeSupport(cs, stateSupportList):
+    lastIndex = cs.tail(1).index[0]
+    clientCount = cs.at[lastIndex, 'ClientID']
 
     for state in stateSupportList:
         state.Support = len(state.AppearsIn) / clientCount
