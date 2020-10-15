@@ -3,7 +3,7 @@ import numpy as np
 from generators.stateGenerator import StateGenerator
 
 class VentPreprocessor:
-    def CreateDataFrame(self, csvPath, seperator):
+    def InitializeDataFrame(self, csvPath, seperator):
         # Load data from
         self.DataFrame = pa.read_csv(csvPath, sep=seperator)
 
@@ -20,7 +20,7 @@ class VentPreprocessor:
         self.DataFrame = self.DataFrame.tz_convert(None)
 
 
-    def GetTemporalDataFrame(self):
+    def GenerateTemporalDataFrame(self):
         df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
 
         # Generate date series
