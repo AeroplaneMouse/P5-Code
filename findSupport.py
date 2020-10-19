@@ -20,9 +20,9 @@ def AlreadyCounted(stateName, stateSupportList):
     for element in stateSupportList:
         if stateName == element.StateName:
             return index
-        index += 1 
-
+        index += 1
     return None
+
 
 # Creates a support list from the given client sequence
 def MakeStateSupportList(cs):
@@ -31,21 +31,23 @@ def MakeStateSupportList(cs):
     lastIndex = cs.tail(1).index[0]
 
     # Go through each clientID
-    for cID in range(1,cs.ClientID[lastIndex] + 1):
+    for cID in range(1, cs.ClientID[lastIndex] + 1):
         currentClient = cs.loc[cs['ClientID'] == cID]
-        
+
         for row in currentClient.iterrows():
             # Add new state
             index = AlreadyCounted(row[1].State, stateSupportList)
-            if index is None :
-                stateSupportList.append(StateSupport(stateName=row[1].State, appearsIn=[cID]))
-            
+            if index is None:
+                stateSupportList.append(
+                    StateSupport(stateName=row[1].State, appearsIn=[cID]))
+
             else:
                 # Update state with current cID
                 if cID not in stateSupportList[index].AppearsIn:
                     stateSupportList[index].AppearsIn.append(cID)
 
     return stateSupportList
+
 
 # Computes the support for every state in the given support list
 def ComputeSupport(cs, stateSupportList):

@@ -7,7 +7,7 @@ class IndexRecord:
     def __str__(self):
         return '{:>5} {:>80} {:>5}'.format(
             self.Pos,
-            str(self.Interval),
+            str(self.Intervals),
             self.Ref)
 
     def __repr__(self):
