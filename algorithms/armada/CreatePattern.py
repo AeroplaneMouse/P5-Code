@@ -22,4 +22,4 @@ def CreatePattern(prefix, stem):
     temp[dimension][0] = stem
     temp[dimension][dimension] = '='
 
-    return newMatrix
+    return temp
