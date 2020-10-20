@@ -1,13 +1,13 @@
 import numpy as np
-from models.TPattern import TPattern
-from models.FState import FState
+# from models.TPattern import TPattern
+# from models.FState import FState
 from algorithms.armada.FindRelation import FindRelation
+
 
 def CreatePattern(prefix, stem):
 
     matrix = prefix.Matrix
     dimension = np.shape(matrix)[0]
-
 
     if(dimension > 1):
         newMatrix = np.reshape(matrix, (dimension + 1, dimension + 1))
