@@ -1,7 +1,9 @@
 from algorithms.armada.MineIndexSet import MineIndexSet
 from algorithms.armada.CreatePattern import CreatePattern
 from models.FState import FState
+from models.TPattern import TPattern
 from mocks import Patterns, IndexSets
+import pandas as pa
 
 
 class Armada:
@@ -11,7 +13,6 @@ class Armada:
 
     def Run(self, minSup):
         # Clear states
-        self.States = []
         self.States = GetStatesFor(minSup, self.SupStates)
 
         # for state in self.States:
@@ -26,9 +27,9 @@ class Armada:
         ### Create pattern tests
         state = FState(
             state='0_20->25',
-            start='2013-07-01 04:01:14',
-            end='2013-07-01 13:08:17')
-        p = CreatePattern(None, state)
+            start=pa.to_datetime('2013-07-01 04:01:14'),
+            end=pa.to_datetime('2013-07-01 13:08:17'))
+        p = CreatePattern(TPattern(None), state)
 
         print(p)
 
