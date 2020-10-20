@@ -9,7 +9,7 @@ if len(sys.argv) == 1:
 else:
     test = sys.argv[1]
 
-    if test == 'CreatePattern':
+    if test == 'CreatePattern_Tests':
         from tests import CreatePattern_Tests
     elif test == '?':
         # Another test
