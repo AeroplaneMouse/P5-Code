@@ -30,6 +30,8 @@ def CreateFirstIndexSet(stem, MDB):
                 state = stem.Name
                 intv = [stem.Start, stem.End]
                 idx.Records.append(state, intv, start_pos)
+    for rec in idx:
+        print(rec)
     return idx
 
 
