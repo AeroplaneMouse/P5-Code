@@ -10,11 +10,13 @@ def CreatePattern(prefix, stem):
 
     newMatrix = np.reshape(matrix, (dimension + 1, dimension + 1))
 
+    if(dimension > 1):
+    	for i in range(dimension):
+        	newMatrix[i+1][dimension] = FindRelation(newMatrix[0][i+1], stem)
+        	newMatrix[dimension][i+1] = '*'
+
     newMatrix[0][dimension] = stem.State
-
-    for i in range(dimension):
-        newMatrix[i+1][dimension] = FindRelation(newMatrix[0][i+1], stem)
-
+    newMatrix[dimension][0] = stem.State
     newMatrix[dimension][dimension] = '='
 
     return newMatrix
