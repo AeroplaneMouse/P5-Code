@@ -1,5 +1,3 @@
-from models.FState import FState
-
 def FindRelation(record1, record2):
     if(record1.Start < record2.Start):
         if (record1.End < record2.Start):
