@@ -3,7 +3,7 @@ from algorithms.armada.CreatePattern import CreatePattern
 from models.FState import FState
 #from mocks import Patterns, IndexSets
 from models.TPattern import TPattern
-from mocks import Patterns, IndexSets
+#from mocks import Patterns, IndexSets
 import pandas as pa
 
 
