@@ -1,7 +1,6 @@
 import pandas as pa
 from models.FState import FState
 from algorithms.armada.CreatePattern import CreatePattern
-from models.TPattern import TPattern
 
 
 def GenerateStates():
@@ -23,12 +22,13 @@ print('********************')
 print('Testing CreatePattern')
 print()
 
+
 print('1 | Generating states')
 states = GenerateStates()
 
+
 print('2 | Testing generation of 1-Patterns')
-emptyPrefix = TPattern(None)
-patternA = CreatePattern()
+patternA = CreatePattern(None, states[0])
 
 
 print(states)
