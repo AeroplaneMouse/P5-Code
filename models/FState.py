@@ -5,10 +5,7 @@ class FState:
         self.End = end      # String or pandas datetime
 
     def __str__(self):
-        return '{} {} {}'.format(
-            self.State,
-            self.Start,
-            self.End)
+        return self.State
 
     def __repr__(self):
         return self.__str__()

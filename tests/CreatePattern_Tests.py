@@ -8,13 +8,17 @@ def GenerateStates():
 
     states.append(FState(
         'A',
-        pa.to_datetime('2013-07-01 04:01:14'),
-        pa.to_datetime('2013-07-01 13:08:17')))
+        7,
+        22))
 
     states.append(FState(
         'B',
-        pa.to_datetime('2013-07-01 04:01:14'),
-        pa.to_datetime('2013-07-01 14:57:17')))
+        8,
+        15))
+    states.append(FState(
+        'C',
+        10,
+        22))
 
     return states
 
@@ -29,6 +33,9 @@ states = GenerateStates()
 
 print('2 | Testing generation of 1-Patterns')
 patternA = CreatePattern(None, states[0])
+print(patternA)
+patternB = CreatePattern(patternA, states[1])
+print(patternB)
+patternC = CreatePattern(patternB, states[2])
+print(patternC)
 
-
-print(states)
