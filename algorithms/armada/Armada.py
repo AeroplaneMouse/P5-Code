@@ -1,7 +1,7 @@
 from algorithms.armada.MineIndexSet import MineIndexSet
 from algorithms.armada.CreatePattern import CreatePattern
 from models.FState import FState
-from mocks import Patterns, IndexSets
+#from mocks import Patterns, IndexSets
 
 
 class Armada:
