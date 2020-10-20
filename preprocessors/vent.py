@@ -2,6 +2,7 @@ import pandas as pa
 import numpy as np
 from generators.stateGenerator import StateGenerator
 
+
 class VentPreprocessor:
     def InitializeDataFrame(self, csvPath, seperator):
         # Load data from
@@ -18,7 +19,6 @@ class VentPreprocessor:
 
         # Remove timezone
         self.DataFrame = self.DataFrame.tz_convert(None)
-
 
     def GenerateTemporalDataFrame(self):
         df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
@@ -58,12 +58,14 @@ def GetState(value, stateGen):
 
     return stateGen.LastStates[interval]
 
+
 def SwitchActiveState(newState, columnIndex, time, clientID, hRegister, df):
-    # Check if hRegister contains key for column. Then save end for active state
+    # Check if hRegister contains key for column.
+    # Then save end for active state
     if str(columnIndex) + 'CurState' in hRegister:
         index = hRegister[str(columnIndex) + 'CurIndex']
-        df.at[index, 'End'] = time
-    
+        df.at[index, 'End'] = time  # Overwrites first endtime
+
     # Insert new state into df
     lastIndex = None
     if df.empty:
@@ -72,7 +74,10 @@ def SwitchActiveState(newState, columnIndex, time, clientID, hRegister, df):
         lastIndex = df.tail(1).index[0] + 1
 
     # Insert new record
-    data = {'ClientID': [clientID], 'State': ['{}_{}'.format(columnIndex, newState)], "Start": [time], 'End': [np.nan]}
+    data = {'ClientID': [clientID],
+            'State': ['{}_{}'.format(columnIndex, newState)],
+            "Start": [time],
+            'End': [time]}
     df = pa.concat([df, pa.DataFrame(data=data, index=[lastIndex])])
 
     # Update hRegister
@@ -80,6 +85,7 @@ def SwitchActiveState(newState, columnIndex, time, clientID, hRegister, df):
     hRegister[str(columnIndex) + 'CurIndex'] = lastIndex
 
     return df
+
 
 # Creates temporal client sequence for one clientID(day)
 def CreateTimeSeries(clientID, data):
