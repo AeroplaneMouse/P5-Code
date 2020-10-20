@@ -1,11 +1,7 @@
 from algorithms.armada.MineIndexSet import MineIndexSet
 from algorithms.armada.CreatePattern import CreatePattern
 from models.FState import FState
-#from mocks import Patterns, IndexSets
-from models.TPattern import TPattern
-#from mocks import Patterns, IndexSets
 import pandas as pa
-
 
 
 class Armada:
@@ -31,7 +27,7 @@ class Armada:
             state='0_20->25',
             start=pa.to_datetime('2013-07-01 04:01:14'),
             end=pa.to_datetime('2013-07-01 13:08:17'))
-        p = CreatePattern(TPattern(None), state)
+        p = CreatePattern(None, state)
 
         print(p)
 
