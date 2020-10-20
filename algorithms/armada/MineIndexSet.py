@@ -1,68 +1,63 @@
 # from CreateIndexSet import CreateIndexSet
 # from CreatePattern import CreatePattern
+from algorithms.armada import Storage
+import findSupport
 
 
-#############################################
-# Mocks
-def CreateIndexSet(one, two, three):
-    return
+# Computes new stems
+# Assumes that cs only contains states that is above minSup
+def ComputePotentialStems(indexSet, frequentStates, minSup):
+    # TODO
+    # Add check for record state == potential stem state
+    
+    # Key points---
+    # - Any state in the refrenced cs where state pos > record.pos == potential stem
+    # - Increment support count for specific state
 
+    # Dictionary of potential stems
+    pStems = {}
 
-def CreatePattern(prefix, state):
-    return
-
-#############################################
-
-
-def ResetFlags(flags):
-    for i in range(0, len(flags)):
-        flags[i] = False
-
-
-def ComputePotentialStems(indexSet, frequentStates, cs):
-    stems = []
-    counts = []
-    flags = []
-
-    # Check every record in indexSet
     for record in indexSet.Records:
-        csRef = record.Ref
-        ResetFlags(flags)
+        # Retrieve cs from reference
+        cs = Storage.MDB[record.Ref]
 
-        # Go through every cs after reference from IndexRecord
-        for i in range(csRef + 1, len(cs)):
-            singleCS = cs.iloc[i]
+        # Increment support count for every state in cs
+        # after pos in indexSet record
+        for csIndex in range(record.Pos, len(cs)):
+            singleCS = cs.iloc[csIndex]
 
-            # Check if cs state is a frequentState
-            if singleCS.State in frequentStates:
-                # Update state count if not done for current record
-                if singleCS.State in stems:
-                    index = stems.index(singleCS.State)
-                    if not flags[index]:
-                        counts[index] += 1
-                        flags[index] = True
-                # Add state as new stem
-                else:
-                    stems.append(singleCS.State)
-                    counts.append(1)
-                    flags.append(True)
+            # Insert state into stem if not there
+            if singleCS.State not in pStems:
+                pStems[singleCS.State] = []
 
-    # Remove shit stems
-    # for i in range(0, len(stems)):
-    #   if count[i] < 0:
+            # Insert clientID if not there
+            clientID = singleCS.ClientID
+            if clientID not in pStems[singleCS.State]:
+                pStems[singleCS.State].append(clientID)
+
+    # Print pStems content
+    # for key in pStems.keys():
+    #     print('{} | {}'.format(key, pStems[key]))
+
+    print('Potential stems:')
+    # Add frequent states to stems
+    stems = []
+    clients = cs[:1].at[0, 'ClientID'] + 1
+    for s in pStems:
+        sup = len(pStems[s]) / clients
+        print('{} | {:.2f}'.format(s, sup))
+        if sup >= minSup:
+            stems.append(s)  # Maybe do something to get FState. IDK might be useful 
 
     return stems
 
 
 def MineIndexSet(pattern, indexSet, frequentStates, cs):
-    stems = ComputePotentialStems(indexSet, frequentStates, cs)
-    print(stems)
+    stems = ComputePotentialStems(indexSet, frequentStates)
 
-    import pdb; pdb.set_trace()  # breakpoint b90b85f2 //
-
-    rSet = []
-    prefix = None  # Mock
-    for s in stems:
-        p = CreatePattern(prefix, s)
-        iSet = CreateIndexSet(s, p, rSet)
-        MineIndexSet(p, iSet)
+    # rSet = []
+    # prefix = None  # Mock
+    # for s in stems:
+    #     p = CreatePattern(prefix, s)
+    #     iSet = CreateIndexSet(s, p, rSet)
+    #     MineIndexSet(p, iSet)
