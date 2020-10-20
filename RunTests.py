@@ -7,12 +7,13 @@ if len(sys.argv) == 1:
 
 # Run specific test
 else:
-    test = sys.argv[1]
+    fileName = sys.argv[1]
 
-    if test == 'CreatePattern_Tests':
+    if fileName == 'CreatePattern_Tests':
         from tests import CreatePattern_Tests
-    elif test == '?':
-        # Another test
-        print()
+    elif fileName == 'CreateIndexSet_Tests':
+        from tests import CreateIndexSet_Tests
+    # elif fileName == '#FileNameForTestFile#':
+        # Put import stuff here
     else:
-        print('Unknown test: \'{}\''.format(test))
+        print('Unknown test: \'{}\''.format(fileName))
