@@ -1,10 +1,9 @@
 import pandas as pa
-import numpy as np
 from generators.stateGenerator import StateGenerator
 
 
 class VentPreprocessor:
-    def InitializeDataFrame(self, csvPath, seperator):
+    def __init__(self, csvPath, seperator):
         # Load data from
         self.DataFrame = pa.read_csv(csvPath, sep=seperator)
 
@@ -20,29 +19,28 @@ class VentPreprocessor:
         # Remove timezone
         self.DataFrame = self.DataFrame.tz_convert(None)
 
-    def GenerateTemporalDataFrame(self):
-        df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
+    def GenerateTemporalMdb(self):
+        mdb = []
 
         # Generate date series
         startDay = self.DataFrame.head(1).index[0]
         endDay = self.DataFrame.tail(1).index[0]
         days = pa.date_range(start=startDay, end=endDay, freq='D')
 
+        # Setting first clientID
         clientID = 0
+
         for day in days:
             # Remove time from date
             day = str(day)[0:10]
 
             # Append dataframe for current day
-            df = df.append(
-                CreateTimeSeries(clientID, self.DataFrame[day]),
-                ignore_index=True
-            )
+            mdb.append(GenerateClientSequence(clientID, self.DataFrame[day]))
 
             # Increment clientID every day
             clientID += 1
 
-        return df
+        return mdb
 
 
 # Maps a value to a state from the StateGenerator
@@ -88,7 +86,7 @@ def SwitchActiveState(newState, columnIndex, time, clientID, hRegister, df):
 
 
 # Creates temporal client sequence for one clientID(day)
-def CreateTimeSeries(clientID, data):
+def GenerateClientSequence(clientID, data):
     stateGen = StateGenerator(minValue=-50, maxValue=50, increment=5)
     hRegister = {}
     df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
@@ -124,27 +122,3 @@ def CreateTimeSeries(clientID, data):
         c += 1
 
     return df
-
-def SplitDataframe(cs):
-    csList = []
-    clientID = 0
-    data = {'ClientID': [], 'State': [], 'Start': [], 'End': []}
-    
-    for i in range(0, len(cs)):
-        singleCS = cs.iloc[i]
-
-        # Change cs
-        if clientID != singleCS.ClientID or i == len(cs)-1:
-            csList.append(pa.DataFrame(data))
-        
-            # Reset
-            clientID = singleCS.ClientID
-            data = {'ClientID': [], 'State': [], 'Start': [], 'End': []}
-            
-        data['ClientID'].append(singleCS.ClientID)
-        data['State'].append(singleCS.State)
-        data['Start'].append(singleCS.Start)
-        data['End'].append(singleCS.End)
-        
-    return csList
-    

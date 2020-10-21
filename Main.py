@@ -1,50 +1,30 @@
-from preprocessors.vent import VentPreprocessor, SplitDataframe
-from findSupport import MakeStateSupportList, ComputeSupport
+from preprocessors.Vent import VentPreprocessor
+from preprocessors import Support
 from algorithms.armada.Armada import Armada
 
 
-# Check if a state name is in suplist
-def Contains(state, supList):
-    for supState in supList:
-        if supState.StateName == state:
-            return True
-
-    return False
-
-
-def RemoveLowSup(minSup, supList, cs):
-        # Clear supList for states below minSup
-    for i in reversed(range(0, len(supList))):
-        if supList[i].Support < minSup:
-            del supList[i]
-
-    # Clear cs for states not in supList
-    for i in reversed(range(0, len(cs))):
-        singleCS = cs.iloc[i]
-
-        if not Contains(singleCS.State, supList):
-            cs = cs.drop(i)
-
-    return cs
-
-
 def Main():
-    # Create preprocessor
-    vent = VentPreprocessor()
-    vent.InitializeDataFrame('datasets/vent-minute-short.csv', ';')
+    # Preprocessing
+    vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
+    mdb = vent.GenerateTemporalMdb()
 
-    # Create CS and compute support
-    cs = vent.GenerateTemporalDataFrame()
-    supList = MakeStateSupportList(cs)
-    ComputeSupport(cs, supList)
+    # Generating and computing support for states
+    supportList = Support.GenerateStateSupportList(mdb)
 
-    minSup = 0.7
-    cs = RemoveLowSup(minSup, supList, cs)
-    mdb = SplitDataframe(cs)
+    # Clear the database of states not meeting the minimum support
+    minSupport = 0.7
 
-    # print(supList)
-    #Run Armada
-    Armada(mdb, supList).Run(minSup)
+    mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
+
+    print(mdb)
+
+    # minSup = 0.7
+    # cs = RemoveLowSup(minSup, supList, cs)
+    # mdb = SplitDataframe(cs)
+
+    # # print(supList)
+    # #Run Armada
+    # Armada(mdb, supList).Run(minSup)
 
     # print(cs)
 
