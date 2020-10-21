@@ -1,3 +1,6 @@
+import pandas as pa
+
+
 class StateSupport:
     def __init__(self, stateName, appearsIn):
         self.StateName = stateName
@@ -73,10 +76,11 @@ def RemoveNonSupported(minSupport, supportList, mdb):
             supportedStates.append(s.StateName)
 
     # In every cs, remove rows where State is not in supportedStates
-    newMdb = []
     for cs in mdb:
-        cs = cs.where(cond=cs.State.isin(supportedStates))
-        cs = cs.dropna()  # Remove empty rows made by 'where'
-        newMdb.append(cs)
+        cs.where(cond=cs.State.isin(supportedStates), inplace=True)
+        # Remove empty rows made by 'where'
+        cs.dropna(inplace=True)
+        # Correct indexies
+        cs.reset_index(drop=True, inplace=True)
 
-    return newMdb
+    return mdb
