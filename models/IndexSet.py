@@ -3,7 +3,7 @@ class IndexSet:
         self.Pattern = pattern
         self.Records = indexRecords
 
-"""
+
     def __str__(self):
         output = '{:>5} {:>80} {:>5}\n'.format('pos', 'Time range', 'CS')
 
@@ -11,4 +11,3 @@ class IndexSet:
             output += str(r)
 
         return output
-"""

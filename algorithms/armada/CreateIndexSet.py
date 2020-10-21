@@ -3,7 +3,7 @@ from models.IndexRecord import IndexRecord
 import copy as copy
 from algorithms.armada.CreatePattern import CreatePattern
 from algorithms.armada import Storage
-
+from models.Interval import Interval
 
 # range set is an index set.
 def CreateIndexSet(stem, prefix, p_idx):
@@ -29,7 +29,7 @@ def CreateFirstIndexSet(stem, visited_states):
                 if cs.iloc[singleState].State == stem.State:
                     
                     ref = cs.at[0, 'ClientID']
-                    intv = [cs.iloc[singleState].Start, stem.State, cs.iloc[singleState].End]
+                    intv = [Interval(cs.iloc[singleState].Start, cs.iloc[singleState].End)]
                     pos = singleState
 
                     new_rec = IndexRecord(pos, intv, ref)

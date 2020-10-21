@@ -13,7 +13,7 @@ def Contains(state, supList):
 
 
 def RemoveLowSup(minSup, supList, cs):
-    # Clear supList for states below minSup
+        # Clear supList for states below minSup
     for i in reversed(range(0, len(supList))):
         if supList[i].Support < minSup:
             del supList[i]

@@ -40,7 +40,9 @@ class Armada:
         for i in range(0, len(Storage.MDB)):
             for j in range(0, len(Storage.MDB[i])):
                 id = CreateFirstIndexSet(Storage.MDB[i].iloc[j], visited_states)
-
+                print(id)
+                
+            
         ### MineIndexSet tests
         # idx = IndexSets.A
         # MineIndexSet(
