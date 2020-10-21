@@ -18,10 +18,6 @@ def CreateIndexSet(stem, prefix, p_idx):
     return p_m_idx
 
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 # MDB is the list of client sequences
 def CreateFirstIndexSet(stem, MDB):
     idx = IndexSet(stem.State, [])
