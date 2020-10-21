@@ -35,9 +35,11 @@ def CreateFirstIndexSet(stem, visited_states):
                     new_rec = IndexRecord(pos, intv, ref)
 
                     idx.Records.append(new_rec)
-            # print()
-            # for i in idx.Records:
-            #     print(i)
+                    break
+            continue
+        print()
+        for i in idx.Records:
+            print(i)
         return idx
 """
         for singleState in range(0, len(MDB)):
