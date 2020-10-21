@@ -26,6 +26,32 @@ class Armada:
             # Mine indexSet
         
 
+        ### Create pattern tests
+        state = FState(
+            state='0_20->25',
+            start=pa.to_datetime('2013-07-01 04:01:14'),
+            end=pa.to_datetime('2013-07-01 13:08:17'))
+        p = CreatePattern(None, state)
+
+        visited_states = []
+        for i in range(0, len(self.CS)):
+            CreateFirstIndexSet(self.CS.iloc[i], self.CS, visited_states)
+
+        
+
+        
+
+        ### MineIndexSet tests
+        # idx = IndexSets.A
+        # MineIndexSet(
+        #     pattern=None,
+        #     indexSet=idx,
+        #     frequentStates=self.States,
+        #     cs=self.CS)
+
+        # MineIndexSet(None, IndexSets.A)
+        # MineIndexSet(pattern, indexSet)
+
 
 # Remove states that does not meet min support
 def GetStatesFor(minSup, supStates):
