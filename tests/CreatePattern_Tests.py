@@ -7,6 +7,8 @@ def TestCreatePattern():
 	A = FStates.A
 	B = FStates.B
 	C = FStates.C
+	D = FStates.D
+	E = FStates.E
 
 	print('Testing generation of 1-Patterns')
 
@@ -39,6 +41,14 @@ def TestCreatePattern():
 
 	testABC = np.array([[None, A, B, C],[A, '=', 'c', 'f'],[B, '*', '=', 'o'],[C, '*', '*', '=']])
 	if(np.array_equal(patternABC, testABC)):
+		print("    Success")
+
+	print("Testing with panda time")
+	patternD = CreatePattern(None, D)
+	patternDE = CreatePattern(patternD, E)
+	testDE = np.array([[None,D,E],[D,'=','s'],[E,'*','=']])
+
+	if np.array_equal(patternDE, testDE):
 		print("    Success")
 
 
