@@ -1,4 +1,4 @@
-from preprocessors.vent import VentPreprocessor
+from preprocessors.vent import VentPreprocessor, SplitDataframe
 from findSupport import MakeStateSupportList, ComputeSupport
 from algorithms.armada.Armada import Armada
 
@@ -12,9 +12,10 @@ def Main():
     cs = vent.GenerateTemporalDataFrame()
     supList = MakeStateSupportList(cs)
     ComputeSupport(cs, supList)
-
+    csList = SplitDataframe(cs)
+    
     # Run Armada
-    Armada(cs, supList).Run(0.7)
+    Armada(csList, supList).Run(0.7)
 
 
 if __name__ == '__main__':

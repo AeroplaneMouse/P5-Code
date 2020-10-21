@@ -124,3 +124,27 @@ def CreateTimeSeries(clientID, data):
         c += 1
 
     return df
+
+def SplitDataframe(cs):
+    csList = []
+    clientID = 0
+    data = {'ClientID': [], 'State': [], 'Start': [], 'End': []}
+    
+    for i in range(0, len(cs)):
+        singleCS = cs.iloc[i]
+
+        # Change cs
+        if clientID != singleCS.ClientID or i == len(cs)-1:
+            csList.append(pa.DataFrame(data))
+        
+            # Reset
+            clientID = singleCS.ClientID
+            data = {'ClientID': [], 'State': [], 'Start': [], 'End': []}
+            
+        data['ClientID'].append(singleCS.ClientID)
+        data['State'].append(singleCS.State)
+        data['Start'].append(singleCS.Start)
+        data['End'].append(singleCS.End)
+        
+    return csList
+    
