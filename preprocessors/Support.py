@@ -58,3 +58,25 @@ def GenerateStateSupportList(mdb):
         state.Support = len(state.AppearsIn) / clientCount
 
     return supportList
+
+
+def IsSupported(state):
+    return
+
+
+# Removes client records from mdb that does not meet the minimum support
+def RemoveNonSupported(minSupport, supportList, mdb):
+    # Extract support states from support list
+    supportedStates = []
+    for s in supportList:
+        if s.Support >= minSupport:
+            supportedStates.append(s.StateName)
+
+    # In every cs, remove rows where State is not in supportedStates
+    newMdb = []
+    for cs in mdb:
+        cs = cs.where(cond=cs.State.isin(supportedStates))
+        cs = cs.dropna()  # Remove empty rows made by 'where'
+        newMdb.append(cs)
+
+    return newMdb

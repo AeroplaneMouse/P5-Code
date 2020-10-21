@@ -1,31 +1,6 @@
 from preprocessors.Vent import VentPreprocessor
-from preprocessors.FindSupport import GenerateStateSupportList
+from preprocessors import Support
 from algorithms.armada.Armada import Armada
-
-
-# Check if a state name is in suplist
-def Contains(state, supList):
-    for supState in supList:
-        if supState.StateName == state:
-            return True
-
-    return False
-
-
-def RemoveLowSup(minSup, supList, cs):
-        # Clear supList for states below minSup
-    for i in reversed(range(0, len(supList))):
-        if supList[i].Support < minSup:
-            del supList[i]
-
-    # Clear cs for states not in supList
-    for i in reversed(range(0, len(cs))):
-        singleCS = cs.iloc[i]
-
-        if not Contains(singleCS.State, supList):
-            cs = cs.drop(i)
-
-    return cs
 
 
 def Main():
@@ -34,13 +9,14 @@ def Main():
     mdb = vent.GenerateTemporalMdb()
 
     # Generating and computing support for states
-    supportList = GenerateStateSupportList(mdb)
+    supportList = Support.GenerateStateSupportList(mdb)
 
     # Clear the database of states not meeting the minimum support
     minSupport = 0.7
 
-    for s in supportList:
-        print(s)
+    mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
+
+    print(mdb)
 
     # minSup = 0.7
     # cs = RemoveLowSup(minSup, supList, cs)
