@@ -1,0 +1,2 @@
+MDB = None
+MinSup = None

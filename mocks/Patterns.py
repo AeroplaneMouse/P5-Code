@@ -1,25 +1,17 @@
-from models.TPattern import TPattern
+import numpy as np
+from mocks import FStates
 
 
-A = TPattern(
-    {'0_20->25': ['=']}
-)
+A = np.ndarray((2, 2), dtype='object')
+A[0][1] = FStates.D
+A[1][0] = FStates.D
+A[1][1] = '='
 
-B = TPattern(
-    {'1_20->25': ['=']}
-)
 
-C = TPattern(
-    {'2_20->25': ['=']}
-)
+B = np.ndarray((2, 2), dtype='object')
+B[0][1] = FStates.E
+B[1][0] = FStates.E
+B[1][1] = '='
 
-D = TPattern(
-    {'3_20->25': ['=']}
-)
 
-AB = {
-    '0_20->25': ['='],
-    '1_20->25': ['s', '=']
-}
-
-All = [A, B, C, D, AB]
+All = [A, B]

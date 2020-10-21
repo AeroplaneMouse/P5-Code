@@ -28,7 +28,7 @@ class VentPreprocessor:
         endDay = self.DataFrame.tail(1).index[0]
         days = pa.date_range(start=startDay, end=endDay, freq='D')
 
-        clientID = 1
+        clientID = 0
         for day in days:
             # Remove time from date
             day = str(day)[0:10]
