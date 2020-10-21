@@ -3,7 +3,7 @@ from mocks import Patterns, IndexRecords
 
 A = IndexSet(
     Patterns.A,
-    [IndexRecords.A, IndexRecords.C]
+    [IndexRecords.A0, IndexRecords.B0, IndexRecords.C0]
 )
 
 
