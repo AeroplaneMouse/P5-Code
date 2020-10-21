@@ -3,6 +3,7 @@
 # from algorithms.armada.CreateIndexSet import CreateIndexSet
 # from models.FState import FState
 from algorithms.armada import Storage
+from algorithms.armada.CreateIndexSet import CreateFirstIndexSet
 
 
 class Armada:
@@ -27,18 +28,18 @@ class Armada:
         
 
         ### Create pattern tests
+        """
         state = FState(
             state='0_20->25',
             start=pa.to_datetime('2013-07-01 04:01:14'),
             end=pa.to_datetime('2013-07-01 13:08:17'))
         p = CreatePattern(None, state)
+        """
 
         visited_states = []
-        for i in range(0, len(self.CS)):
-            CreateFirstIndexSet(self.CS.iloc[i], self.CS, visited_states)
-
-        
-
+        for i in range(0, len(Storage.MDB)):
+            for j in range(0, len(Storage.MDB[i])):
+                CreateFirstIndexSet(Storage.MDB[i].iloc[j], Storage.MDB, visited_states)
         
 
         ### MineIndexSet tests
