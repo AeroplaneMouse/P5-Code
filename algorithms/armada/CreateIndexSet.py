@@ -38,15 +38,3 @@ def CreateFirstIndexSet(stem, visited_states):
                     break
             continue
         return idx
-"""
-        for singleState in range(0, len(MDB)):
-            if MDB.iloc[singleState].State == stem.State:
-                ref = MDB.iloc[singleState].ClientID
-                intv = [MDB.iloc[singleState].Start, stem.State, MDB.iloc[singleState].End]
-                pos = singleState
-                
-                new_rec = IndexRecord(pos, intv, ref)
-                
-                idx.Records.append(new_rec)
-        return idx
-"""
