@@ -1,5 +1,5 @@
-from preprocessors.vent import VentPreprocessor, SplitDataframe
-from findSupport import MakeStateSupportList, ComputeSupport
+from preprocessors.Vent import VentPreprocessor
+from preprocessors.FindSupport import GenerateStateSupportList
 from algorithms.armada.Armada import Armada
 
 
@@ -29,22 +29,26 @@ def RemoveLowSup(minSup, supList, cs):
 
 
 def Main():
-    # Create preprocessor
-    vent = VentPreprocessor()
-    vent.InitializeDataFrame('datasets/vent-minute-short.csv', ';')
+    # Preprocessing
+    vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
+    mdb = vent.GenerateTemporalMdb()
 
-    # Create CS and compute support
-    cs = vent.GenerateTemporalDataFrame()
-    supList = MakeStateSupportList(cs)
-    ComputeSupport(cs, supList)
+    # Generating and computing support for states
+    supportList = GenerateStateSupportList(mdb)
 
-    minSup = 0.7
-    cs = RemoveLowSup(minSup, supList, cs)
-    mdb = SplitDataframe(cs)
+    # Clear the database of states not meeting the minimum support
+    minSupport = 0.7
 
-    # print(supList)
-    #Run Armada
-    Armada(mdb, supList).Run(minSup)
+    for s in supportList:
+        print(s)
+
+    # minSup = 0.7
+    # cs = RemoveLowSup(minSup, supList, cs)
+    # mdb = SplitDataframe(cs)
+
+    # # print(supList)
+    # #Run Armada
+    # Armada(mdb, supList).Run(minSup)
 
     # print(cs)
 
