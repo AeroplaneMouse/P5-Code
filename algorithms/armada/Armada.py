@@ -33,16 +33,10 @@ class Armada:
 
         visited_states = []
         for i in range(0, len(self.CS)):
-            print()
-            
-            if self.CS.iloc[i].State not in visited_states:
-                visited_states.append(self.CS.iloc[i].State)
-                print("Index table for " + self.CS.iloc[i].State)
-                CreateFirstIndexSet(self.CS.iloc[i], self.CS)
+            CreateFirstIndexSet(self.CS.iloc[i], self.CS, visited_states)
 
         
 
-        #print(self.CS)
         
 
         ### MineIndexSet tests

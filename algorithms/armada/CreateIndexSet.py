@@ -19,14 +19,17 @@ def CreateIndexSet(stem, prefix, p_idx):
 
 
 # MDB is the list of client sequences
-def CreateFirstIndexSet(stem, MDB):
+def CreateFirstIndexSet(stem, MDB, visited_states):
     idx = IndexSet(stem.State, [])
-    for singleState in range(0, len(MDB)):
-        if MDB.iloc[singleState].State == stem.State:
-            ref = MDB.iloc[singleState].ClientID
-            intv = [MDB.iloc[singleState].Start, MDB.iloc[singleState].End]
-            new_rec = IndexRecord(MDB.iloc[singleState].Start, intv, ref)
-            idx.Records.append(new_rec)
-    for i in idx.Records:
-        print(i)
-    return idx
+    if stem.State not in visited_states:
+        visited_states.append(stem.State)
+        for singleState in range(0, len(MDB)):
+            if MDB.iloc[singleState].State == stem.State:
+                ref = MDB.iloc[singleState].ClientID
+                intv = [MDB.iloc[singleState].Start, stem.State, MDB.iloc[singleState].End]
+                pos = singleState
+                
+                new_rec = IndexRecord(pos, intv, ref)
+                
+                idx.Records.append(new_rec)
+        return idx
