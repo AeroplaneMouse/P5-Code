@@ -1,7 +1,5 @@
-from typing import Pattern
 from models.IndexSet import IndexSet
 from models.IndexRecord import IndexRecord
-from models.FState import FState
 import copy as copy
 
 
@@ -20,18 +18,19 @@ def CreateIndexSet(stem, prefix, p_idx):
     return p_m_idx
 
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 # MDB is the list of client sequences
 def CreateFirstIndexSet(stem, MDB):
-    idx = IndexSet()
-    idx.Pattern = stem.Name
-    for cs in MDB:
-        start_pos = 0
-        for state in cs:
-            start_pos += 1
-            if state == stem:
-                state = stem.Name
-                intv = [stem.Start, stem.End]
-                idx.Records.append(state, intv, start_pos)
-    for rec in idx:
-        print(rec)
+    idx = IndexSet(stem.State, [])
+    for singleState in range(0, len(MDB)):
+        if MDB.iloc[singleState].State == stem.State:
+            ref = MDB.iloc[singleState].ClientID
+            intv = [MDB.iloc[singleState].Start, MDB.iloc[singleState].End]
+            new_rec = IndexRecord(MDB.iloc[singleState].Start, intv, ref)
+            idx.Records.append(new_rec)
+    for i in idx.Records:
+        print(i)
     return idx
