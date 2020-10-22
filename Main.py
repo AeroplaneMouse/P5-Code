@@ -13,16 +13,10 @@ def Main():
 
     # Clear the database of states not meeting the minimum support
     minSupport = 0.7
-
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
     print(mdb)
 
-    # minSup = 0.7
-    # cs = RemoveLowSup(minSup, supList, cs)
-    # mdb = SplitDataframe(cs)
-
-    # # print(supList)
     # #Run Armada
     # Armada(mdb, supList).Run(minSup)
 

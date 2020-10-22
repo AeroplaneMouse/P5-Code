@@ -1,7 +1,9 @@
 # from CreateIndexSet import CreateIndexSet
 # from CreatePattern import CreatePattern
 from algorithms.armada import Storage
-import findSupport
+from preprocessors import Support
+from models.PState import PState
+from models.FState import FState
 
 
 # Computes new stems
@@ -23,17 +25,17 @@ def ComputePotentialStems(indexSet, frequentStates, minSup):
 
         # Increment support count for every state in cs
         # after pos in indexSet record
-        for csIndex in range(record.Pos, len(cs)):
-            singleCS = cs.iloc[csIndex]
+        for csIndex in range(record.Pos + 1, len(cs)):
+            csRecord = cs.iloc[csIndex]
 
             # Insert state into stem if not there
-            if singleCS.State not in pStems:
-                pStems[singleCS.State] = []
+            if csRecord.State not in pStems:
+                pStems[csRecord.State] = PState(csIndex)
 
             # Insert clientID if not there
-            clientID = singleCS.ClientID
-            if clientID not in pStems[singleCS.State]:
-                pStems[singleCS.State].append(clientID)
+            clientID = csRecord.ClientID
+            if clientID not in pStems[csRecord.State].AppearsIn:
+                pStems[csRecord.State].AppearsIn.append(clientID)
 
     # Print pStems content
     # for key in pStems.keys():
@@ -44,10 +46,12 @@ def ComputePotentialStems(indexSet, frequentStates, minSup):
     stems = []
     clients = cs[:1].at[0, 'ClientID'] + 1
     for s in pStems:
-        sup = len(pStems[s]) / clients
-        print('{} | {:.2f}'.format(s, sup))
-        if sup >= minSup:
-            stems.append(s)  # Maybe do something to get FState. IDK might be useful 
+        support = len(pStems[s].AppearsIn) / clients
+        print('{} | {}  {:.2f}'.format(s, pStems[s].Pos, support))
+        if support >= minSup:
+            # Create FState
+            state = FState(s, None, None)
+            stems.append(state)
 
     return stems
 
@@ -57,7 +61,7 @@ def MineIndexSet(pattern, indexSet, frequentStates, cs):
 
     # rSet = []
     # prefix = None  # Mock
-    # for s in stems:
-    #     p = CreatePattern(prefix, s)
-    #     iSet = CreateIndexSet(s, p, rSet)
-    #     MineIndexSet(p, iSet)
+    for s in stems:
+        p = CreatePattern(prefix, s)
+        iSet = CreateIndexSet(s, p, rSet)
+        MineIndexSet(p, iSet)

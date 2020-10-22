@@ -1,45 +1,23 @@
-from preprocessors.vent import VentPreprocessor
+from preprocessors.Vent import VentPreprocessor
+from preprocessors import Support
 from algorithms.armada.MineIndexSet import MineIndexSet, ComputePotentialStems
-from mocks import IndexSets
 from algorithms.armada import Storage
+from mocks import IndexSets
 import pandas as pa
 
 
 # Preprocessing
-vent = VentPreprocessor()
-vent.InitializeDataFrame('datasets/vent-minute-short.csv', ';')
-cs = vent.GenerateTemporalDataFrame()
+vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
+mdb = vent.GenerateTemporalMdb()
 
+# Generating and computing support for states
+supportList = Support.GenerateStateSupportList(mdb)
 
-# Insert MDB into storage and split into multiple cs DataFrames
-Storage.MDB = []
-clientID = 0
-data = {'ClientID': [], 'State': [], 'Start': [], 'End': []}
-for i in range(0, len(cs)):
-    singleCS = cs.iloc[i]
+# Clear the database of states not meeting the minimum support
+minSupport = 0.7
+mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
-    # Change cs
-    if clientID != singleCS.ClientID or i == len(cs)-1:
-        Storage.MDB.append(pa.DataFrame(data))
-
-        # Reset
-        clientID = singleCS.ClientID
-        data = {'ClientID': [], 'State': [], 'Start': [], 'End': []}
-
-    data['ClientID'].append(singleCS.ClientID)
-    data['State'].append(singleCS.State)
-    data['Start'].append(singleCS.Start)
-    data['End'].append(singleCS.End)
-
-# for i in range(0, len(data['ClientID'])):
-#     print('{} | {} | {} | {}'.format(
-#         data['ClientID'][i],
-#         data['State'][i],
-#         data['Start'][i]
-#         data['End'][i]))
-
-# print(len(Storage.MDB))
-# print(Storage.MDB)
+Storage.MDB = mdb
 
 
 print('********************')
@@ -51,4 +29,5 @@ stems = ComputePotentialStems(indexSet=IndexSets.A, frequentStates=None, minSup=
 
 print()
 print('New stems:')
-print(stems)
+for s in stems:
+    print(s)
