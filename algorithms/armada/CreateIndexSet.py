@@ -1,3 +1,4 @@
+from typing import Pattern
 from models.IndexSet import IndexSet
 from models.IndexRecord import IndexRecord
 import copy as copy
@@ -6,29 +7,33 @@ from algorithms.armada import Storage
 import numpy as np
 
 # visited_states is used to keep check of frequent states that already have an index set
+visited_patterns = []
+
 # range set is an index set.
 def CreateIndexSet(stem, prefix, range_set):
     p_m_idx = IndexSet(CreatePattern(prefix, stem), [])
-    #Goes through all the client sequences in range_set
-    for cs in range_set:
-        if range_set == Storage.MDB:
-            start_pos = 0
-        else:
-            start_pos = range_set.pos
-        pos = (start_pos + 1)
-        #goes through the frequent states in cs
-        for pos in range(pos, len(cs)):
-            #if the state found is equal the index set pattern add to index set
-            if cs.iloc[pos].State == stem:
-                ref = cs
-                intv = [[cs.iloc[pos].Start, cs.iloc[pos].End]]
-            
-                new_rec = IndexRecord(pos, intv, ref)
+    if p_m_idx.Pattern not in visited_patterns:
+        visited_patterns.append(p_m_idx.Pattern)
+        #Goes through all the client sequences in range_set
+        for cs in range_set:
+            if range_set == Storage.MDB:
+                start_pos = 0
+            else:
+                start_pos = range_set.pos
+            pos = (start_pos + 1)
+            #goes through the frequent states in cs
+            for pos in range(pos, len(cs)):
+                #if the state found is equal the index set pattern add to index set
+                if cs.iloc[pos].State == stem:
+                    ref = cs
+                    intv = [[cs.iloc[pos].Start, cs.iloc[pos].End]]
+                
+                    new_rec = IndexRecord(pos, intv, ref)
 
-                p_m_idx.Records.append(new_rec)
-                break
-            continue
-    return p_m_idx
+                    p_m_idx.Records.append(new_rec)
+                    break
+                continue
+        return p_m_idx
 
 
 # MDB is the list of client sequences
