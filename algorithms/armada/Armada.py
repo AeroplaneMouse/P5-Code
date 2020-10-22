@@ -16,7 +16,6 @@ class Armada:
         # Clear states
         Storage.MinSup = minSup
         self.States = GetStatesFor(minSup, self.SupStates)
-
         # for state in self.States:
         #     s = state.StateName
 
@@ -39,11 +38,7 @@ class Armada:
         visited_states = []
         for i in range(0, len(Storage.MDB)):
             for j in range(0, len(Storage.MDB[i])):
-                id = CreateFirstIndexSet(Storage.MDB[i].iloc[j], visited_states)
-        
-        for i in range(0, len(Storage.MDB)):
-            for j in range(0, len(Storage.MDB[i])):
-                CreateIndexSet(Storage.MDB[i].iloc[j], id)
+                id = CreateIndexSet(Storage.MDB[i].iloc[j], None, Storage.MDB ,visited_states)
         
         
                 

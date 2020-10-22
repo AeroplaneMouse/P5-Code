@@ -7,25 +7,27 @@ import numpy as np
 
 
 # range set is an index set.
-def CreateIndexSet(stem, prefix, range_set):
+def CreateIndexSet(stem, prefix, range_set, visited_states):
     p_m_idx = IndexSet(CreatePattern(prefix, stem), [])
-    for cs in range_set:
-        if range_set == Storage.MDB:
-            start_pos = 0
-        else:
-            start_pos = range_set.pos
-        pos = (start_pos + 1)
-        for pos in range(pos, len(cs)):
-            if cs.iloc[pos].State == stem:
-                ref = cs
-                intv = [[cs.iloc[pos].Start, cs.iloc[pos].End]]
-            
-                new_rec = IndexRecord(pos, intv, ref)
+    if stem.State not in visited_states:
+        visited_states.append(stem.State)
+        for cs in range_set:
+            if range_set == Storage.MDB:
+                start_pos = 0
+            else:
+                start_pos = range_set.pos
+            pos = (start_pos + 1)
+            for pos in range(pos, len(cs)):
+                if cs.iloc[pos].State == stem:
+                    ref = cs
+                    intv = [[cs.iloc[pos].Start, cs.iloc[pos].End]]
+                
+                    new_rec = IndexRecord(pos, intv, ref)
 
-                p_m_idx.Records.append(new_rec)
-                break
-            continue
-    return p_m_idx
+                    p_m_idx.Records.append(new_rec)
+                    break
+                continue
+        return p_m_idx
 
 
 # MDB is the list of client sequences
