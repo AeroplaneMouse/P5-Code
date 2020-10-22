@@ -1,14 +1,14 @@
-# from CreateIndexSet import CreateIndexSet
-# from CreatePattern import CreatePattern
+from algorithms.armada.CreateIndexSet import CreateIndexSet
+from algorithms.armada.CreatePattern import CreatePattern
 from algorithms.armada import Storage
-from preprocessors import Support
 from models.PState import PState
 from models.FState import FState
+from models.Interval import Interval
 
 
 # Computes new stems
 # Assumes that cs only contains states that is above minSup
-def ComputePotentialStems(indexSet, frequentStates, minSup):
+def ComputePotentialStems(indexSet, minSup):
     # TODO
     # Add check for record state == potential stem state
     
@@ -30,7 +30,7 @@ def ComputePotentialStems(indexSet, frequentStates, minSup):
 
             # Insert state into stem if not there
             if csRecord.State not in pStems:
-                pStems[csRecord.State] = PState(csIndex)
+                pStems[csRecord.State] = PState(Interval(csRecord.Start, csRecord.End))
 
             # Insert clientID if not there
             clientID = csRecord.ClientID
@@ -47,21 +47,20 @@ def ComputePotentialStems(indexSet, frequentStates, minSup):
     clients = cs[:1].at[0, 'ClientID'] + 1
     for s in pStems:
         support = len(pStems[s].AppearsIn) / clients
-        print('{} | {}  {:.2f}'.format(s, pStems[s].Pos, support))
+        print('{} | {}  {:.2f}'.format(s, pStems[s].Interval, support))
         if support >= minSup:
             # Create FState
-            state = FState(s, None, None)
+            intv = pStems[s].Interval
+            state = FState(s, intv.Start, intv.End)
             stems.append(state)
 
     return stems
 
 
-def MineIndexSet(pattern, indexSet, frequentStates, cs):
-    stems = ComputePotentialStems(indexSet, frequentStates)
+def MineIndexSet(pattern, indexSet):
+    stems = ComputePotentialStems(indexSet, Storage.MinimumSupport)
 
-    # rSet = []
-    # prefix = None  # Mock
     for s in stems:
-        p = CreatePattern(prefix, s)
-        iSet = CreateIndexSet(s, p, rSet)
-        MineIndexSet(p, iSet)
+        p_mark = CreatePattern(pattern, s)
+        pSet = CreateIndexSet(s, pattern, indexSet)
+        MineIndexSet(p_mark, pSet)

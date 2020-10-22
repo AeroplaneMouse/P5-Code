@@ -1,2 +1,2 @@
 MDB = None
-MinSup = None
+MinimumSupport = None

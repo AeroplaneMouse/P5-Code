@@ -1,4 +1,4 @@
 class PState:
-    def __init__(self, pos):
-        self.Pos = pos
+    def __init__(self, interval):
+        self.Interval = interval
         self.AppearsIn = []

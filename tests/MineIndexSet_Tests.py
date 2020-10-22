@@ -18,14 +18,14 @@ minSupport = 0.7
 mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
 Storage.MDB = mdb
-
+Storage.MinimumSupport = 0.7
 
 print('********************')
 print('Testing ComputePotentialStems')
 print()
 
 
-stems = ComputePotentialStems(indexSet=IndexSets.A, frequentStates=None, minSup=0.7)
+stems = ComputePotentialStems(indexSet=IndexSets.A, minSup=0.7)
 
 print()
 print('New stems:')
