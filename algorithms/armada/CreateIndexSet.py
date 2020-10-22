@@ -6,7 +6,7 @@ from algorithms.armada.CreatePattern import CreatePattern
 from algorithms.armada import Storage
 import numpy as np
 
-# visited_states is used to keep check of frequent states that already have an index set
+# visited_states is used to keep check of frequent patterns that already have an index set
 visited_patterns = []
 
 # range set is an index set.
@@ -35,7 +35,7 @@ def CreateIndexSet(stem, prefix, range_set):
                 continue
         return p_m_idx
 
-
+"""
 # MDB is the list of client sequences
 # visited_states is used to keep check of frequent states that already have an index set
 def CreateFirstIndexSet(stem, visited_states):
@@ -60,3 +60,4 @@ def CreateFirstIndexSet(stem, visited_states):
                     break
             continue
         return idx
+"""
