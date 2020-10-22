@@ -1,4 +1,6 @@
 import pandas as pa
+from models.FState import FState
+from models.Interval import Interval
 
 
 class StateSupport:
@@ -84,3 +86,21 @@ def RemoveNonSupported(minSupport, supportList, mdb):
         cs.reset_index(drop=True, inplace=True)
 
     return mdb
+
+
+def ExtractInterval(state, cs):
+    for cRecord in cs.iterrows():
+        if cRecord[1].State == state:
+            return Interval(cRecord[1].Start, cRecord[1].End)
+
+
+def ExtractFrequentStates(minSupport, supportList, mdb):
+    states = []
+
+    for s in supportList:
+        if s.Support >= minSupport:
+            cs = mdb[s.AppearsIn[0]]
+            intv = ExtractInterval(s.StateName, cs)
+            states.append(FState(s.StateName, intv.Start, intv.End))
+
+    return states

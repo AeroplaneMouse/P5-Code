@@ -1,6 +1,7 @@
 from preprocessors.Vent import VentPreprocessor
 from preprocessors import Support
 from algorithms.armada.Armada import Armada
+from algorithms.armada.Armada import Armada_Deprecated
 
 
 def Main():
@@ -15,10 +16,12 @@ def Main():
     minSupport = 0.7
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
-    print(mdb)
+    frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
+
+    # Armada(mdb, frequentStates, minSupport)
 
     # #Run Armada
-    # Armada(mdb, supList).Run(minSup)
+    Armada_Deprecated(mdb, supportList).Run(minSupport)
 
     # print(cs)
 
