@@ -3,7 +3,7 @@
 # from algorithms.armada.CreateIndexSet import CreateIndexSet
 # from models.FState import FState
 from algorithms.armada import Storage
-from algorithms.armada.CreateIndexSet import CreateFirstIndexSet
+from algorithms.armada.CreateIndexSet import CreateFirstIndexSet, CreateIndexSet
 
 
 class Armada:
@@ -40,7 +40,12 @@ class Armada:
         for i in range(0, len(Storage.MDB)):
             for j in range(0, len(Storage.MDB[i])):
                 id = CreateFirstIndexSet(Storage.MDB[i].iloc[j], visited_states)
-                print(id)
+        
+        for i in range(0, len(Storage.MDB)):
+            for j in range(0, len(Storage.MDB[i])):
+                CreateIndexSet(Storage.MDB[i].iloc[j], id)
+        
+        
                 
             
         ### MineIndexSet tests
