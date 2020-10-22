@@ -35,10 +35,9 @@ class Armada:
         p = CreatePattern(None, state)
         """
 
-        visited_states = []
         for i in range(0, len(Storage.MDB)):
             for j in range(0, len(Storage.MDB[i])):
-                id = CreateIndexSet(Storage.MDB[i].iloc[j], None, Storage.MDB ,visited_states)
+                id = CreateIndexSet(Storage.MDB[i].iloc[j], None, Storage.MDB)
         
         
                 
