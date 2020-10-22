@@ -41,13 +41,11 @@ def ComputePotentialStems(indexSet, minSup):
     # for key in pStems.keys():
     #     print('{} | {}'.format(key, pStems[key]))
 
-    print('Potential stems:')
     # Add frequent states to stems
     stems = []
     clients = cs[:1].at[0, 'ClientID'] + 1
     for s in pStems:
         support = len(pStems[s].AppearsIn) / clients
-        print('{} | {}  {:.2f}'.format(s, pStems[s].Interval, support))
         if support >= minSup:
             # Create FState
             intv = pStems[s].Interval
