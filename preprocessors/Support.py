@@ -1,23 +1,6 @@
-import pandas as pa
 from models.FState import FState
+from models.SState import SState
 from models.Interval import Interval
-
-
-class StateSupport:
-    def __init__(self, stateName, appearsIn):
-        self.StateName = stateName
-        self.AppearsIn = appearsIn
-        self.Support = None
-
-    def __str__(self):
-        return '{} | {:<10} | {:.2f}'.format(
-            self.StateName,
-            str(self.AppearsIn),
-            self.Support
-        )
-
-    def __repr__(self):
-        return self.__str__()
 
 
 # Tries to find the given state in the support list.
@@ -49,7 +32,7 @@ def GenerateStateSupportList(mdb):
             # Add state to supportList if not counted
             index = GetIndex(clientRecord.State, supportList)
             if index is None:
-                supportList.append(StateSupport(
+                supportList.append(SState(
                     stateName=clientRecord.State,
                     appearsIn=[clientRecord.ClientID]))
 

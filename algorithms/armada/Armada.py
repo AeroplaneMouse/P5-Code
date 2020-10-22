@@ -1,5 +1,5 @@
 from algorithms.armada import Storage
-from algorithms.armada.CreateIndexSet import CreateFirstIndexSet, CreateIndexSet
+from algorithms.armada.CreateIndexSet import CreateIndexSet
 from algorithms.armada.CreatePattern import CreatePattern
 from algorithms.armada.MineIndexSet import MineIndexSet
 
