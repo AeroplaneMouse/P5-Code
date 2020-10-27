@@ -9,9 +9,11 @@ import numpy as np
 # visited_states is used to keep check of frequent patterns that already have an index set
 patterns = []
 
+
 # range set is an index set.
 def CreateIndexSet(stem, pattern, range_set):
     p_m_idx = IndexSet(pattern, [])
+
     #Goes through all the client sequences in range_set
     for cs in range_set:
         if range_set == Storage.MDB:
@@ -19,18 +21,18 @@ def CreateIndexSet(stem, pattern, range_set):
         else:
             start_pos = range_set.pos
         pos = (start_pos + 1)
+
         #goes through the frequent states in cs
         for pos in range(pos, len(cs)):
             #if the state found is equal the index set pattern add to index set
-            if cs.iloc[pos].State == stem:
-                ref = cs
+            if cs.iloc[pos].State == stem.State:
+                ref = cs.at[0, 'ClientID']
                 intv = [[cs.iloc[pos].Start, cs.iloc[pos].End]]
-            
-                new_rec = IndexRecord(pos, intv, ref)
 
+                new_rec = IndexRecord(pos, intv, ref)
                 p_m_idx.Records.append(new_rec)
                 break
-            continue
+
     patterns.append(p_m_idx.Pattern)
     return p_m_idx
 

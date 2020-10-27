@@ -3,11 +3,10 @@ class IndexSet:
         self.Pattern = pattern
         self.Records = indexRecords
 
-
     def __str__(self):
-        output = '{:>5} {:>80} {:>5}\n'.format('pos', 'Time range', 'CS')
+        output = '{:>5} | {:>80} | {:>5}\n'.format('pos', 'Time range', 'CS')
 
         for r in self.Records:
-            output += str(r)
+            output += str(r) + '\n'
 
         return output
