@@ -43,7 +43,7 @@ def ComputePotentialStems(indexSet, minSup):
 
     # Add frequent states to stems
     stems = []
-    clients = cs[:1].at[0, 'ClientID'] + 1
+    clients = len(Storage.MDB)
     for s in pStems:
         support = len(pStems[s].AppearsIn) / clients
         if support >= minSup:
