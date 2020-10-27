@@ -1,18 +1,13 @@
-from typing import Pattern
 from models.IndexSet import IndexSet
 from models.IndexRecord import IndexRecord
-import copy as copy
-from algorithms.armada.CreatePattern import CreatePattern
 from algorithms.armada import Storage
-import numpy as np
 
-# visited_states is used to keep check of frequent patterns that already have an index set
-patterns = []
 
 # range set is an index set.
 def CreateIndexSet(stem, pattern, range_set):
     p_m_idx = IndexSet(pattern, [])
 
+    # Get references to client sequences from MDB or index set
     csList = []
     isIndexSet = False
     if range_set == Storage.MDB:
@@ -24,28 +19,27 @@ def CreateIndexSet(stem, pattern, range_set):
             cs = Storage.MDB[record.Ref]
             csList.append(cs)
 
-    #Goes through all the client sequences in range_set
-    i = 0
+    # Goes through all the client sequences in range_set
+    i = -1
     for cs in csList:
+        i += 1
+        # Set starting pos from index record
         if isIndexSet:
             start_pos = range_set.Records[i].Pos + 1
 
-        pos = start_pos
-
-        #goes through the frequent states in cs
-        for pos in range(pos, len(cs)):
-            #if the state found is equal the index set pattern add to index set
+        # Goes through the frequent states in cs
+        for pos in range(start_pos, len(cs)):
+            # If the state found is equal the index set pattern add to indexSet
             if cs.iloc[pos].State == stem.State:
-                ref = cs.at[0, 'ClientID']
+                ref = i
                 intv = [[cs.iloc[pos].Start, cs.iloc[pos].End]]
 
                 new_rec = IndexRecord(pos, intv, ref)
                 p_m_idx.Records.append(new_rec)
+
+                # Break when the first occurrence of the state is found
                 break
 
-        i += 1
-
-    patterns.append(p_m_idx.Pattern)
     return p_m_idx
 
 

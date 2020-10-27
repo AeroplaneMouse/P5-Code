@@ -20,13 +20,6 @@ def ExtractStatesInPattern(pattern):
 # Computes new stems
 # Assumes that cs only contains states that is above minSup
 def ComputePotentialStems(indexSet, minSup):
-    # TODO
-    # Add check for record state == potential stem state
-    
-    # Key points---
-    # - Any state in the refrenced cs where state pos > record.pos == potential stem
-    # - Increment support count for specific state
-
     # Dictionary of potential stems
     pStems = {}
 
@@ -48,19 +41,18 @@ def ComputePotentialStems(indexSet, minSup):
             if clientID not in pStems[csRecord.State].AppearsIn:
                 pStems[csRecord.State].AppearsIn.append(clientID)
 
-    # Print pStems content
-    # for key in pStems.keys():
-    #     print('{} | {}'.format(key, pStems[key]))
-
     # Add frequent states to stems
     stems = []
     clients = len(Storage.MDB)
     patternStates = ExtractStatesInPattern(indexSet.Pattern)
     for s in pStems:
+        # Only add states not already part of the pattern
         if s not in patternStates:
+            # Compute stem support
             support = len(pStems[s].AppearsIn) / clients
+            
+            # Add frequent stems to output
             if support >= minSup:
-                # Create FState
                 intv = pStems[s].Interval
                 state = FState(s, intv.Start, intv.End)
                 stems.append(state)
@@ -68,13 +60,14 @@ def ComputePotentialStems(indexSet, minSup):
     return stems
 
 
-def MineIndexSet(pattern, indexSet, depth):
-    if depth == -1:
-        return
-
+def MineIndexSet(pattern, indexSet):
     stems = ComputePotentialStems(indexSet, Storage.MinimumSupport)
 
+    # Create and mine index sets for the new pattern p_mark
     for s in stems:
+        # Create and save pattern
         p_mark = CreatePattern(pattern, s)
+        Storage.Patterns.append(p_mark)
+
         pSet = CreateIndexSet(s, p_mark, indexSet)
-        MineIndexSet(p_mark, pSet, depth+1)
+        MineIndexSet(p_mark, pSet)

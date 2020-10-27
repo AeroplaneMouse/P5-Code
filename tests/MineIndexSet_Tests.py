@@ -3,8 +3,10 @@ from preprocessors import Support
 from algorithms.armada.MineIndexSet import MineIndexSet, ComputePotentialStems
 from algorithms.armada import Storage
 from mocks import IndexSets
-import pandas as pa
 
+
+#####################################################################
+# Setup
 
 # Preprocessing
 vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
@@ -18,12 +20,15 @@ minSupport = 0.7
 mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
 Storage.MDB = mdb
-Storage.MinimumSupport = 0.7
+Storage.MinimumSupport = minSupport
+
+
+#####################################################################
+# Tests
 
 print('********************')
 print('Testing ComputePotentialStems')
 print()
-
 
 stems = ComputePotentialStems(indexSet=IndexSets.A, minSup=0.7)
 
