@@ -28,9 +28,9 @@ def CreateIndexSet(stem, pattern, range_set):
     i = 0
     for cs in csList:
         if isIndexSet:
-            start_pos = range_set.Records[i].Pos
+            start_pos = range_set.Records[i].Pos + 1
 
-        pos = (start_pos + 1)
+        pos = start_pos
 
         #goes through the frequent states in cs
         for pos in range(pos, len(cs)):

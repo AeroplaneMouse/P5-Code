@@ -13,11 +13,11 @@ def Main():
     supportList = Support.GenerateStateSupportList(mdb)
 
     # Clear the database of states not meeting the minimum support
-    minSupport = 0.7
+    minSupport = 0.3
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
-
+    
     Armada(mdb, frequentStates, minSupport)
     
     # #Run Armada

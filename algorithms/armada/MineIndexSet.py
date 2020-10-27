@@ -55,10 +55,14 @@ def ComputePotentialStems(indexSet, minSup):
     return stems
 
 
-def MineIndexSet(pattern, indexSet):
+def MineIndexSet(pattern, indexSet, depth):
+    if depth == -1:
+        return
+    
     stems = ComputePotentialStems(indexSet, Storage.MinimumSupport)
 
     for s in stems:
         p_mark = CreatePattern(pattern, s)
         pSet = CreateIndexSet(s, p_mark, indexSet)
-        MineIndexSet(p_mark, pSet)
+        MineIndexSet(p_mark, pSet, depth+1)
+

@@ -13,7 +13,7 @@ def Armada(mdb, frequentStates, minSupport):
     for s in frequentStates:
         p = CreatePattern(None, s)
         p_idx = CreateIndexSet(s, p, Storage.MDB)
-        MineIndexSet(p, p_idx)
+        MineIndexSet(p, p_idx, 0)
 
     printPatterns()
     return "Some fucking OP patterns... perhaps"
