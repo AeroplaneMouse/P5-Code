@@ -50,10 +50,11 @@ def CreateIndexSet(stem, pattern, range_set):
 
 
 def printPatterns():
-    for i in patterns:
-        print("Pattern:")
-        print(i)
-        print()
+    # for i in patterns:
+    #     print("Pattern:")
+    #     print(i)
+    #     print()
+    print('Patterns: {}'.format(len(patterns)))
 
 
 """

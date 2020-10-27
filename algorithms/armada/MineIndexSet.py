@@ -4,6 +4,17 @@ from algorithms.armada import Storage
 from models.PState import PState
 from models.FState import FState
 from models.Interval import Interval
+import numpy as np
+
+
+def ExtractStatesInPattern(pattern):
+    states = []
+    dim = np.shape(pattern)[0]
+
+    for i in range(1, dim):
+        states.append(pattern[0][i].State)
+
+    return states
 
 
 # Computes new stems
@@ -44,13 +55,15 @@ def ComputePotentialStems(indexSet, minSup):
     # Add frequent states to stems
     stems = []
     clients = len(Storage.MDB)
+    patternStates = ExtractStatesInPattern(indexSet.Pattern)
     for s in pStems:
-        support = len(pStems[s].AppearsIn) / clients
-        if support >= minSup:
-            # Create FState
-            intv = pStems[s].Interval
-            state = FState(s, intv.Start, intv.End)
-            stems.append(state)
+        if s not in patternStates:
+            support = len(pStems[s].AppearsIn) / clients
+            if support >= minSup:
+                # Create FState
+                intv = pStems[s].Interval
+                state = FState(s, intv.Start, intv.End)
+                stems.append(state)
 
     return stems
 
@@ -58,11 +71,10 @@ def ComputePotentialStems(indexSet, minSup):
 def MineIndexSet(pattern, indexSet, depth):
     if depth == -1:
         return
-    
+
     stems = ComputePotentialStems(indexSet, Storage.MinimumSupport)
 
     for s in stems:
         p_mark = CreatePattern(pattern, s)
         pSet = CreateIndexSet(s, p_mark, indexSet)
         MineIndexSet(p_mark, pSet, depth+1)
-
