@@ -14,12 +14,23 @@ patterns = []
 def CreateIndexSet(stem, pattern, range_set):
     p_m_idx = IndexSet(pattern, [])
 
+    csList = []
+    isIndexSet = False
+    if range_set == Storage.MDB:
+        csList = Storage.MDB
+        start_pos = 0
+    else:
+        isIndexSet = True
+        for record in range_set.Records:
+            cs = Storage.MDB[record.Ref]
+            csList.append(cs)
+
     #Goes through all the client sequences in range_set
-    for cs in range_set:
-        if range_set == Storage.MDB:
-            start_pos = 0
-        else:
-            start_pos = range_set.pos
+    i = 0
+    for cs in csList:
+        if isIndexSet:
+            start_pos = range_set.Records[i].Pos
+
         pos = (start_pos + 1)
 
         #goes through the frequent states in cs
@@ -32,6 +43,8 @@ def CreateIndexSet(stem, pattern, range_set):
                 new_rec = IndexRecord(pos, intv, ref)
                 p_m_idx.Records.append(new_rec)
                 break
+
+        i += 1
 
     patterns.append(p_m_idx.Pattern)
     return p_m_idx
