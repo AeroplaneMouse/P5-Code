@@ -6,7 +6,7 @@ from algorithms.armada.Armada import Armada_Deprecated
 
 def Main():
     # Preprocessing
-    vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
+    vent = VentPreprocessor('datasets/vent-minute-shorter.csv', ';')
     mdb = vent.GenerateTemporalMdb()
 
     # Generating and computing support for states

@@ -60,5 +60,5 @@ def MineIndexSet(pattern, indexSet):
 
     for s in stems:
         p_mark = CreatePattern(pattern, s)
-        pSet = CreateIndexSet(s, pattern, indexSet)
+        pSet = CreateIndexSet(s, p_mark, indexSet)
         MineIndexSet(p_mark, pSet)

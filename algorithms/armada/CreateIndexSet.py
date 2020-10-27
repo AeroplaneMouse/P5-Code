@@ -9,7 +9,6 @@ import numpy as np
 # visited_states is used to keep check of frequent patterns that already have an index set
 patterns = []
 
-
 # range set is an index set.
 def CreateIndexSet(stem, pattern, range_set):
     p_m_idx = IndexSet(pattern, [])
