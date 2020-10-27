@@ -8,10 +8,11 @@ import numpy as np
 
 # visited_states is used to keep check of frequent patterns that already have an index set
 visited_patterns = []
+patterns = []
 
 # range set is an index set.
-def CreateIndexSet(stem, prefix, range_set):
-    p_m_idx = IndexSet(CreatePattern(prefix, stem), [])
+def CreateIndexSet(stem, pattern, range_set):
+    p_m_idx = IndexSet(pattern, [])
     if p_m_idx.Pattern not in visited_patterns:
         visited_patterns.append(p_m_idx.Pattern)
         #Goes through all the client sequences in range_set
@@ -33,7 +34,14 @@ def CreateIndexSet(stem, prefix, range_set):
                     p_m_idx.Records.append(new_rec)
                     break
                 continue
+        patterns.append(p_m_idx.Pattern)
         return p_m_idx
+
+
+def printPatterns():
+    for i in patterns:
+        print(i)
+
 
 """
 # MDB is the list of client sequences

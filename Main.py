@@ -18,10 +18,10 @@ def Main():
 
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
 
-    # Armada(mdb, frequentStates, minSupport)
-
+    Armada(mdb, frequentStates, minSupport)
+    
     # #Run Armada
-    Armada_Deprecated(mdb, supportList).Run(minSupport)
+    #Armada_Deprecated(mdb, supportList).Run(minSupport)
 
     # print(cs)
 

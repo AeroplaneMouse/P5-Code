@@ -1,5 +1,5 @@
 from algorithms.armada import Storage
-from algorithms.armada.CreateIndexSet import CreateIndexSet
+from algorithms.armada.CreateIndexSet import CreateIndexSet, printPatterns
 from algorithms.armada.CreatePattern import CreatePattern
 from algorithms.armada.MineIndexSet import MineIndexSet
 
@@ -12,9 +12,10 @@ def Armada(mdb, frequentStates, minSupport):
     # Run the algorithm
     for s in frequentStates:
         p = CreatePattern(None, s)
-        p_idx = CreateFirstIndexSet(s, Storage.MDB)
+        p_idx = CreateIndexSet(s, p, Storage.MDB)
         MineIndexSet(p, p_idx)
 
+    printPatterns()
     return "Some fucking OP patterns... perhaps"
 
 
