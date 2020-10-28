@@ -49,7 +49,7 @@ def ComputePotentialStems(indexSet, minSup, maxGap):
             csRecord = cs.iloc[csIndex]
 
             # Check if stem is within max gap constraint
-            if csIndex.End < time + maxGap:
+            if csRecord.End < time + maxGap:
                 # Insert state into stem if not there
                 if csRecord.State not in pStems:
                     pStems[csRecord.State] = PState(Interval(csRecord.Start, csRecord.End))

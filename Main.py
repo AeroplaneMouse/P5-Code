@@ -1,6 +1,7 @@
 from preprocessors.Vent import VentPreprocessor
 from preprocessors import Support
 from algorithms.armada.Armada import Armada
+import pandas as pa
 
 
 def Main():
@@ -12,12 +13,9 @@ def Main():
     supportList = Support.GenerateStateSupportList(mdb)
 
     # Clear the database of states not meeting the minimum support
-    minSupport = 0.7
+    minSupport = 0.4
     maxGap = pa.to_timedelta('04:00:00')  # hh:mm:ss
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
-
-    print(mdb)
-    import pdb; pdb.set_trace()  # breakpoint c6b86b0d //
 
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
 
@@ -32,8 +30,9 @@ def Main():
         print()
         i += 1
     print('########################')
-    print('# Minimum support: {:>5}'.format(minSupport))
-    print('# Patterns found: {:>6}'.format(len(patterns)))
+    print('# Minimum support: {:>21}'.format(minSupport))
+    print('# Maximum gap: {:>25}'.format(str(maxGap)))
+    print('# Patterns found: {:>22}'.format(len(patterns)))
 
 
 if __name__ == '__main__':
