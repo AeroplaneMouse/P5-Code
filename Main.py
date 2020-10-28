@@ -13,11 +13,15 @@ def Main():
 
     # Clear the database of states not meeting the minimum support
     minSupport = 0.7
+    maxGap = 4  # 4 hours
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
+    print(mdb)
+    import pdb; pdb.set_trace()  # breakpoint c6b86b0d //
+    
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
 
-    patterns = Armada(mdb, frequentStates, minSupport)
+    patterns = Armada(mdb, frequentStates, minSupport, maxGap)
 
     # Print last 10 patterns
     print('Last 10 patterns:')

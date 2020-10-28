@@ -19,7 +19,7 @@ def ExtractStatesInPattern(pattern):
 
 # Computes new stems
 # Assumes that cs only contains states that is above minSup
-def ComputePotentialStems(indexSet, minSup):
+def ComputePotentialStems(indexSet, minSup, maxGap):
     # Dictionary of potential stems
     pStems = {}
 
@@ -61,7 +61,7 @@ def ComputePotentialStems(indexSet, minSup):
 
 
 def MineIndexSet(pattern, indexSet):
-    stems = ComputePotentialStems(indexSet, Storage.MinimumSupport)
+    stems = ComputePotentialStems(indexSet, Storage.MinimumSupport, Storage.MaximumGap)
 
     # Create and mine index sets for the new pattern p_mark
     for s in stems:

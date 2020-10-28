@@ -4,10 +4,11 @@ from algorithms.armada.CreatePattern import CreatePattern
 from algorithms.armada.MineIndexSet import MineIndexSet
 
 
-def Armada(mdb, frequentStates, minSupport):
+def Armada(mdb, frequentStates, minSupport, maxGap):
     # Initialize
     Storage.MDB = mdb
     Storage.MinimumSupport = minSupport
+    Storage.MaximumGap = maxGap
     Storage.Patterns = []
 
     # Run the algorithm
