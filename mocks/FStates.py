@@ -27,4 +27,19 @@ E = FState(
     pa.to_datetime('2013-07-01 04:01:14'),
     pa.to_datetime('2013-07-01 14:57:17'))
 
-All = [A, B, C]
+F = FState(
+    'F',
+    pa.to_datetime('06:00:00'),
+    pa.to_datetime('08:00:00'))
+
+G = FState(
+    'G',
+    pa.to_datetime('06:00:00'),
+    pa.to_datetime('07:00:00'))
+
+H = FState(
+    'H',
+    pa.to_datetime('06:30:00'),
+    pa.to_datetime('09:00:00'))
+
+All = [A, B, C, F, G, H]

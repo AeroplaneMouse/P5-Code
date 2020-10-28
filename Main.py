@@ -13,12 +13,12 @@ def Main():
 
     # Clear the database of states not meeting the minimum support
     minSupport = 0.7
-    maxGap = 4  # 4 hours
+    maxGap = pa.to_timedelta('04:00:00')  # hh:mm:ss
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
     print(mdb)
     import pdb; pdb.set_trace()  # breakpoint c6b86b0d //
-    
+
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
 
     patterns = Armada(mdb, frequentStates, minSupport, maxGap)
