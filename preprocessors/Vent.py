@@ -121,4 +121,9 @@ def GenerateClientSequence(clientID, data):
         df.at[index, 'End'] = time
         c += 1
 
+    df = SortCS(df)
+    return df
+
+def SortCS(df):
+    df.sort_values(by=['Start', 'End'], inplace=True)
     return df
