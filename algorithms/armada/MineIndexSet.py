@@ -7,6 +7,20 @@ from models.Interval import Interval
 import numpy as np
 
 
+def GetFirstEndTime(pattern):
+    # Extract states
+    states = pattern[0][1:]
+
+    # Use first state as initial end time
+    time = states[0].End
+
+    for s in states[1:]:
+        if s.End < time:
+            time = s.End
+
+    return time
+
+
 def ExtractStatesInPattern(pattern):
     states = []
     dim = np.shape(pattern)[0]
@@ -19,9 +33,11 @@ def ExtractStatesInPattern(pattern):
 
 # Computes new stems
 # Assumes that cs only contains states that is above minSup
-def ComputePotentialStems(indexSet, minSup):
+def ComputePotentialStems(indexSet, minSup, maxGap):
     # Dictionary of potential stems
     pStems = {}
+
+    time = GetFirstEndTime(indexSet.Pattern)
 
     for record in indexSet.Records:
         # Retrieve cs from reference
@@ -32,14 +48,16 @@ def ComputePotentialStems(indexSet, minSup):
         for csIndex in range(record.Pos + 1, len(cs)):
             csRecord = cs.iloc[csIndex]
 
-            # Insert state into stem if not there
-            if csRecord.State not in pStems:
-                pStems[csRecord.State] = PState(Interval(csRecord.Start, csRecord.End))
+            # Check if stem is within max gap constraint
+            if csRecord.End < time + maxGap:
+                # Insert state into stem if not there
+                if csRecord.State not in pStems:
+                    pStems[csRecord.State] = PState(Interval(csRecord.Start, csRecord.End))
 
-            # Insert clientID if not there
-            clientID = csRecord.ClientID
-            if clientID not in pStems[csRecord.State].AppearsIn:
-                pStems[csRecord.State].AppearsIn.append(clientID)
+                # Insert clientID if not there
+                clientID = csRecord.ClientID
+                if clientID not in pStems[csRecord.State].AppearsIn:
+                    pStems[csRecord.State].AppearsIn.append(clientID)
 
     # Add frequent states to stems
     stems = []
@@ -61,7 +79,7 @@ def ComputePotentialStems(indexSet, minSup):
 
 
 def MineIndexSet(pattern, indexSet):
-    stems = ComputePotentialStems(indexSet, Storage.MinimumSupport)
+    stems = ComputePotentialStems(indexSet, Storage.MinimumSupport, Storage.MaximumGap)
 
     # Create and mine index sets for the new pattern p_mark
     for s in stems:
