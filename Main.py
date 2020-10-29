@@ -6,15 +6,15 @@ import pandas as pa
 
 def Main():
     # Preprocessing
-    vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
-    mdb = vent.GenerateTemporalMdb(interval=5)
+    vent = VentPreprocessor('datasets/vent-minute.csv', ';')
+    mdb, skippedDays = vent.GenerateTemporalMdb(interval=5)
 
     # Generating and computing support for states
     supportList = Support.GenerateStateSupportList(mdb)
 
     # Clear the database of states not meeting the minimum support
-    minSupport = 0.4
-    maxGap = pa.to_timedelta('04:00:00')  # hh:mm:ss
+    minSupport = 0.1
+    maxGap = pa.to_timedelta('12:00:00')  # hh:mm:ss
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
@@ -33,6 +33,7 @@ def Main():
     print('# Minimum support: {:>21}'.format(minSupport))
     print('# Maximum gap: {:>25}'.format(str(maxGap)))
     print('# Patterns found: {:>22}'.format(len(patterns)))
+    print('# Skipped days: {:>24}'.format(len(skippedDays)))
 
 
 if __name__ == '__main__':

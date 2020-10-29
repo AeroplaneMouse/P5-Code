@@ -1,4 +1,5 @@
 import pandas as pa
+import numpy as np
 
 
 class VentPreprocessor:
@@ -28,6 +29,8 @@ class VentPreprocessor:
         endDay = self.DataFrame.tail(1).index[0]
         days = pa.date_range(start=startDay, end=endDay, freq='D')
 
+        skippedDays = []
+
         # Setting first clientID
         clientID = 0
 
@@ -35,16 +38,23 @@ class VentPreprocessor:
             # Remove time from date
             day = str(day)[0:10]
 
-            # Append dataframe for current day
-            mdb.append(GenerateClientSequence(
-                clientID,
-                self.DataFrame[day],
-                interval))
+            # Get dataframe for current day
+            data = self.DataFrame[day]
+
+            # Check if day is empty
+            if not data.empty:
+                mdb.append(GenerateClientSequence(
+                    clientID,
+                    data,
+                    interval))
+            else:
+                skippedDays.append(day)
+                continue  # Don't increment clientID for empty days
 
             # Increment clientID every day
             clientID += 1
 
-        return mdb
+        return mdb, skippedDays
 
 
 # Computes the state given a value and the interval for each state
@@ -94,24 +104,28 @@ def GenerateClientSequence(clientID, data, interval):
     hRegister = {}
     df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
 
+    index = -1
     for row in data.iterrows():
+        index += 1
         timeIndex = row[0]
 
         # Go through each column and compare active and current state
         c = 0
         for cValue in row[1].array:
-            state = GetState(cValue, interval)
+            # Check column value
+            if not np.isnan(cValue):
+                state = GetState(cValue, interval)
 
-            # Switch active state for current column
-            if str(c) + 'CurState' not in hRegister or state != hRegister[str(c) + 'CurState']:
-                df = SwitchActiveState(
-                    newState=state,
-                    columnIndex=c,
-                    time=timeIndex,
-                    clientID=clientID,
-                    hRegister=hRegister,
-                    df=df
-                )
+                # Switch active state for current column
+                if str(c) + 'CurState' not in hRegister or state != hRegister[str(c) + 'CurState']:
+                    df = SwitchActiveState(
+                        newState=state,
+                        columnIndex=c,
+                        time=timeIndex,
+                        clientID=clientID,
+                        hRegister=hRegister,
+                        df=df
+                    )
 
             # Increment column index
             c += 1
