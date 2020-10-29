@@ -7,8 +7,8 @@ class VentPreprocessor:
         # Load data from
         self.DataFrame = pa.read_csv(csvPath, sep=seperator)
 
-        # Set timestamps as index
-        self.DataFrame.index = pa.to_datetime(self.DataFrame.pop('Timestamp'))
+        # Set timestamps as index and convert to UTC time
+        self.DataFrame.index = pa.to_datetime(self.DataFrame.pop('Timestamp'), utc=True)
 
         # Remove shitty columns
         self.DataFrame.pop('DayOfWeek')
@@ -16,7 +16,7 @@ class VentPreprocessor:
         self.DataFrame.pop('Vent_HRVstaleairpressuredifferential')
         self.DataFrame.pop('Vent_HRVfreshairpressuredifferential')
 
-        # Remove timezone
+        # Remove timezone data
         self.DataFrame = self.DataFrame.tz_convert(None)
 
     def GenerateTemporalMdb(self):
