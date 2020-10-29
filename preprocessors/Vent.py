@@ -1,5 +1,4 @@
 import pandas as pa
-from generators.stateGenerator import StateGenerator
 
 
 class VentPreprocessor:
@@ -8,7 +7,9 @@ class VentPreprocessor:
         self.DataFrame = pa.read_csv(csvPath, sep=seperator)
 
         # Set timestamps as index and convert to UTC time
-        self.DataFrame.index = pa.to_datetime(self.DataFrame.pop('Timestamp'), utc=True)
+        self.DataFrame.index = pa.to_datetime(
+            self.DataFrame.pop('Timestamp'), 
+            utc=True)
 
         # Remove shitty columns
         self.DataFrame.pop('DayOfWeek')
@@ -19,7 +20,7 @@ class VentPreprocessor:
         # Remove timezone data
         self.DataFrame = self.DataFrame.tz_convert(None)
 
-    def GenerateTemporalMdb(self):
+    def GenerateTemporalMdb(self, interval):
         mdb = []
 
         # Generate date series
@@ -35,7 +36,10 @@ class VentPreprocessor:
             day = str(day)[0:10]
 
             # Append dataframe for current day
-            mdb.append(GenerateClientSequence(clientID, self.DataFrame[day]))
+            mdb.append(GenerateClientSequence(
+                clientID,
+                self.DataFrame[day],
+                interval))
 
             # Increment clientID every day
             clientID += 1
@@ -43,18 +47,18 @@ class VentPreprocessor:
         return mdb
 
 
-# Maps a value to a state from the StateGenerator
-def GetState(value, stateGen):
-    # Generate states if none
-    if stateGen.LastStates is None:
-        stateGen.GenerateStates()
+# Computes the state given a value and the interval for each state
+def GetState(value, interval):
+    # Compute distance to range start
+    r = value % interval
 
-    interval = stateGen.MinValue
-    while interval < value:
-        interval += stateGen.Increment
-    interval -= stateGen.Increment
+    # Compute range start and end
+    rangeStart = value - r
+    rangeEnd = rangeStart + interval
 
-    return stateGen.LastStates[interval]
+    return '{:.0f}->{:.0f}'.format(
+        rangeStart,
+        rangeEnd)
 
 
 def SwitchActiveState(newState, columnIndex, time, clientID, hRegister, df):
@@ -86,8 +90,7 @@ def SwitchActiveState(newState, columnIndex, time, clientID, hRegister, df):
 
 
 # Creates temporal client sequence for one clientID(day)
-def GenerateClientSequence(clientID, data):
-    stateGen = StateGenerator(minValue=-50, maxValue=50, increment=5)
+def GenerateClientSequence(clientID, data, interval):
     hRegister = {}
     df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
 
@@ -97,7 +100,7 @@ def GenerateClientSequence(clientID, data):
         # Go through each column and compare active and current state
         c = 0
         for cValue in row[1].array:
-            state = GetState(cValue, stateGen)
+            state = GetState(cValue, interval)
 
             # Switch active state for current column
             if str(c) + 'CurState' not in hRegister or state != hRegister[str(c) + 'CurState']:

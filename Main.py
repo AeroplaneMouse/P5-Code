@@ -7,7 +7,7 @@ import pandas as pa
 def Main():
     # Preprocessing
     vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
-    mdb = vent.GenerateTemporalMdb()
+    mdb = vent.GenerateTemporalMdb(interval=5)
 
     # Generating and computing support for states
     supportList = Support.GenerateStateSupportList(mdb)
