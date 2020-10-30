@@ -42,14 +42,14 @@ class VentPreprocessor:
             data = self.DataFrame[day]
 
             # Check if day is empty
-            if not data.empty:
+            if data.empty:
+                skippedDays.append(day)
+                continue  # Don't increment clientID for empty days
+            else:
                 mdb.append(GenerateClientSequence(
                     clientID,
                     data,
                     interval))
-            else:
-                skippedDays.append(day)
-                continue  # Don't increment clientID for empty days
 
             # Increment clientID every day
             clientID += 1
