@@ -21,6 +21,16 @@ def Main():
 
     patterns = Armada(mdb, frequentStates, minSupport, maxGap)
 
+    # Count the number of different patterns
+    count = {}
+    for p in patterns:
+        pSize = len(p[0][1:])
+
+        if pSize not in count:
+            count[pSize] = 1
+        else:
+            count[pSize] += 1
+
     # Print last 10 patterns
     print('Last 10 patterns:')
     i = len(patterns) - 9
@@ -29,11 +39,18 @@ def Main():
         print(p)
         print()
         i += 1
-    print('########################')
+    print('########################################')
     print('# Minimum support: {:>21}'.format(minSupport))
     print('# Maximum gap: {:>25}'.format(str(maxGap)))
     print('# Patterns found: {:>22}'.format(len(patterns)))
     print('# Skipped days: {:>24}'.format(len(skippedDays)))
+    
+    # Print number of different patterns
+    print('#')
+    for key in count:
+        print('# {:>2}-patterns: {:>25}'.format(
+            key,
+            count[key]))
 
 
 if __name__ == '__main__':
