@@ -55,6 +55,25 @@ class LoadPreprocessor:
         return mdb, skippedDays
 
 
-def GenerateClientSequence(clientId, df):
-    import pdb; pdb.set_trace()  # breakpoint 8c7a1861 //
-    return None
+def GetState(value, columnName):
+    if value == 1:
+        value = 'ON'
+    else:
+        value = 'OFF'
+    return '{}_{}'.format(columnName[11:], value)
+
+
+def GenerateClientSequence(clientId, data):
+    df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
+
+    for row in data.iterrows():
+        time = row[0]
+
+        for col in row[1].index:
+            state = GetState(value=row[1][col], columnName=col)
+
+
+        import pdb; pdb.set_trace()  # breakpoint 9b4cff7a //
+
+    df.sort_values(by=['Start', 'End'], inplace=True)
+    return df
