@@ -8,6 +8,7 @@ if len(sys.argv) == 1:
     from tests import MineIndexSet_Tests
     from tests import TimeDifference_Tests
     from tests import GetFirstEndTime_Tests
+    from tests import Load_Tests
 
 # Run specific test
 else:
@@ -23,6 +24,8 @@ else:
         from tests import TimeDifference_Tests
     elif fileName == 'GetFirstEndTime_Tests' or fileName == 'GetFirstEndTime':
         from tests import GetFirstEndTime_Tests
+    elif fileName == 'Load_Tests' or fileName == 'Load':
+        from tests import Load_Tests
 
     # elif fileName == '#FileNameForTest_Tests#' or fileName == '#FileNameForTest#':
         # Put import stuff here
