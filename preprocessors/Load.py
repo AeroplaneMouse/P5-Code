@@ -65,6 +65,8 @@ def GetState(value, columnName):
 
 def GenerateClientSequence(clientId, data):
     df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
+    hRegister = {}
+    lastIndex = 0
 
     for row in data.iterrows():
         time = row[0]
@@ -72,8 +74,38 @@ def GenerateClientSequence(clientId, data):
         for col in row[1].index:
             state = GetState(value=row[1][col], columnName=col)
 
+            # Add column information to holding register
+            if col not in hRegister:
+                hRegister[col] = {
+                    'ClientID': clientId,
+                    'State': state,
+                    'Start': time,
+                    'End': time}
 
-        import pdb; pdb.set_trace()  # breakpoint 9b4cff7a //
+            # Change active state
+            elif state != hRegister[col]['State']:
+                # Save endtime for active state
+                hRegister[col]['End'] = time
+                # Insert active state into DataFrame
+                df = pa.concat([df, pa.DataFrame(data=hRegister[col], 
+                                                 index=[lastIndex])])
+                lastIndex += 1
 
+                # Switch active state to current
+                hRegister[col] = {
+                    'ClientID': clientId,
+                    'State': state,
+                    'Start': time,
+                    'End': time}
+
+    # Save end time for remaining active states
+    # and insert into DataFrame
+    time = data.tail(1).index[0]
+    for col in data.columns:
+        hRegister[col]['End'] = time
+        df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
+        lastIndex += 1
+
+    # Sort DataFrame by start and end time
     df.sort_values(by=['Start', 'End'], inplace=True)
     return df
