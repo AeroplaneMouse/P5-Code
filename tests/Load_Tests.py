@@ -3,7 +3,7 @@ from preprocessors import Support
 from algorithms.armada.Armada import Armada
 import pandas as pa
 
-PATH = '../Datasets/Load-minute.csv'
+PATH = 'datasets/Load-minute.csv'
 
 
 load = LoadPreprocessor(PATH, ',')
