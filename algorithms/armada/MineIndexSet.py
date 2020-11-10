@@ -7,6 +7,7 @@ from models.Interval import Interval
 import numpy as np
 
 
+# Finds the first occuring endtime in the given pattern
 def GetFirstEndTime(pattern):
     # Extract states
     states = pattern[0][1:]
@@ -21,6 +22,7 @@ def GetFirstEndTime(pattern):
     return time
 
 
+# Extract all state names in the given pattern
 def ExtractStatesInPattern(pattern):
     states = []
     dim = np.shape(pattern)[0]
@@ -31,7 +33,7 @@ def ExtractStatesInPattern(pattern):
     return states
 
 
-# Computes new stems
+# Computes new potential stems
 # Assumes that cs only contains states that is above minSup
 def ComputePotentialStems(indexSet, minSup, maxGap):
     # Dictionary of potential stems
@@ -68,7 +70,7 @@ def ComputePotentialStems(indexSet, minSup, maxGap):
         if s not in patternStates:
             # Compute stem support
             support = len(pStems[s].AppearsIn) / clients
-            
+
             # Add frequent stems to output
             if support >= minSup:
                 intv = pStems[s].Interval
@@ -78,6 +80,7 @@ def ComputePotentialStems(indexSet, minSup, maxGap):
     return stems
 
 
+# The MineIndexSet method
 def MineIndexSet(pattern, indexSet):
     stems = ComputePotentialStems(indexSet, Storage.MinimumSupport, Storage.MaximumGap)
 
