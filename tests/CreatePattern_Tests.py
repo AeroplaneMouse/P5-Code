@@ -4,52 +4,52 @@ import numpy as np
 
 
 def TestCreatePattern():
-	A = FStates.A
-	B = FStates.B
-	C = FStates.C
-	D = FStates.D
-	E = FStates.E
+    A = FStates.A
+    B = FStates.B
+    C = FStates.C
+    D = FStates.D
+    E = FStates.E
 
-	print('Testing generation of 1-Patterns')
+    print('Testing generation of 1-Patterns')
 
-	patternA = CreatePattern(None, A)
-	patternB = CreatePattern(None, B)
-	patternC = CreatePattern(None, C)
+    patternA = CreatePattern(None, A)
+    patternB = CreatePattern(None, B)
+    patternC = CreatePattern(None, C)
 
-	testA = np.array([[None,A],[A,'=']])
-	testB = np.array([[None,B],[B,'=']])
-	testC = np.array([[None,C],[C,'=']])
-	if np.array_equal(patternA, testA) and np.array_equal(patternB, testB) and np.array_equal(patternC, testC):
-		print("    Success")
+    testA = np.array([[None, A], [A, '=']])
+    testB = np.array([[None, B], [B, '=']])
+    testC = np.array([[None, C], [C, '=']])
+    if np.array_equal(patternA, testA) and np.array_equal(patternB, testB) and np.array_equal(patternC, testC):
+        print("    Success")
 
-	print('Testing generation of 2-Patterns')
+    print('Testing generation of 2-Patterns')
 
-	patternAB = CreatePattern(patternA, B)
-	patternAC = CreatePattern(patternA, C)
-	patternBC = CreatePattern(patternB, C)
+    patternAB = CreatePattern(patternA, B)
+    patternAC = CreatePattern(patternA, C)
+    patternBC = CreatePattern(patternB, C)
 
-	testAB = np.array([[None,A,B],[A,'=','c'],[B,'*','=']])
-	testAC = np.array([[None,A,C],[A,'=','f'],[C,'*','=']])
-	testBC = np.array([[None,B,C],[B,'=','o'],[C,'*','=']])
+    testAB = np.array([[None, A, B], [A, '=', 'c'], [B, '*', '=']])
+    testAC = np.array([[None, A, C], [A, '=', 'f'], [C, '*', '=']])
+    testBC = np.array([[None, B, C], [B, '=', 'o'], [C, '*', '=']])
 
-	if np.array_equal(patternAB, testAB) and np.array_equal(patternAC, testAC) and np.array_equal(patternBC, testBC):
-		print("    Success")
+    if np.array_equal(patternAB, testAB) and np.array_equal(patternAC, testAC) and np.array_equal(patternBC, testBC):
+        print("    Success")
 
-	print('Testing generation of 3-Patterns')
+    print('Testing generation of 3-Patterns')
 
-	patternABC = CreatePattern(patternAB, C)
+    patternABC = CreatePattern(patternAB, C)
 
-	testABC = np.array([[None, A, B, C],[A, '=', 'c', 'f'],[B, '*', '=', 'o'],[C, '*', '*', '=']])
-	if(np.array_equal(patternABC, testABC)):
-		print("    Success")
+    testABC = np.array([[None, A, B, C],[A, '=', 'c', 'f'],[B, '*', '=', 'o'],[C, '*', '*', '=']])
+    if(np.array_equal(patternABC, testABC)):
+        print("    Success")
 
-	print("Testing with panda time")
-	patternD = CreatePattern(None, D)
-	patternDE = CreatePattern(patternD, E)
-	testDE = np.array([[None,D,E],[D,'=','s'],[E,'*','=']])
+    print("Testing with panda time")
+    patternD = CreatePattern(None, D)
+    patternDE = CreatePattern(patternD, E)
+    testDE = np.array([[None, D, E], [D, '=', 's'], [E, '*', '=']])
 
-	if np.array_equal(patternDE, testDE):
-		print("    Success")
+    if np.array_equal(patternDE, testDE):
+        print("    Success")
 
 
 print('********************')
