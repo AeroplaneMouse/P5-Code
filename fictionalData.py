@@ -1,4 +1,5 @@
 import pandas as pa
+from os import path
 
 
 class Sensor:
@@ -8,9 +9,8 @@ class Sensor:
         self.periods = periods
 
     def getState(self, time):
-        if time.weekday() in self.activeDays:
-            if self.inPeriods(time):
-                return 'ON'
+        if time.weekday() in self.activeDays and self.inPeriods(time):
+            return 'ON'
         else:
             return 'OFF'
 
@@ -20,10 +20,10 @@ class Sensor:
         newTime = pa.to_datetime(onlyTime)
 
         for p in self.periods:
-            if newTime < p.start or newTime > p.end:
-                return False
+            if newTime >= p.start and newTime <= p.end:
+                return True
 
-        return True
+        return False
 
 
 class Period:
@@ -32,14 +32,11 @@ class Period:
         self.end = end
 
 
+# Generate the instance data for every sensor at the given time
 def GetInstanceData(time, sensors):
-    data = {}
-
+    data = {'Timestamp': time, 'DayOfWeek': 'None', 'TimeStamp_Count': 0}
     for s in sensors:
         data[s.label] = s.getState(time)
-
-    print(data)
-    import pdb; pdb.set_trace()  # breakpoint 4c0bc949 //
 
     return data
 
@@ -51,9 +48,51 @@ def GenerateDayData(day, sensors):
     for t in minutes:
         data.append(GetInstanceData(t, sensors))
 
+    return data
+
 
 def toTime(time):
     return pa.to_datetime(time)
+
+
+def generateFirstRow(sensors):
+    firstRow = {
+        'Timestamp': 'Timestamp',
+        'DayOfWeek': 'DayOfWeek',
+        'TimeStamp_Count': 'TimeStamp_Count'
+    }
+
+    for s in sensors:
+        firstRow[s.label] = s.label
+
+    return firstRow
+
+
+def createFile(fileName):
+    if path.exists(fileName):
+        print('Found existing dataset with name \'' + fileName + '\'. Overwriting...')
+    else:
+        print('Creating dataset \'' + fileName + '\'')
+
+    return open(fileName, 'wt')
+
+
+# Writes data to file
+def insert(file, dataRow):
+    i = 0
+    lastKey = None
+    for key in dataRow:
+        if i >= len(dataRow) - 1:
+            lastKey = key
+            break
+
+        data = str(dataRow[key]) + '; '
+        file.write(data)
+        i += 1
+
+    # Write last row to file
+    data = str(dataRow[lastKey]) + '\n'
+    file.write(data)
 
 
 # A generator method for generating a fictional dataset for testing
@@ -67,19 +106,26 @@ def GenerateFictionalDataCSV(fileName):
     days = pa.date_range(start=START_DATE, end=END_DATE, freq='d')
 
     sensors = {
-        Sensor('LIGHT', range(0, 6), [Period(toTime('08:00'), toTime('15:00'))]),
-        Sensor('PC', range(0, 6), [Period(toTime('08:20'), toTime('14:40'))]),
-        Sensor('DOOR', range(0, 6), [
+        Sensor('LIGHT', range(0, 5), [Period(toTime('08:00'), toTime('15:00'))]),
+        Sensor('PC', range(0, 5), [Period(toTime('08:20'), toTime('14:40'))]),
+        Sensor('DOOR', range(0, 5), [
             Period(toTime('07:55'), toTime('08:00')),
             Period(toTime('15:00'), toTime('15:05'))])
     }
 
+    file = createFile(fileName)
+
+    firstRow = generateFirstRow(sensors)
+    insert(file, firstRow)
+
     # Generate data for every day
     for day in days:
         data = GenerateDayData(day, sensors)
+        for d in data:
+            insert(file, d)
 
-        print('{} {}'.format(day, data))
+    file.close()
 
 
-
-# GenerateFictionalDataCSV('TestData.csv')
+if __name__ == '__main__':
+    GenerateFictionalDataCSV('datasets/TestData.csv')

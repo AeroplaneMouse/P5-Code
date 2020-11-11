@@ -13,7 +13,10 @@ def testPeriods():
     start = pa.to_datetime('07:55')
     end = pa.to_datetime('12:00')
 
-    sen = fic.Sensor('Test', range(1, 5), [fic.Period(start, end)])
+    startS = pa.to_datetime('14:00')
+    endS = pa.to_datetime('15:00')
+
+    sen = fic.Sensor('Test', range(1, 5), [fic.Period(start, end), fic.Period(startS, endS)])
     time = pa.to_datetime('01-01-2020 10:00')
 
     # Inside
