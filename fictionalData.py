@@ -34,7 +34,7 @@ class Period:
 
 # Generate the instance data for every sensor at the given time
 def GetInstanceData(time, sensors):
-    data = {'Timestamp': time, 'DayOfWeek': 'None', 'TimeStamp_Count': 0}
+    data = {'Timestamp': time}
     for s in sensors:
         data[s.label] = s.getState(time)
 
@@ -56,11 +56,7 @@ def toTime(time):
 
 
 def generateFirstRow(sensors):
-    firstRow = {
-        'Timestamp': 'Timestamp',
-        'DayOfWeek': 'DayOfWeek',
-        'TimeStamp_Count': 'TimeStamp_Count'
-    }
+    firstRow = {'Timestamp': 'Timestamp'}
 
     for s in sensors:
         firstRow[s.label] = s.label
