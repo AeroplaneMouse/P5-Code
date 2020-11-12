@@ -23,9 +23,23 @@ C[3][0] = FStates.H
 C[1][1] = '='
 C[2][2] = '='
 C[3][3] = '='
-C[1][2] = 'S' 
+C[1][2] = 'S'
 C[1][3] = 'O'
 C[2][3] = 'O'
+
+D = np.ndarray((2, 2), dtype='object')
+D[0][1] = FStates.F
+D[1][0] = FStates.F
+D[1][1] = '='
+
+E = np.ndarray((3, 3), dtype='object')
+E[0][1] = FStates.F
+E[0][2] = FStates.G
+E[1][0] = FStates.F
+E[2][0] = FStates.G
+E[1][1] = '='
+E[2][2] = '='
+E[1][2] = 'S'
 
 
 All = [A, B, C]
