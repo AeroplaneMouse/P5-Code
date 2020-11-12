@@ -10,10 +10,10 @@ def CreatePattern(prefix, stem):
         temp[1][0] = stem
         temp[1][1] = '='
         return temp
-    
+
     #append prefix
     else:
-
+        #Increase ndarray dimensions by 1 to append by stem
         dimension = np.shape(prefix)[0]
         temp = np.concatenate((prefix, np.zeros((1, dimension), dtype='object')))
         temp = np.concatenate((temp, np.zeros((dimension+1, 1), dtype='object')), axis=1)
