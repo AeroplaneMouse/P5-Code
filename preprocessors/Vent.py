@@ -9,7 +9,7 @@ class VentPreprocessor:
 
         # Set timestamps as index and convert to UTC time
         self.DataFrame.index = pa.to_datetime(
-            self.DataFrame.pop('Timestamp'), 
+            self.DataFrame.pop('Timestamp'),
             utc=True)
 
         # Remove shitty columns
