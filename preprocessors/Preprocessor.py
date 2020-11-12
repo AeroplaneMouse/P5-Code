@@ -2,7 +2,7 @@ import pandas as pa
 
 
 class Preprocessor:
-    def __init__(self, csvPath, seperator, colOfInterest):
+    def __init__(self, csvPath, seperator, colOfInterest, getState):
         # Load data from CSV
         self.df = pa.read_csv(csvPath, sep=seperator)
 
@@ -18,6 +18,8 @@ class Preprocessor:
 
         # Remove timezone data
         self.df = self.df.tz_convert(None)
+
+        self.__getState = getState
 
     def GenerateTemporalMdb(self):
         mdb = []
@@ -44,15 +46,58 @@ class Preprocessor:
                 skippedDays.append(day)
                 continue  # Don't increment clientID for empty days
             else:
-                mdb.append(GenerateClientSequence(
-                    clientID,
-                    data))
+                cs = self.__generateClientSequence(clientID, data)
+                mdb.append(cs)
 
             # Increment clientID every day
             clientID += 1
 
         return mdb, skippedDays
 
+    def __generateClientSequence(self, clientId, data):
+        df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
+        hRegister = {}
+        lastIndex = 0
 
-def GenerateClientSequence(clientId, data):
-    return
+        for row in data.iterrows():
+            time = row[0]
+
+            for col in row[1].index:
+                state = self.__getState(value=row[1][col], columnName=col)
+
+                # Add column information to holding register
+                if col not in hRegister:
+                    hRegister[col] = {
+                        'ClientID': clientId,
+                        'State': state,
+                        'Start': time,
+                        'End': time}
+
+                # Change active state
+                elif state != hRegister[col]['State']:
+                    # Save endtime for active state
+                    hRegister[col]['End'] = time
+
+                    # Insert active state into DataFrame
+                    df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
+                    lastIndex += 1
+
+                    # Switch active state to current
+                    hRegister[col] = {
+                        'ClientID': clientId,
+                        'State': state,
+                        'Start': time,
+                        'End': time}
+
+        # Save end time for remaining active states
+        # and insert into DataFrame
+        time = data.tail(1).index[0]
+        for col in data.columns:
+            hRegister[col]['End'] = time
+            df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
+            lastIndex += 1
+
+        # Sort DataFrame by start and end time
+        df.sort_values(by=['Start', 'End'], inplace=True)
+
+        return df
