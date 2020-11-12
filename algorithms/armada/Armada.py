@@ -22,17 +22,3 @@ def Armada(mdb, frequentStates, minSupport, maxGap):
 
     # return "Some fucking OP patterns... perhaps"
     return Storage.Patterns
-
-
-class Armada_Deprecated:
-    def __init__(self, mdb, states):
-        # Initialize storage with db
-        Storage.MDB = mdb  # List if cs
-        self.SupStates = states
-
-    def Run(self, minSup):
-        # for state in self.States:
-
-        for i in range(0, len(Storage.MDB)):
-            for j in range(0, len(Storage.MDB[i])):
-                id = CreateIndexSet(Storage.MDB[i].iloc[j], None, Storage.MDB)
