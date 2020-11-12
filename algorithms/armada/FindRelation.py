@@ -15,3 +15,5 @@ def FindRelation(record1, record2):
             return 'e'
         elif(record1.End < record2.End):
             return 's'
+    else:
+        return "X"
