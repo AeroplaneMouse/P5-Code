@@ -3,6 +3,7 @@ import sys
 # Run all tests
 if len(sys.argv) == 1:
     print('Running all tests')
+    from tests import FindRelation_Tests
     from tests import CreatePattern_Tests
     from tests import CreateIndexSet_Tests
     from tests import MineIndexSet_Tests
