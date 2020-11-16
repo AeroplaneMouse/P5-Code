@@ -9,6 +9,7 @@ def db_construct(db_a, a_p):
 	for cs in db_a_p:
 		postfix_prune(cs)
 		temp_seq.append(cs)
+	return temp_seq
 
 
 def create_db_a_p(db_a, a_p):
@@ -18,7 +19,7 @@ def create_db_a_p(db_a, a_p):
 		counter = 0
 		for ep in cs:
 			counter += 1
-			if ep.Label == a_p:
+			if ep.Label == a_p.Label and ep.IsStart == a_p.IsStart:
 				db_a_p.append(cs[counter:])
 	return db_a_p
 
@@ -37,4 +38,3 @@ def prune(cs):
 	for ep in cs:
 		if ep.Prune == True:
 			cs.remove(ep)
-	print(cs)
