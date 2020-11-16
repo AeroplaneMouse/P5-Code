@@ -82,7 +82,7 @@ def insert(file, dataRow):
             lastKey = key
             break
 
-        data = str(dataRow[key]) + '; '
+        data = str(dataRow[key]) + ';'
         file.write(data)
         i += 1
 

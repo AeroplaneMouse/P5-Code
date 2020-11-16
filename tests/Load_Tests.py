@@ -13,7 +13,7 @@ mdb, skippedDays = load.GenerateTemporalMdb()
 supportList = Support.GenerateStateSupportList(mdb)
 
 # Clear the database of states not meeting the minimum support
-minSupport = 0.0
+minSupport = 0.7
 maxGap = pa.to_timedelta('24:00:00')  # hh:mm:ss
 mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 

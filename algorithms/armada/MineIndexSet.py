@@ -5,6 +5,7 @@ from models.PState import PState
 from models.FState import FState
 from models.Interval import Interval
 import numpy as np
+import pandas as pa
 
 
 # Finds the first occuring endtime in the given pattern
@@ -19,31 +20,29 @@ def GetFirstEndTime(pattern):
         if s.End < time:
             time = s.End
 
-    return time
-
-
-# Extract all state names in the given pattern
-def ExtractStatesInPattern(pattern):
-    states = []
-    dim = np.shape(pattern)[0]
-
-    for i in range(1, dim):
-        states.append(pattern[0][i].State)
-
-    return states
+    return str(time)[11:]
 
 
 # Computes new potential stems
 # Assumes that cs only contains states that is above minSup
 def ComputePotentialStems(indexSet, minSup, maxGap):
+    # # print('IndexSet:')
+    # # print(indexSet)
+
     # Dictionary of potential stems
     pStems = {}
 
     time = GetFirstEndTime(indexSet.Pattern)
+    # print('First end time: \n{}\n'.format(time))
 
     for record in indexSet.Records:
         # Retrieve cs from reference
         cs = Storage.MDB[record.Ref]
+
+        if len(cs) > 0:
+            date = str(cs.iloc[0]['End'])[:10]
+            maxGapTime = pa.to_datetime(date + ' ' + time) + maxGap
+            # print(maxGapTime)
 
         # Increment support count for every state in cs
         # after pos in indexSet record
@@ -51,7 +50,8 @@ def ComputePotentialStems(indexSet, minSup, maxGap):
             csRecord = cs.iloc[csIndex]
 
             # Check if stem is within max gap constraint
-            if csRecord.End < time + maxGap:
+            if csRecord.End < maxGapTime:
+                # print('csRecord: {}\n'.format(csRecord))
                 # Insert state into stem if not there
                 if csRecord.State not in pStems:
                     pStems[csRecord.State] = PState(Interval(csRecord.Start, csRecord.End))
@@ -61,10 +61,12 @@ def ComputePotentialStems(indexSet, minSup, maxGap):
                 if clientID not in pStems[csRecord.State].AppearsIn:
                     pStems[csRecord.State].AppearsIn.append(clientID)
 
+    # print('Potential stems: \n{}\n'.format(pStems))
+
     # Add frequent states to stems
     stems = []
     clients = len(Storage.MDB)
-    patternStates = ExtractStatesInPattern(indexSet.Pattern)
+    patternStates = indexSet.Pattern[0][1:]
     for s in pStems:
         # Only add states not already part of the pattern
         if s not in patternStates:
