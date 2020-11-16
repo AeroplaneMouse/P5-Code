@@ -8,4 +8,7 @@ class Endpoint:
 
 
     def __str__(self):
-        return self.Label
+        return self.Label + ("+" if self.IsStart == True else '-')
+
+    def __repr__(self):
+    	return self.__str__()
