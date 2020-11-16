@@ -9,6 +9,7 @@ class Endpoint:
 
     def __str__(self):
         return self.Label + ("+" if self.IsStart == True else '-')
+        #return "true" if self.Prune else "false"
 
     def __repr__(self):
     	return self.__str__()
