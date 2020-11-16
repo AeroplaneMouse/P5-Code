@@ -1,7 +1,7 @@
 import pandas as pa
 
 
-class Preprocessor:
+class GenericPreprocessor:
     def __init__(self, csvPath, seperator, colOfInterest, getState):
         # Load data from CSV
         self.df = pa.read_csv(csvPath, sep=seperator)
@@ -65,7 +65,7 @@ class Preprocessor:
             for col in row[1].index:
                 state = self.__getState(value=row[1][col], columnName=col)
 
-                # Add column information to holding register
+                # Column information to holding register
                 if col not in hRegister:
                     hRegister[col] = {
                         'ClientID': clientId,
@@ -79,8 +79,9 @@ class Preprocessor:
                     hRegister[col]['End'] = time
 
                     # Insert active state into DataFrame
-                    df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
-                    lastIndex += 1
+                    if hRegister[col]['State'] is not None:
+                        df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
+                        lastIndex += 1
 
                     # Switch active state to current
                     hRegister[col] = {
@@ -93,9 +94,10 @@ class Preprocessor:
         # and insert into DataFrame
         time = data.tail(1).index[0]
         for col in data.columns:
-            hRegister[col]['End'] = time
-            df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
-            lastIndex += 1
+            if hRegister[col]['State'] is not None:
+                hRegister[col]['End'] = time
+                df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
+                lastIndex += 1
 
         # Sort DataFrame by start and end time
         df.sort_values(by=['Start', 'End'], inplace=True)
