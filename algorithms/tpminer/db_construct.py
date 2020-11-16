@@ -26,14 +26,14 @@ def postfix_prune(cs):
 	counter = 0
 	for ep in cs:
 		counter += 1
-		if ep.IsStart == false:
-			ep.prune = true
+		if ep.IsStart == False:
+			ep.prune = True
 			for i in range(counter):
-				if cs[i].Label == ep.Label and cs[i].IsStart == true:
-					ep.prune = false
+				if cs[i].Label == ep.Label and cs[i].IsStart == True:
+					ep.prune = False
 	prune(cs)
 
 def prune(cs):
 	for ep in cs:
-		if ep.prune == true:
+		if ep.prune == True:
 			del ep

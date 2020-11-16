@@ -11,6 +11,7 @@ if len(sys.argv) == 1:
     from tests import GetFirstEndTime_Tests
     from tests import Load_Tests
     from tests import fictionalData_Tests
+    from tests import db_construct_Tests
 
 # Run specific test
 else:
@@ -30,6 +31,8 @@ else:
         from tests import Load_Tests
     elif fileName == 'fictionalData_Tests' or fileName == 'fictionalData':
         from tests import fictionalData_Tests
+    elif fileName == 'db_construct_Tests' or fileName == 'db_construct':
+        from tests import db_construct_Tests
 
     # elif fileName == '#FileNameForTest_Tests#' or fileName == '#FileNameForTest#':
         # Put import stuff here

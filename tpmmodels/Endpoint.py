@@ -4,7 +4,7 @@ class Endpoint:
         self.OccurNum = 0 
         self.IsStart = isStart
         self.Parenthesis = parenthesis
-        self.Prune = false
+        self.Prune = False
 
 
     def __str__(self):
