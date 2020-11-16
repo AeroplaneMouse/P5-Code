@@ -137,3 +137,6 @@ dmypy.json
 
 # Pytham
 .idea/
+
+# Datasets
+datasets/
