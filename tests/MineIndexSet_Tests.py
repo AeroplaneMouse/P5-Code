@@ -1,22 +1,50 @@
-from preprocessors.Vent import VentPreprocessor
+from preprocessors.Preprocessor import GenericPreprocessor
 from preprocessors import Support
-from algorithms.armada.MineIndexSet import MineIndexSet, ComputePotentialStems
+from algorithms.armada import MineIndexSet
 from algorithms.armada import Storage
 from mocks import IndexSets
+import pandas as pa
+import testSuite
 
 
 #####################################################################
 # Setup
+PATH = 'datasets/vent-minute-short.csv'
+colOfInterest = [
+    'Vent_HRVTempExhaustOut',
+    'Vent_HRVTempOutdoorin',
+    'Vent_HRVTempReturnIn',
+    'Vent_HRVTempSupplyOut']
+
+
+def getState(value, columnName):
+    # Convert name to number
+    columnName = colOfInterest.index(columnName)
+
+    INTERVAL = 5
+    # Compute distance to range start
+    r = value % INTERVAL
+
+    # Compute range start and end
+    rangeStart = value - r
+    rangeEnd = rangeStart + INTERVAL
+
+    return '{}_{:.0f}->{:.0f}'.format(
+        columnName,
+        rangeStart,
+        rangeEnd)
 
 # Preprocessing
-vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
-mdb = vent.GenerateTemporalMdb()
+pre = GenericPreprocessor(PATH, ';', colOfInterest, getState)
+mdb, skippedDays = pre.GenerateTemporalMdb()
 
 # Generating and computing support for states
 supportList = Support.GenerateStateSupportList(mdb)
 
-# Clear the database of states not meeting the minimum support
+# Setting support variables
 minSupport = 0.7
+maxGap = pa.to_timedelta('24:00:00')  # hh:mm:ss
+
 mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
 
 Storage.MDB = mdb
@@ -25,14 +53,20 @@ Storage.MinimumSupport = minSupport
 
 #####################################################################
 # Tests
+def Test_ComputePotentialStems():
+    # Setup
+    a = IndexSets.A
+    minSup = 0.7
+    maxGap = pa.to_timedelta('24:00:00')
+
+    stems = MineIndexSet.ComputePotentialStems(a, minSup, maxGap)
+
+
+    return
+
 
 print('********************')
 print('Testing ComputePotentialStems')
 print()
 
-stems = ComputePotentialStems(indexSet=IndexSets.A, minSup=0.7)
-
-print()
-print('New stems:')
-for s in stems:
-    print(s)
+# Test_ComputePotentialStems()
