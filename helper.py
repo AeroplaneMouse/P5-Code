@@ -25,7 +25,7 @@ def PrintNPatterns(n, patterns):
         i += 1
 
 
-def PrintResults(minSupport, maxGap, patterns, skippedDays, path):
+def PrintResults(minSupport, maxGap, patterns, skippedDays, frequentStates, path):
     # Remove extension and dataset folder
     path = path[9:-4]
 
@@ -35,6 +35,7 @@ def PrintResults(minSupport, maxGap, patterns, skippedDays, path):
     print('# Maximum gap: {:>25}'.format(str(maxGap)))
     print('# Patterns found: {:>22}'.format(len(patterns)))
     print('# Skipped days: {:>24}'.format(len(skippedDays)))
+    print('# Frequent states: {:>21}'.format(len(frequentStates)))
 
 
 def PrintPatternCount(count):

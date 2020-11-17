@@ -3,19 +3,6 @@ from algorithms.armada.CreateIndexSet import CreateIndexSet
 from algorithms.armada.CreatePattern import CreatePattern
 from algorithms.armada.MineIndexSet import MineIndexSet
 
-import threading
-
-
-class t (threading.Thread):
-    def __init__(self, threadID, name, q):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.q = q
-
-    def run(self):
-        return
-
 
 def Armada(mdb, frequentStates, minSupport, maxGap):
     # Initialize

@@ -23,18 +23,22 @@ def GetFirstEndTime(pattern):
     return str(time)[11:]
 
 
+# Extract the names of all states in a given pattern
+def ExtractStateNames(pattern):
+    strStates = []
+    states = pattern[0][1:]
+    for s in states:
+        strStates.append(s.State)
+
+    return strStates
+
+
 # Computes new potential stems
 # Assumes that cs only contains states that is above minSup
 def ComputePotentialStems(indexSet, minSup, maxGap):
-    # # print('IndexSet:')
-    # # print(indexSet)
-
-    # Dictionary of potential stems
     pStems = {}
 
     time = GetFirstEndTime(indexSet.Pattern)
-    # print('First end time: \n{}\n'.format(time))
-
     for record in indexSet.Records:
         # Retrieve cs from reference
         cs = Storage.MDB[record.Ref]
@@ -42,7 +46,6 @@ def ComputePotentialStems(indexSet, minSup, maxGap):
         if len(cs) > 0:
             date = str(cs.iloc[0]['End'])[:10]
             maxGapTime = pa.to_datetime(date + ' ' + time) + maxGap
-            # print(maxGapTime)
 
         # Increment support count for every state in cs
         # after pos in indexSet record
@@ -51,7 +54,6 @@ def ComputePotentialStems(indexSet, minSup, maxGap):
 
             # Check if stem is within max gap constraint
             if csRecord.End < maxGapTime:
-                # print('csRecord: {}\n'.format(csRecord))
                 # Insert state into stem if not there
                 if csRecord.State not in pStems:
                     pStems[csRecord.State] = PState(Interval(csRecord.Start, csRecord.End))
@@ -61,12 +63,10 @@ def ComputePotentialStems(indexSet, minSup, maxGap):
                 if clientID not in pStems[csRecord.State].AppearsIn:
                     pStems[csRecord.State].AppearsIn.append(clientID)
 
-    # print('Potential stems: \n{}\n'.format(pStems))
-
     # Add frequent states to stems
     stems = []
     clients = len(Storage.MDB)
-    patternStates = indexSet.Pattern[0][1:]
+    patternStates = ExtractStateNames(indexSet.Pattern)
     for s in pStems:
         # Only add states not already part of the pattern
         if s not in patternStates:

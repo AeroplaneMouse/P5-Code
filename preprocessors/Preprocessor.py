@@ -1,4 +1,5 @@
 import pandas as pa
+import numpy as np
 
 
 class GenericPreprocessor:
@@ -19,7 +20,7 @@ class GenericPreprocessor:
         # Remove timezone data
         self.df = self.df.tz_convert(None)
 
-        self.__getState = getState
+        self.__getState__ = getState
 
     def GenerateTemporalMdb(self):
         mdb = []
@@ -53,6 +54,13 @@ class GenericPreprocessor:
             clientID += 1
 
         return mdb, skippedDays
+
+    def __getState(self, value, columnName):
+        # Skip empty values
+        if np.isnan(value):
+            return None
+        else:
+            return self.__getState__(value, columnName)
 
     def __generateClientSequence(self, clientId, data):
         df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])
