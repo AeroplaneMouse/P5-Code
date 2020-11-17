@@ -1,17 +1,38 @@
-from preprocessors.Vent import VentPreprocessor
+from preprocessors.Preprocessor import GenericPreprocessor
 from preprocessors import Support
 from algorithms.armada.Armada import Armada
 from algorithms.tpminer import tpminer
 import pandas as pa
 import helper
 
-PATH = 'datasets/vent-minute.csv'
+
+PATH = 'datasets/vent-minute-short.csv'
+
+
+def getState(value, columnName):
+    INTERVAL = 5
+    # Compute distance to range start
+    r = value % INTERVAL
+
+    # Compute range start and end
+    rangeStart = value - r
+    rangeEnd = rangeStart + INTERVAL
+
+    return '{:.0f}->{:.0f}'.format(
+        rangeStart,
+        rangeEnd)
 
 
 def Main():
     # Preprocessing
-    vent = VentPreprocessor(PATH, ';')
-    mdb, skippedDays = vent.GenerateTemporalMdb(interval=5)
+    colOfInterest = [
+        'Vent_HRVTempExhaustOut',
+        'Vent_HRVTempOutdoorin',
+        'Vent_HRVTempReturnIn',
+        'Vent_HRVTempSupplyOut']
+
+    pre = GenericPreprocessor(PATH, ';', colOfInterest, getState)
+    mdb, skippedDays = pre.GenerateTemporalMdb()
 
     # Generating and computing support for states
     supportList = Support.GenerateStateSupportList(mdb)
