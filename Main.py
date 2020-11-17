@@ -4,6 +4,7 @@ from algorithms.armada.Armada import Armada
 from algorithms.tpminer import tpminer
 import pandas as pa
 import helper
+import menu
 
 
 PATH = 'datasets/vent-minute-short.csv'
@@ -24,6 +25,12 @@ def getState(value, columnName):
 
 
 def Main():
+    m = menu.Menu('Menu', [])
+    m.Run()
+
+    import pdb; pdb.set_trace()  # breakpoint e0e79ff1 //
+
+
     # Preprocessing
     colOfInterest = [
         'Vent_HRVTempExhaustOut',
@@ -37,7 +44,7 @@ def Main():
     # Generating and computing support for states
     supportList = Support.GenerateStateSupportList(mdb)
 
-    # Clear the database of states not meeting the minimum support
+    # Setting support variables
     minSupport = 0.6
     maxGap = pa.to_timedelta('24:00:00')  # hh:mm:ss
  
