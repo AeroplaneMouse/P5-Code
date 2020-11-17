@@ -29,10 +29,7 @@ def Armada(mdb, frequentStates, minSupport, maxGap):
         # Create and save pattern
         p = CreatePattern(None, s)
         Storage.Patterns.append(p)
-
         p_idx = CreateIndexSet(s, p, Storage.MDB)
-
-        # thread.start_new_thread(MineIndexSet, (p, p_idx))
-        # MineIndexSet(p, p_idx)
+        MineIndexSet(p, p_idx)
 
     return Storage.Patterns
