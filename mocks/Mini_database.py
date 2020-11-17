@@ -2,23 +2,34 @@ from tpmmodels.Endpoint import Endpoint
 from tpmmodels.DB import DB
 import copy
 
+a_start = Endpoint('A', True, 0)
+a_finish = Endpoint('A', False, 0)
+b_start = Endpoint('B', True, 0)
+b_finish = Endpoint('B', False, 0)
+c_start = Endpoint('C', True, 0)
+c_finish = Endpoint('C', False, 0)
+d_start = Endpoint('D', True, 0)
+d_finish = Endpoint('D', False, 0)
 
-prfx = [Endpoint('B', True, 0)]
+prfx = [b_start]
+prfx2 = [d_start]
+prfx3 = [b_start, d_start]
+
 a_p = copy.deepcopy(prfx)
-a_p.append(Endpoint('A', False, 0))
+a_p.append(a_finish)
 
 cs = []
 
-cs.append(Endpoint('A', True, 0))
-cs.append(Endpoint('A', False, 0))
+cs.append(a_start)
+cs.append(a_finish)
 
 #To be postfix pruned
-cs.append(Endpoint('B', False, 0))
+cs.append(b_finish)
 
-cs.append(Endpoint('C', True, 0))
-cs.append(Endpoint('C', False, 0))
-cs.append(Endpoint('D', True, 0))
-cs.append(Endpoint('D', False, 0))
+cs.append(c_start)
+cs.append(c_finish)
+cs.append(d_start)
+cs.append(d_finish)
 
 cs2 = copy.deepcopy(cs)
 cs3 = copy.deepcopy(cs)
@@ -31,4 +42,6 @@ db.ES.append(cs2)
 db.ES.append(cs3)
 db.ES.append(cs4)
 db.ES.append(cs5)
+
+cs2 = [a_start, b_start, b_finish, c_start, a_finish, d_start, d_finish, c_finish]
 
