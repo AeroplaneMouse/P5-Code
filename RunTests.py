@@ -13,6 +13,8 @@ if len(sys.argv) == 1:
     from tests import fictionalData_Tests
     from tests import db_construct_Tests
     from tests import point_pruning_Tests
+    from tests import TDB_to_endpoint_Tests
+
 
 # Run specific test
 else:
@@ -36,6 +38,8 @@ else:
         from tests import db_construct_Tests
     elif fileName == 'point_pruning_Tests' or fileName == 'point_pruning':
         from tests import point_pruning_Tests
+    elif fileName == 'TDB_to_endpoint_Tests' or fileName == 'TDB_to_endpoint':
+        from tests import TDB_to_endpoint_Tests
 
     # elif fileName == '#FileNameForTest_Tests#' or fileName == '#FileNameForTest#':
         # Put import stuff here
