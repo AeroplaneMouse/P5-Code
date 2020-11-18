@@ -8,7 +8,6 @@ if len(sys.argv) == 1:
     from tests import CreateIndexSet_Tests
     from tests import MineIndexSet_Tests
     from tests import TimeDifference_Tests
-    from tests import GetFirstEndTime_Tests
     from tests import Load_Tests
     from tests import fictionalData_Tests
     from tests import db_construct_Tests
@@ -26,8 +25,6 @@ else:
         from tests import MineIndexSet_Tests
     elif fileName == 'TimeDifference_Tests' or fileName == 'TimeDifference':
         from tests import TimeDifference_Tests
-    elif fileName == 'GetFirstEndTime_Tests' or fileName == 'GetFirstEndTime':
-        from tests import GetFirstEndTime_Tests
     elif fileName == 'Load_Tests' or fileName == 'Load':
         from tests import Load_Tests
     elif fileName == 'fictionalData_Tests' or fileName == 'fictionalData':
