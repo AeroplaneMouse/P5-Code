@@ -1,38 +1,49 @@
-from preprocessors.Vent import VentPreprocessor
-from preprocessors import Support
-from algorithms.armada.MineIndexSet import MineIndexSet, ComputePotentialStems
-from algorithms.armada import Storage
+import pandas as pa
+import testSuite as t
+from mocks import FStates
+from mocks import Patterns
 from mocks import IndexSets
+from preprocessors import Support
+from algorithms.armada import Storage
+from algorithms.armada import MineIndexSet
 
 
 #####################################################################
 # Setup
 
-# Preprocessing
-vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
-mdb = vent.GenerateTemporalMdb()
-
-# Generating and computing support for states
-supportList = Support.GenerateStateSupportList(mdb)
-
-# Clear the database of states not meeting the minimum support
-minSupport = 0.7
-mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
-
-Storage.MDB = mdb
-Storage.MinimumSupport = minSupport
-
-
 #####################################################################
 # Tests
+
+def Test_ExtractStateName_ReturnExpectedLength():
+    p = Patterns.A
+
+    states = MineIndexSet.ExtractStateNames(p)
+    expected_states = [FStates.D]
+
+    m = 'ExtractStateName: Return expected length'
+    t.test(len(states) == len(expected_states), m)
+
+
+def Test_ExtractStateName_ReturnExpectetStates():
+    p = Patterns.C
+
+    states = MineIndexSet.ExtractStateNames(p)
+    expected_states = ['F', 'G', 'H']
+
+    result = True
+    for i in range(0, 3):
+        if states[i] != expected_states[i]:
+            result = False
+            break
+    m = 'ExtractStateName: Return list of state names'
+    t.test(result, m)
+
 
 print('********************')
 print('Testing ComputePotentialStems')
 print()
 
-stems = ComputePotentialStems(indexSet=IndexSets.A, minSup=0.7)
 
-print()
-print('New stems:')
-for s in stems:
-    print(s)
+# Test_ComputePotentialStems()
+Test_ExtractStateName_ReturnExpectedLength()
+Test_ExtractStateName_ReturnExpectetStates()
