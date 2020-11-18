@@ -65,7 +65,6 @@ print('********************')
 print('Testing MineIndexSet.py')
 print()
 
-print()
 print('ExtractStateNames:')
 Test_ExtractStateNames_ReturnExpectedLength()
 Test_ExtractStateNames_ReturnExpectetStates()
