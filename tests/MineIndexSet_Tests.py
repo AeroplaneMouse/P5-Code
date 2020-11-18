@@ -9,22 +9,38 @@ from algorithms.armada import MineIndexSet
 
 
 #####################################################################
-# Setup
+# GetFirstEndTime
+def one_patternTest():
+    time = MineIndexSet.GetFirstEndTime(Patterns.D)
+    m = 'Test 1-pattern. Return first state end time'
+    t.test(time == FStates.F.End, m)
+
+
+def two_patternTest():
+    time = MineIndexSet.GetFirstEndTime(Patterns.E)
+    m = 'Test 2-pattern. Return second state'
+    t.test(time == FStates.G.End, m)
+
+
+def three_patternTest():
+    time = MineIndexSet.GetFirstEndTime(Patterns.C)
+    m = 'Test 3-pattern. Return second state'
+    t.test(time == FStates.G.End, m)
+
 
 #####################################################################
-# Tests
-
-def Test_ExtractStateName_ReturnExpectedLength():
+# ExtractStateNames
+def Test_ExtractStateNames_ReturnExpectedLength():
     p = Patterns.A
 
     states = MineIndexSet.ExtractStateNames(p)
     expected_states = [FStates.D]
 
-    m = 'ExtractStateName: Return expected length'
+    m = 'Return expected length'
     t.test(len(states) == len(expected_states), m)
 
 
-def Test_ExtractStateName_ReturnExpectetStates():
+def Test_ExtractStateNames_ReturnExpectetStates():
     p = Patterns.C
 
     states = MineIndexSet.ExtractStateNames(p)
@@ -35,15 +51,21 @@ def Test_ExtractStateName_ReturnExpectetStates():
         if states[i] != expected_states[i]:
             result = False
             break
-    m = 'ExtractStateName: Return list of state names'
+    m = 'Return list of state names'
     t.test(result, m)
 
 
 print('********************')
-print('Testing ComputePotentialStems')
+print('Testing MineIndexSet.py')
 print()
 
+print()
+print('ExtractStateNames:')
+Test_ExtractStateNames_ReturnExpectedLength()
+Test_ExtractStateNames_ReturnExpectetStates()
 
-# Test_ComputePotentialStems()
-Test_ExtractStateName_ReturnExpectedLength()
-Test_ExtractStateName_ReturnExpectetStates()
+print()
+print('GetFirstEndTime:')
+one_patternTest()
+two_patternTest()
+three_patternTest()
