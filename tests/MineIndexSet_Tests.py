@@ -12,20 +12,26 @@ from algorithms.armada import MineIndexSet
 # GetFirstEndTime
 def one_patternTest():
     time = MineIndexSet.GetFirstEndTime(Patterns.D)
+    e_time = str(FStates.F.End)[11:]
+
     m = 'Test 1-pattern. Return first state end time'
-    t.test(time == FStates.F.End, m)
+    t.test(time == e_time, m)
 
 
 def two_patternTest():
     time = MineIndexSet.GetFirstEndTime(Patterns.E)
+    e_time = str(FStates.G.End)[11:]
+
     m = 'Test 2-pattern. Return second state'
-    t.test(time == FStates.G.End, m)
+    t.test(time == e_time, m)
 
 
 def three_patternTest():
     time = MineIndexSet.GetFirstEndTime(Patterns.C)
+    e_time = str(FStates.G.End)[11:]
+
     m = 'Test 3-pattern. Return second state'
-    t.test(time == FStates.G.End, m)
+    t.test(time == e_time, m)
 
 
 #####################################################################
