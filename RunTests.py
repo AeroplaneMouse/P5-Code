@@ -2,35 +2,53 @@ import sys
 
 # Run all tests
 if len(sys.argv) == 1:
-    print('Running all tests')
+    print('#'*30)
+    print('{:<29}#'.format('# Running all tests'))
+    print('#'*30)
+    print()
+
     from tests import FindRelation_Tests
+    print()
     from tests import CreatePattern_Tests
+    print()
     from tests import CreateIndexSet_Tests
+    print()
     from tests import MineIndexSet_Tests
-    from tests import TimeDifference_Tests
+    print()
     from tests import Load_Tests
+    print()
     from tests import fictionalData_Tests
+    print()
     from tests import db_construct_Tests
+    print()
     from tests import point_pruning_Tests
+    print()
 
 # Run specific test
 else:
     fileName = sys.argv[1]
 
-    if fileName == 'CreatePattern_Tests' or fileName == 'CreatePattern':
+    if fileName == 'FindRelation_Tests' or fileName == 'FindRelation':
+        from tests import FindRelation_Tests
+
+    elif fileName == 'CreatePattern_Tests' or fileName == 'CreatePattern':
         from tests import CreatePattern_Tests
+
     elif fileName == 'CreateIndexSet_Tests' or fileName == 'CreateIndex':
         from tests import CreateIndexSet_Tests
+
     elif fileName == 'MineIndexSet_Tests' or fileName == 'MineIndexSet':
         from tests import MineIndexSet_Tests
-    elif fileName == 'TimeDifference_Tests' or fileName == 'TimeDifference':
-        from tests import TimeDifference_Tests
+
     elif fileName == 'Load_Tests' or fileName == 'Load':
         from tests import Load_Tests
+
     elif fileName == 'fictionalData_Tests' or fileName == 'fictionalData':
         from tests import fictionalData_Tests
+
     elif fileName == 'db_construct_Tests' or fileName == 'db_construct':
         from tests import db_construct_Tests
+
     elif fileName == 'point_pruning_Tests' or fileName == 'point_pruning':
         from tests import point_pruning_Tests
 
