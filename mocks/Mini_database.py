@@ -19,12 +19,8 @@ a_p = copy.deepcopy(prfx)
 
 cs = []
 
-cs.append(a_start)
 cs.append(a_finish)
-
-#To be postfix pruned
 cs.append(b_finish)
-
 cs.append(c_start)
 cs.append(c_finish)
 cs.append(d_start)

@@ -1,10 +1,11 @@
 from tpmmodels.DB import DB
+from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 
 
 def db_construct(db_a, a_p):
 	temp_seq = DB(a_p)
 
-	prfx_starting_ep = find_prfx_s_ep(a_p)
+	prfx_starting_ep = remove_corresponding_eps(a_p)
 
 	db_a_p = create_db_a_p(db_a, a_p)
 	print(len(db_a_p.ES))
@@ -13,21 +14,6 @@ def db_construct(db_a, a_p):
 		temp_seq.ES.append(cs)
 
 	return temp_seq
-
-def find_prfx_s_ep(prfx):
-	s_ep = list(filter(lambda x : x.IsStart, prfx))
-	f_ep = list(filter(lambda x : not x.IsStart, prfx))
-	print(s_ep)
-	print(f_ep)
-
-
-	for f in f_ep:
-		i = 0
-		while f.Label != s_ep[i].Label:
-			i += 1
-		del s_ep[i]
-		
-	return s_ep
 
 def create_db_a_p(db_a, a_p):
 	db_a_p = DB(a_p)
