@@ -8,7 +8,6 @@ def db_construct(db_a, a_p):
 	prfx_starting_ep = remove_corresponding_eps(a_p)
 
 	db_a_p = create_db_a_p(db_a, a_p)
-	print(len(db_a_p.ES))
 	for cs in db_a_p.ES:
 		postfix_prune(cs, a_p, prfx_starting_ep)
 		temp_seq.ES.append(cs)
