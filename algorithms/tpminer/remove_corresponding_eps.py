@@ -3,9 +3,6 @@
 def remove_corresponding_eps(prfx):
 	s_ep = list(filter(lambda x : x.IsStart, prfx))
 	f_ep = list(filter(lambda x : not x.IsStart, prfx))
-	print(s_ep)
-	print(f_ep)
-
 
 	for f in f_ep:
 		i = 0

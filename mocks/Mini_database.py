@@ -18,7 +18,7 @@ prfx3 = [b_start, d_start]
 a_p = copy.deepcopy(prfx)
 
 cs = []
-
+cs.append(a_start)
 cs.append(a_finish)
 cs.append(b_finish)
 cs.append(c_start)
