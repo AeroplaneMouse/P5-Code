@@ -11,12 +11,11 @@ c_finish = Endpoint('C', False, 0)
 d_start = Endpoint('D', True, 0)
 d_finish = Endpoint('D', False, 0)
 
-prfx = [b_start]
+prfx = [a_start]
 prfx2 = [d_start]
 prfx3 = [b_start, d_start]
 
 a_p = copy.deepcopy(prfx)
-a_p.append(a_finish)
 
 cs = []
 
