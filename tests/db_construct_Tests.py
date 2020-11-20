@@ -15,7 +15,7 @@ def test_db_construct():
 	expected_result = [[c_s, a_f, d_s],[c_s, a_f, d_s],[c_s, a_f, d_s]]
 
 	if result != expected_result:
-		print("Test #1 FAILED")
+		print("construct_db Test #1 FAILED")
 		return
 
 		#two-pattern of corresponding ep's
@@ -24,8 +24,10 @@ def test_db_construct():
 	expected_result = [[d_s],[d_s],[d_s]]
 
 	if result != expected_result:
-		print("Test #2 FAILED")
+		print("construct_db Test #2 FAILED")
 		return
+
+	print("construct_db tests successful")
 
 	
 
