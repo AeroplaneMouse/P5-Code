@@ -6,7 +6,7 @@ def test_point_pruning():
 	#test with prefix of length 1
 	FE = {a_f, b_f, c_s, c_f, d_s, d_f}
 	expected_return = {a_f, c_s, d_s}
-	prfx = [a_s]
+	prfx = [a_s, a_f, a_s]
 
 	if (
 		point_pruning(FE, prfx) != expected_return
@@ -28,4 +28,5 @@ def test_point_pruning():
 	print("All point_pruning Tests Successful")
 
 test_point_pruning()
+
 
