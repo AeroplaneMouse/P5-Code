@@ -1,38 +1,76 @@
-from preprocessors.Vent import VentPreprocessor
-from preprocessors import Support
-from algorithms.armada.MineIndexSet import MineIndexSet, ComputePotentialStems
-from algorithms.armada import Storage
+import pandas as pa
+import testSuite as t
+from mocks import FStates
+from mocks import Patterns
 from mocks import IndexSets
+from preprocessors import Support
+from algorithms.armada import Storage
+from algorithms.armada import MineIndexSet
 
 
 #####################################################################
-# Setup
+# GetFirstEndTime
+def one_patternTest():
+    time = MineIndexSet.GetFirstEndTime(Patterns.D)
+    e_time = str(FStates.F.End)[11:]
 
-# Preprocessing
-vent = VentPreprocessor('datasets/vent-minute-short.csv', ';')
-mdb = vent.GenerateTemporalMdb()
+    m = 'Test 1-pattern. Return first state end time'
+    t.test(time == e_time, m)
 
-# Generating and computing support for states
-supportList = Support.GenerateStateSupportList(mdb)
 
-# Clear the database of states not meeting the minimum support
-minSupport = 0.7
-mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
+def two_patternTest():
+    time = MineIndexSet.GetFirstEndTime(Patterns.E)
+    e_time = str(FStates.G.End)[11:]
 
-Storage.MDB = mdb
-Storage.MinimumSupport = minSupport
+    m = 'Test 2-pattern. Return second state'
+    t.test(time == e_time, m)
+
+
+def three_patternTest():
+    time = MineIndexSet.GetFirstEndTime(Patterns.C)
+    e_time = str(FStates.G.End)[11:]
+
+    m = 'Test 3-pattern. Return second state'
+    t.test(time == e_time, m)
 
 
 #####################################################################
-# Tests
+# ExtractStateNames
+def Test_ExtractStateNames_ReturnExpectedLength():
+    p = Patterns.A
+
+    states = MineIndexSet.ExtractStateNames(p)
+    expected_states = [FStates.D]
+
+    m = 'Return expected length'
+    t.test(len(states) == len(expected_states), m)
+
+
+def Test_ExtractStateNames_ReturnExpectetStates():
+    p = Patterns.C
+
+    states = MineIndexSet.ExtractStateNames(p)
+    expected_states = ['F', 'G', 'H']
+
+    result = True
+    for i in range(0, 3):
+        if states[i] != expected_states[i]:
+            result = False
+            break
+    m = 'Return list of state names'
+    t.test(result, m)
+
 
 print('********************')
-print('Testing ComputePotentialStems')
+print('Testing MineIndexSet.py')
 print()
 
-stems = ComputePotentialStems(indexSet=IndexSets.A, minSup=0.7)
+print('ExtractStateNames:')
+Test_ExtractStateNames_ReturnExpectedLength()
+Test_ExtractStateNames_ReturnExpectetStates()
 
 print()
-print('New stems:')
-for s in stems:
-    print(s)
+print('GetFirstEndTime:')
+one_patternTest()
+two_patternTest()
+three_patternTest()

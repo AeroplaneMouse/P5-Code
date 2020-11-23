@@ -1,13 +1,21 @@
+import testSuite as t
 from algorithms.armada.CreateIndexSet import CreateIndexSet
 from algorithms.armada import Storage
 from preprocessors.Vent import VentPreprocessor
 
 
+def Test_CreateInitialIndexSet():
+
+    pass
+
+
 print('********************')
-print('Testing CreateIndexSet')
+print('Testing CreateIndexSet.py')
 print()
 
-PATH = 'datasets/vent-minute-shorter.csv'
-preprocessor = VentPreprocessor(PATH, ';')
+t.test(False, 'No tests made')
 
-mdb = preprocessor.GenerateTemporalMdb(interval=5)
+# PATH = 'datasets/vent-minute-shorter.csv'
+# preprocessor = VentPreprocessor(PATH, ';')
+
+# mdb = preprocessor.GenerateTemporalMdb(interval=5)

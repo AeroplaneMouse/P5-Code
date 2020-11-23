@@ -4,9 +4,11 @@ from algorithms.armada.Armada import Armada
 from algorithms.tpminer import tpminer
 import pandas as pa
 import helper
+from preprocessors.loadData import goodColumns as LOAD_colOfInterest
 
 
 PATH = 'datasets/vent-minute.csv'
+PATH_LOAD = 'datasets/Load-minute.csv'
 colOfInterest = [
     'Vent_HRVTempExhaustOut',
     'Vent_HRVTempOutdoorin',
@@ -32,13 +34,27 @@ def getState(value, columnName):
         rangeEnd)
 
 
+def LOAD_getState(value, columnName):
+    if value == '1' or value == 1:
+        return '{}_{}'.format(columnName, value)
+    else:
+        return None
+
+
 def Main():
-    # Preprocessing
-    pre = GenericPreprocessor(PATH, ';', colOfInterest, getState)
+    print('[INFO] Starting...')
+
+    # Vent preprocessing
+    # pre = GenericPreprocessor(PATH, ';', colOfInterest, getState)
+    # Load preprocessor
+    pre = GenericPreprocessor(PATH_LOAD, ',', LOAD_colOfInterest, LOAD_getState)
+
     mdb, skippedDays = pre.GenerateTemporalMdb()
 
     # Generating and computing support for states
     supportList = Support.GenerateStateSupportList(mdb)
+
+    print('[INFO] Preprocessing complete')
 
     # Set support variables
     minSupport = 0.6
@@ -50,6 +66,7 @@ def Main():
     # Armada Call
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
+    print('[INFO] Frequent states removed')
     patterns = Armada(mdb, frequentStates, minSupport, maxGap)
 
     # Print last 10 patterns
