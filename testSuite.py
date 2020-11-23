@@ -5,3 +5,8 @@ def test(bool, message):
         print('[Success] ' + message)
     else:
         print('[Failed]  ' + message)
+
+def generateTestMdb():
+
+    pass
+

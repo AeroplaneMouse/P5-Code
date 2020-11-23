@@ -33,6 +33,9 @@ class GenericPreprocessor:
         # Setting first clientID
         clientID = 0
 
+        n = len(days)
+        progress = 1
+
         # Generate client sequence for every day
         skippedDays = []
         for day in days:
@@ -52,6 +55,8 @@ class GenericPreprocessor:
 
             # Increment clientID every day
             clientID += 1
+            print('[INFO] Preprocessing {:.1f}%'.format((progress/n)*100))
+            progress += 1
 
         return mdb, skippedDays
 

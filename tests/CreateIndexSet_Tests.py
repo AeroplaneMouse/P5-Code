@@ -4,6 +4,11 @@ from algorithms.armada import Storage
 from preprocessors.Vent import VentPreprocessor
 
 
+def Test_CreateInitialIndexSet():
+
+    pass
+
+
 print('********************')
 print('Testing CreateIndexSet.py')
 print()
