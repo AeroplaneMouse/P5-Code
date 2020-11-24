@@ -1,6 +1,3 @@
-from tpmmodels.DB import DB
-from tpmmodels.Endpoint import Endpoint
-from algorithms.tpminer import tpminer
 from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 from tpmmodels.Ep_sup import Ep_sup
 
@@ -49,8 +46,3 @@ def acc_sup(cs, suppList):
 				is_in_list = True
 		if not is_in_list:
 			suppList.append(Ep_sup(ep.Label, ep.IsStart, 1))
-
-
-
-
-            
