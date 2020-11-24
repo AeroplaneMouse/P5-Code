@@ -12,3 +12,12 @@ class Endpoint:
 
     def __repr__(self):
     	return self.__str__()
+
+    def __hash__(self):
+        return hash(self.Label)
+
+    def __eq__(self, other):
+        return (
+            self.Label == other.Label
+            and self.IsStart == other.IsStart
+        )

@@ -1,19 +1,21 @@
 from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 from tpmmodels.Ep_sup import Ep_sup
+from tpmmodels.Endpoint import Endpoint
 
 def count_support(db_a, min_sup):
 
 	prfx_trimmed = remove_corresponding_eps(db_a.Pattern)
-	FE = []
+	suppList = []
+	FE = set()
 
 	for cs in db_a.ES:
 		j = find_stop_pos(cs, prfx_trimmed)
-		acc_sup(cs[:j+1], FE)
+		acc_sup(cs[:j+1], suppList)
 
 	cs_n = len(db_a.ES)
-	for ep in FE:
-		if ep.Support / cs_n < min_sup:
-			FE.remove(ep)
+	for ep in suppList:
+		if ep.Support / cs_n >= min_sup:
+			FE.add(Endpoint(ep.Label, ep.IsStart, ep.Parenthesis))
 
 	return FE
 
@@ -48,4 +50,4 @@ def acc_sup(cs, suppList):
 				suppList[i].Support += 1
 				is_in_list = True
 		if not is_in_list:
-			suppList.append(Ep_sup(ep.Label, ep.IsStart, 1))
+			suppList.append(Ep_sup(ep.Label, ep.IsStart, 1, ep.Parenthesis))
