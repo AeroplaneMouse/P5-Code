@@ -1,4 +1,4 @@
-from copy import copy
+import copy as c
 import testSuite as t
 from tpmmodels.DB import DB
 from mocks.Mini_database import *
@@ -6,14 +6,17 @@ from algorithms.tpminer.count_support import count_support
 
 
 def test_count_support():
-    prfx = [a_s, a_f]
-    cs = [c_f, d_f, b_f]
+    #test with 5 equivalent cs of 5  starting endpoints. should add all endpoints to FE
+    prfx = []
+    cs = [a_s, b_s, c_s, d_s, e_s]
     db = DB(prfx)
-    db.ES = [cs, copy(cs), copy(cs), copy(cs), [c_f, a_f, b_f]]
+    db.ES = [cs, c.copy(cs), c.copy(cs), c.copy(cs), c.copy(cs)]
 
-    FE = count_support(db, 1)
+    FE = count_support(db, 0.99)
 
-    print(len(FE))
+    expected_result = set(cs)
+    print(expected_result)
+    t.test(FE == expected_result, "count_support Test #1")
 
 
 print('********************')
