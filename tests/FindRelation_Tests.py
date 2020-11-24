@@ -1,18 +1,17 @@
-from algorithms.armada.FindRelation import FindRelation
+import testSuite as t
 import mocks.FStates as states
+from algorithms.armada.FindRelation import FindRelation
 
 
 def TestFindRelation():
-    if (
+    result = (
         FindRelation(states.A, states.B) != 'c'
         or FindRelation(states.A, states.C) != 'f'
         or FindRelation(states.B, states.C) != 'o'
         or FindRelation(states.B, states.A) != 'X'
-    ):
-        print("FindRelation_Tests failed")
-        return
-    else:
-        print("FindRelation_Tests Succesful")
+    )
+
+    t.test(not result, 'FindRelation_Tests')
 
 
 TestFindRelation()
