@@ -30,7 +30,6 @@ def find_stop_pos(cs, prfx_s_ep):
 	else:
 		return len(cs) - 1
 
-
 def is_stop_ep(ep, prfx_s_ep):
 	if not ep.IsStart:
 		for s_ep in prfx_s_ep:
