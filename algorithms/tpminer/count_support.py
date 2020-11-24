@@ -22,6 +22,10 @@ def find_stop_pos(cs, prfx_s_ep):
 		i = 0
 		while not is_stop_ep(cs[i], prfx_s_ep):
 			i += 1
+		p = cs[i].Parenthesis
+		if p > 0:
+			while cs[i + 1].Parenthesis == p:
+				i += 1
 		return i
 	else:
 		return len(cs) - 1
