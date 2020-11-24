@@ -16,16 +16,16 @@ f_f = Endpoint('F', False, 0)
 g_s = Endpoint('G', True, 0)
 g_f = Endpoint('G', False, 0)
 
-Seq_1 = {a_s, b_s, b_f, a_f, c_s, c_f}
-Seq_2 = {a_s, b_s, b_f, a_f, c_s, c_f}
-Seq_3 = {a_s, b_s, b_f, a_f, c_s, c_f}
-Seq_4 = {a_s, b_s, b_f, a_f, c_s, c_f}
-Seq_5 = {a_s, b_s, b_f, a_f, c_s, c_f}
-Seq_6 = {a_s, b_s, b_f, a_f, c_s, c_f}
-Seq_7 = {a_s, b_s, b_f, a_f, c_s, c_f}
-Seq_8 = {a_s, b_s, b_f, a_f, c_s, c_f}
+Seq_1 = [a_s, b_s, b_f, a_f, c_s, c_f]
+Seq_2 = [a_s, b_s, b_f, a_f, c_s, c_f]
+Seq_3 = [a_s, b_s, b_f, a_f, c_s, c_f]
+Seq_4 = [a_s, b_s, b_f, a_f, c_s, c_f]
+Seq_5 = [a_s, b_s, b_f, a_f, c_s, c_f]
+Seq_6 = [a_s, b_s, b_f, a_f, c_s, c_f]
+Seq_7 = [a_s, b_s, b_f, a_f, c_s, c_f]
+Seq_8 = [a_s, b_s, b_f, a_f, c_s, c_f]
 
 EP_list = [Seq_1, Seq_2, Seq_3, Seq_4, Seq_5, Seq_6, Seq_7, Seq_8]
 
-db = DB(a_s)
+db = DB([a_s])
 db.ES = EP_list

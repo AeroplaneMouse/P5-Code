@@ -26,7 +26,8 @@ if len(sys.argv) == 1:
     from tests import TDB_to_endpoint_Tests
     print()
     from tests import count_support_Tests
-
+    print()
+    from tests import TPSpan_Tests
 
 # Run specific test
 else:
@@ -60,7 +61,8 @@ else:
         from tests import TDB_to_endpoint_Tests
     elif fileName == 'count_support_Tests' or fileName == 'count_support':
         from tests import count_support_Tests
-
+    elif fileName == 'TPSpan_Tests' or fileName == 'TPSpan':
+        from tests import TPSpan_Tests
 
     # elif fileName == '#FileNameForTest_Tests#' or fileName == '#FileNameForTest#':
         # Put import stuff here
