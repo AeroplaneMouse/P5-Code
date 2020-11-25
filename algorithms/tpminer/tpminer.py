@@ -8,13 +8,13 @@ def TDBToEndpointSequenceList(mdb):
     for element in mdb:
         EndpointSequence = []
 
-        p = 1
+        p = 0
         i = 0
         j = 0
 
         lastTime = -1
         counted = False
-        
+
         while (i < len(element)):
             if (element.at[j, 'End'] < element.at[i, 'Start']):
                 if(element.at[j,'End']== lastTime):
@@ -30,7 +30,7 @@ def TDBToEndpointSequenceList(mdb):
                     lastTime = element.at[j,'End']
                     counted = False
                 j += 1
-                
+
             else:
                 if(element.at[i,'Start'] == lastTime):
                     if(counted == True):
@@ -45,7 +45,7 @@ def TDBToEndpointSequenceList(mdb):
                     lastTime = element.at[i,'Start']
                     counted = False
                 i += 1
-                
+
         while (j<len(element)):
             if(element.at[j,'End']== lastTime):
                 if(counted==True):
@@ -60,10 +60,10 @@ def TDBToEndpointSequenceList(mdb):
                 lastTime = element.at[j,'End']
                 counted = False
             j += 1
-        
+
         EndpointSequenceList.append(EndpointSequence)
-        
-        
+
+
         # while (i < len(element)):
         #     # if (element.at[j, 'End'] == element.at[i, 'Start']):
         #     #     # create a parenthesis pair of endpoints
@@ -90,7 +90,7 @@ def TDBToEndpointSequenceList(mdb):
         #     EndpointSequence.append(Endpoint(element.at[j,'State'], False, 0))
         #     # count up j
         #     j += 1
-        
+
 
         # EndpointSequenceList.append(EndpointSequence)
 
