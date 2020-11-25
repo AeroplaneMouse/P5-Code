@@ -58,6 +58,7 @@ class GenericPreprocessor:
             print('[INFO] Preprocessing {:.1f}%'.format((progress/n)*100))
             progress += 1
 
+        print('[INFO] Preprocessing finished')
         return mdb, skippedDays
 
     def __getState(self, value, columnName):
@@ -114,5 +115,8 @@ class GenericPreprocessor:
 
         # Sort DataFrame by start and end time
         df.sort_values(by=['Start', 'End'], inplace=True)
+
+        # Fixed indexes
+        df.reset_index(drop=True, inplace=True)
 
         return df

@@ -28,6 +28,9 @@ if len(sys.argv) == 1:
     from tests import count_support_Tests
     print()
     from tests import TPSpan_Tests
+    print()
+    from tests import GenericPreprocessor_Tests
+
 
 # Run specific test
 else:
@@ -59,10 +62,15 @@ else:
 
     elif fileName == 'TDB_to_endpoint_Tests' or fileName == 'TDB_to_endpoint':
         from tests import TDB_to_endpoint_Tests
+
     elif fileName == 'count_support_Tests' or fileName == 'count_support':
         from tests import count_support_Tests
+
     elif fileName == 'TPSpan_Tests' or fileName == 'TPSpan':
         from tests import TPSpan_Tests
+
+    elif fileName == 'GenericPreprocessor_Tests' or fileName == 'GenericPreprocessor':
+        from tests import GenericPreprocessor_Tests
 
     # elif fileName == '#FileNameForTest_Tests#' or fileName == '#FileNameForTest#':
         # Put import stuff here
