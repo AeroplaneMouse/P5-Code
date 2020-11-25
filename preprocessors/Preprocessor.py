@@ -1,9 +1,12 @@
 import pandas as pa
 import numpy as np
+from logging import *
 
 
 class GenericPreprocessor:
-    def __init__(self, csvPath, seperator, colOfInterest, getState):
+    def __init__(self, csvPath, seperator, colOfInterest, getState, logger):
+        self.logger = logger
+
         # Load data from CSV
         self.df = pa.read_csv(csvPath, sep=seperator)
 
@@ -55,10 +58,15 @@ class GenericPreprocessor:
 
             # Increment clientID every day
             clientID += 1
-            print('[INFO] Preprocessing {:.1f}%'.format((progress/n)*100))
+
+            # Logging progress
+            procent = (progress / n) * 100
+            log = Log('Preprocessing {:.1f}%'.format(procent), Severity.INFO)
+            self.logger.log(log)
             progress += 1
 
-        print('[INFO] Preprocessing finished')
+        log = Log('Preprocessing finished', Severity.NOTICE)
+        self.logger.log(log)
         return mdb, skippedDays
 
     def __getState(self, value, columnName):

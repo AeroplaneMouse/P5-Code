@@ -1,9 +1,10 @@
-from preprocessors.Preprocessor import GenericPreprocessor
-from preprocessors import Support
-from algorithms.armada.Armada import Armada
-from algorithms.tpminer import tpminer
-import pandas as pa
 import helper
+import pandas as pa
+from logging import *
+from preprocessors import Support
+from algorithms.tpminer import tpminer
+from algorithms.armada.Armada import Armada
+from preprocessors.Preprocessor import GenericPreprocessor
 from preprocessors.loadData import goodColumns as LOAD_colOfInterest
 
 
@@ -42,19 +43,21 @@ def LOAD_getState(value, columnName):
 
 
 def Main():
-    print('[INFO] Starting...')
+    logger = PrintLogger(Severity.NOTICE)
+    log = Log('Start', Severity.NOTICE)
+    logger.log(log)
 
     # Vent preprocessing
-    # pre = GenericPreprocessor(PATH, ';', colOfInterest, getState)
+    pre = GenericPreprocessor(PATH, ';', colOfInterest,
+        getState, logger)
     # Load preprocessor
-    pre = GenericPreprocessor(PATH_LOAD, ',', LOAD_colOfInterest, LOAD_getState)
+    # pre = GenericPreprocessor(PATH_LOAD, ',', LOAD_colOfInterest,
+        # LOAD_getState, logger)
 
     mdb, skippedDays = pre.GenerateTemporalMdb()
 
     # Generating and computing support for states
     supportList = Support.GenerateStateSupportList(mdb)
-
-    print('[INFO] Preprocessing complete')
 
     # Set support variables
     minSupport = 0.6
@@ -66,8 +69,11 @@ def Main():
     # Armada Call
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
-    print('[INFO] Frequent states removed')
-    patterns = Armada(mdb, frequentStates, minSupport, maxGap)
+
+    log = Log('Frequent states removed', Severity.INFO)
+    logger.log(log)
+
+    patterns = Armada(mdb, frequentStates, minSupport, maxGap, logger)
 
     # Print last 10 patterns
     helper.PrintNPatterns(10, patterns)
