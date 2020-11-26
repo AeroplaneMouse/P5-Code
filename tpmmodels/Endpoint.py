@@ -7,11 +7,7 @@ class Endpoint:
         self.Prune = False
 
     def __str__(self):
-        out = '{}{} P: {}'.format(
-            self.Label,
-            ("+" if self.IsStart == True else '-'),
-            self.Parenthesis)
-        return out
+        return str(self.Label) + str("+" if self.IsStart == True else '-')
         #return "true" if self.Prune else "false"
 
     def __repr__(self):
