@@ -71,7 +71,7 @@ class GenericPreprocessor:
 
     def __getState(self, value, columnName):
         # Skip empty values
-        if np.isnan(value):
+        if (type(value) is np.float64 and np.isnan(value)):
             return None
         else:
             return self.__getState__(value, columnName)
