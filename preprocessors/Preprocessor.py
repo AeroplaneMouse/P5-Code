@@ -24,6 +24,8 @@ class GenericPreprocessor:
         self.df = self.df.tz_convert(None)
 
         self.__getState__ = getState
+        self.__getClientSequenceData__ = self.__singleDayClientSequence
+        self.getClients = None
 
     def GenerateTemporalMdb(self):
         mdb = []
@@ -128,3 +130,6 @@ class GenericPreprocessor:
         df.reset_index(drop=True, inplace=True)
 
         return df
+
+
+def weeklyClients():

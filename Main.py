@@ -10,12 +10,13 @@ from preprocessors.loadData import goodColumns as LOAD_colOfInterest
 
 PATH = 'datasets/vent-minute.csv'
 PATH_LOAD = 'datasets/Load-minute.csv'
+PATH_ABSENS = 'datasets/Absens_P5.csv'
 colOfInterest = [
     'Vent_HRVTempExhaustOut',
     'Vent_HRVTempOutdoorin',
     'Vent_HRVTempReturnIn',
     'Vent_HRVTempSupplyOut']
-
+ABSENS_cols = ['Andreas','Daniel','Lasse','Lisa','Rasmus','Slamal']
 
 def getState(value, columnName):
     # Convert name to number
@@ -42,17 +43,46 @@ def LOAD_getState(value, columnName):
         return None
 
 
+def absens_getState(value, columnName):
+    output = columnName + '_'
+
+    if (value == '✔️'):
+        output += 'Here'
+    elif (value == '❌'):
+        output += 'Despawned'
+    else:
+        value = int(value)
+        if (value <= 10):
+            output += 'BitLate'
+        elif (value <= 30):
+            output += 'MediumLate'
+        elif (value <= 90):
+            output += 'MuchLate'
+
+    return output
+
+
+def weeklyClient(day):
+
+    pass
+
+
 def Main():
     logger = PrintLogger(Severity.NOTICE)
     log = Log('Start', Severity.NOTICE)
     logger.log(log)
 
     # Vent preprocessing
-    pre = GenericPreprocessor(PATH, ';', colOfInterest,
-        getState, logger)
+    # pre = GenericPreprocessor(PATH, ';', colOfInterest,
+    #     getState, logger)
     # Load preprocessor
     # pre = GenericPreprocessor(PATH_LOAD, ',', LOAD_colOfInterest,
         # LOAD_getState, logger)
+    # Absens
+    pre = GenericPreprocessor(PATH_ABSENS, ',', ABSENS_cols,
+        absens_getState, logger)
+
+    pre.__getClientSequenceData__ = weeklyClient
 
     mdb, skippedDays = pre.GenerateTemporalMdb()
 
@@ -60,7 +90,7 @@ def Main():
     supportList = Support.GenerateStateSupportList(mdb)
 
     # Set support variables
-    minSupport = 0.6
+    minSupport = 0.2
     maxGap = pa.to_timedelta('24:00:00')  # hh:mm:ss
 
     # TPMiner Call
@@ -76,7 +106,7 @@ def Main():
     patterns = Armada(mdb, frequentStates, minSupport, maxGap, logger)
 
     # Print last 10 patterns
-    helper.PrintNPatterns(10, patterns)
+    helper.PrintNPatterns(18, patterns)
     helper.PrintResults(minSupport, maxGap, patterns, skippedDays, frequentStates, PATH)
 
     # Display the number of different patterns
