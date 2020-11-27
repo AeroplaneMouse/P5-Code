@@ -1,5 +1,7 @@
+import sys
 import helper
 import pandas as pa
+from job import Job
 from logging import *
 from preprocessors import Support
 from algorithms.tpminer import tpminer
@@ -41,12 +43,32 @@ def LOAD_getState(value, columnName):
     else:
         return None
 
+def processArguments(args):
+    job = Job()
+
+    # No arguments given
+    if len(args) == 1:
+        pass
+
+    else:
+        for arg in args:
+            print(arg)
+
 
 def Main():
+    # Starting the logger
     logger = PrintLogger(Severity.NOTICE)
     log = Log('Start', Severity.NOTICE)
     logger.log(log)
 
+    # The number of arguments
+    # len(sys.argv)
+    fileName = sys.argv[0] # File name
+    # firstArgument = sys.argv[1] # First argument
+
+    job = processArguments(sys.argv)
+
+    return
     # Vent preprocessing
     pre = GenericPreprocessor(PATH, ';', colOfInterest,
         getState, logger)
