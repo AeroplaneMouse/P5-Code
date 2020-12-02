@@ -1,3 +1,4 @@
+from time import perf_counter
 import pandas as pa
 from models.result import Result
 from logging import Log, Severity
@@ -37,13 +38,19 @@ class Job:
             log = Log('Starting algorithm: {}'.format(self.algorithm.__name__), Severity.INFO)
             self.logger.log(log)
 
+        t0 = perf_counter()
         mdb, skippedDays = self.preprocessor.GenerateTemporalMdb()
         supportList = Support.GenerateStateSupportList(mdb)
+        preTime = perf_counter() - t0
 
+
+        t0 = perf_counter()
         results = self.algorithm(mdb, supportList, self.logger, self.minSupport, self.maxGap)
+        results.algorithmTime = perf_counter() - t0
 
         results.skippedDays = skippedDays
         results.path = self.dataset
+        results.preprocessingTime = preTime
 
         self.results = results
         return self.results

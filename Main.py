@@ -1,15 +1,13 @@
 import sys
-import resultPrinting
 import pandas as pa
 from models.job import Job
 from models.result import Result
 from methods import *
 from logging import *
-from preprocessors import Support
+from preprocessors import Support, columns as col
 from algorithms.tpminer import tpminer
 from algorithms.armada.Armada import Armada
 from preprocessors.Preprocessor import GenericPreprocessor
-from preprocessors.loadData import goodColumns as LOAD_colOfInterest
 
 
 PATH = 'datasets/vent-minute.csv'
@@ -56,7 +54,7 @@ def setup(logger):
     job.algorithm = armada
     job.seperator = ';'
     job.dataset = 'datasets/vent-minute.csv'
-    job.columns = vent_columns
+    job.columns = col.vent_columns
     job.getState = vent_getState
     job.minSupport = 0.5
     job.maxGap = pa.to_timedelta('24:00:00')

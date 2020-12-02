@@ -3,7 +3,7 @@
 class Result:
     def __init__(self, minSupport, maxGap, patterns, frequentStates):
         self.patterns = patterns
-        self.preprocessTime = -1
+        self.preprocessingTime = -1
         self.algorithmTime = -1
         self.frequentStates = []
         self.skippedDays = []
@@ -35,6 +35,8 @@ class Result:
         print('# Patterns found: {:>22} #'.format(len(self.patterns)))
         print('# Skipped days: {:>24} #'.format(len(self.skippedDays)))
         print('# Frequent states: {:>21} #'.format(len(self.frequentStates)))
+        print('# Preprocessing: {:>21.1f} s #'.format(self.preprocessingTime))
+        print('# Algorithm time: {:>20.1f} s #'.format(self.algorithmTime))
 
         count = CountNPatterns(self.patterns)
         print('#' + ' '*40 + '#')
