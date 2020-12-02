@@ -1,5 +1,10 @@
 from tpmmodels.Endpoint import Endpoint
 
+class TempEP:
+    def __init__(self, label, isStart, time):
+        self.Label = label
+        self.IsStart = isStart
+        self.Time = time
 
 def TDBToEndpointSequenceList(mdb):
 
@@ -7,93 +12,36 @@ def TDBToEndpointSequenceList(mdb):
 
     for element in mdb:
         EndpointSequence = []
-
-        p = 0
+        
+        TempEPlist = []
+        
         i = 0
-        j = 0
-
+        #make list of TempEPs.
+        while (i < len(element)):
+            TempEPlist.append(TempEP(element.at[i,'State'],True,element.at[i,'Start']))
+            TempEPlist.append(TempEP(element.at[i,'State'],False,element.at[i,'End']))
+        
+        #sort TempEPs by time.
+        TempEPlist.sort(key=lambda tempEP: tempEP.Time)
+        
+        #make EPs for EndpointSequence and add them.
         lastTime = -1
         counted = False
-
-        while (i < len(element)):
-            if (element.at[j, 'End'] < element.at[i, 'Start']):
-                if(element.at[j,'End']== lastTime):
-                    if(counted==True):
-                        EndpointSequence.append(Endpoint(element.at[j,'State'], False, p))
-                    else:
-                        p = p + 1
-                        EndpointSequence[-1].Parenthesis = p
-                        EndpointSequence.append(Endpoint(element.at[j,'State'], False, p))
-                        counted = True
-                else:
-                    EndpointSequence.append(Endpoint(element.at[j,'State'], False, 0))
-                    lastTime = element.at[j,'End']
-                    counted = False
-                j += 1
-
-            else:
-                if(element.at[i,'Start'] == lastTime):
-                    if(counted == True):
-                        EndpointSequence.append(Endpoint(element.at[i,'State'], True, p))
-                    else:
-                        p = p + 1
-                        EndpointSequence[-1].Parenthesis = p
-                        EndpointSequence.append(Endpoint(element.at[i,'State'], True, p))
-                        counted = True
-                else:
-                    EndpointSequence.append(Endpoint(element.at[i,'State'], True, 0))
-                    lastTime = element.at[i,'Start']
-                    counted = False
-                i += 1
-
-        while (j<len(element)):
-            if(element.at[j,'End']== lastTime):
-                if(counted==True):
-                    EndpointSequence.append(Endpoint(element.at[j,'State'], False, p))
-                else:
+        p = 0
+        
+        for ep in TempEPlist:
+            if(ep.Time == lastTime):
+                if(counted == False):
                     p = p + 1
-                    EndpointSequence[-1].Parenthesis = p
-                    EndpointSequence.append(Endpoint(element.at[j,'State'], False, p))
+                    EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, p))
                     counted = True
+                if(counted == True):
+                    EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, p))
             else:
-                EndpointSequence.append(Endpoint(element.at[j,'State'], False, 0))
-                lastTime = element.at[j,'End']
+                EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, 0))
+                lastTime = ep.Time
                 counted = False
-            j += 1
-
+            
         EndpointSequenceList.append(EndpointSequence)
-
-
-        # while (i < len(element)):
-        #     # if (element.at[j, 'End'] == element.at[i, 'Start']):
-        #     #     # create a parenthesis pair of endpoints
-        #     #     EndpointSequence.append(Endpoint(element.at[i,'State'], True, p))
-        #     #     EndpointSequence.append(Endpoint(element.at[j,'State'], False, p))
-        #     #     # count up i,j, and parenthesis counter
-        #     #     p += 1
-        #     #     i += 1
-        #     #     j += 1
-
-        #     if (element.at[j, 'End'] < element.at[i, 'Start']):
-        #         # create a finishing endpoint for j, and append to Endpoint Sequence.
-        #         EndpointSequence.append(Endpoint(element.at[j,'State'], False, 0))
-        #         # count up j
-        #         j += 1
-        #     else:
-        #         # Create a starting endpoint for i, and append to Endpoint Sequence.
-        #         EndpointSequence.append(Endpoint(element.at[i,'State'], True, 0))
-        #         # count up i
-        #         i += 1
-
-        # while (j<len(element)):
-        #     # create remaining endpoints for finishing endpoints
-        #     EndpointSequence.append(Endpoint(element.at[j,'State'], False, 0))
-        #     # count up j
-        #     j += 1
-
-
-        # EndpointSequenceList.append(EndpointSequence)
-
-
 
     return EndpointSequenceList
