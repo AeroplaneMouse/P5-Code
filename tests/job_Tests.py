@@ -8,17 +8,19 @@ from exceptions import *
 def Test_useGenericPreprocessor_ThrowExceptionIfUsedPropertyIsNone_NoneProperty():
     job = Job()
 
+    m = ''
     isCatched = False
     try:
         job.useGenericPreprocessor()
-    except ArgumentNotSetError:
+    except ArgumentNotSetError as e:
         isCatched = True
-    except Exceptions as e:
-        print(type(e))
+        m += e.argument
+    except:
         pass
 
 
-    m = '\'useGenericPreprocessor\' catched none properties'
+    m = ('\'useGenericPreprocessor\' catched none properties: '
+        + 'The following is not set[{}]'.format(m))
     t.test(isCatched, m)
 
 
