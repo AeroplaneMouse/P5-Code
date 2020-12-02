@@ -8,9 +8,9 @@ from algorithms.tpminer.db_construct import db_construct
 def test_TPSpan():
     TP = set()
 
-    Ep = [a_f, b_f, c_s, f_s, g_f, f_f, c_f]
-    Ep2 = [a_f, b_f, c_s, f_s, g_f, f_f, c_f]
-    Ep3 = [a_f, b_f, c_s, f_s, g_f, f_f, c_f]
+    Ep = [b_f, c_s_1, c_f_1]
+    Ep2 = [b_f, c_s_1, c_f_1]
+    Ep3 = [b_f, c_s_1, c_f_1]
 
     cs = Projected_cs([b_s])
     cs.Ep_list = Ep
@@ -22,7 +22,7 @@ def test_TPSpan():
     db = DB([b_s])
     db.ES = [cs, cs2, cs3]
 
-    TPSpan([b_s], db, 0.5, TP)
+    TPSpan([b_s], db, 1, TP)
 
     for pattern in TP:
         print(pattern)
