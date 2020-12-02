@@ -8,12 +8,14 @@ def db_construct(db_a, a_p):
 
     prfx_starting_ep = remove_corresponding_eps(a_p)
 
-    in_paren = False
-    if len(a_p) > 1:
-        if a_p[-2].Parenthesis > 0 and a_p[-2].Parenthesis == a_p[-1].Parenthesis:
-            in_paren = True
+    #in_paren = False
+    #if len(a_p) > 1:
+        #if a_p[-2].Parenthesis > 0 and a_p[-2].Parenthesis == a_p[-1].Parenthesis:
+            #in_paren = True
 
-    db_a_p = create_db_paren(db_a, a_p) if in_paren else create_db(db_a, a_p)
+    #db_a_p = create_db_paren(db_a, a_p) if in_paren else create_db(db_a, a_p)
+
+    db_a_p = create_db(db_a, a_p)
 
     for cs in db_a_p.ES:
         #postfix_prune(cs.Ep_list, a_p, prfx_starting_ep)

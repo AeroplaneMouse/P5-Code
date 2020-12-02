@@ -8,11 +8,13 @@ from tpmmodels.Projected_cs import Projected_cs
 
 def tpminer_main(mdb, min_sup):
     TP = set()
+    print("bitch")
     temp = TDBToEndpointSequenceList(mdb)
-    print(mdb[0])
 
-    #for ep in temp[0]:
-        #print(ep)
+    print("bitch22")
+
+    for ep in temp[0]:
+        print(ep)
 
     db = convert_to_db(temp)
 
