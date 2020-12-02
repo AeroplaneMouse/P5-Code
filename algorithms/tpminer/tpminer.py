@@ -5,7 +5,11 @@ class TempEP:
         self.Label = label
         self.IsStart = isStart
         self.Time = time
-
+        
+    def __str__(self):
+        return str(self.Label) + 'start: ' + str(self.IsStart) + ' Time: ' + str(self.Time)
+        
+        
 def TDBToEndpointSequenceList(mdb):
 
     EndpointSequenceList = []
@@ -16,10 +20,12 @@ def TDBToEndpointSequenceList(mdb):
         TempEPlist = []
         
         i = 0
+
         #make list of TempEPs.
         while (i < len(element)):
             TempEPlist.append(TempEP(element.at[i,'State'],True,element.at[i,'Start']))
             TempEPlist.append(TempEP(element.at[i,'State'],False,element.at[i,'End']))
+            i = i + 1
         
         #sort TempEPs by time.
         TempEPlist.sort(key=lambda tempEP: tempEP.Time)
@@ -33,9 +39,10 @@ def TDBToEndpointSequenceList(mdb):
             if(ep.Time == lastTime):
                 if(counted == False):
                     p = p + 1
+                    EndpointSequence[-1].Parenthesis = p
                     EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, p))
                     counted = True
-                if(counted == True):
+                else:
                     EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, p))
             else:
                 EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, 0))
