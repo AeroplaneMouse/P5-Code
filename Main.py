@@ -2,6 +2,7 @@ import sys
 import resultPrinting
 import pandas as pa
 from models.job import Job
+from models.result import Result
 from methods import *
 from logging import *
 from preprocessors import Support
@@ -47,6 +48,23 @@ def armada(mdb, supportList, logger, minSupport, maxGap):
 
     patterns = Armada(mdb, frequentStates, minSupport, maxGap, logger)
 
+    return Result(minSupport, maxGap, patterns, frequentStates)
+
+
+def setup(logger):
+    job = Job(logger=logger)
+    job.algorithm = armada
+    job.seperator = ';'
+    job.dataset = 'datasets/vent-minute.csv'
+    job.columns = vent_columns
+    job.getState = vent_getState
+    job.minSupport = 0.5
+    job.maxGap = pa.to_timedelta('24:00:00')
+
+    job.useGenericPreprocessor()
+
+    return job
+
 
 def Main():
     # Starting the logger
@@ -62,68 +80,15 @@ def Main():
     # job = processArguments(sys.argv)
     # job.logger = logger
 
-    job = Job(logger=logger)
+    # Setup
+    job = setup(logger)
 
-    # Settings
-    job.algorithm = armada
-    job.seperator = ';'
-    job.dataset = 'datasets/vent-minute.csv'
-    job.columns = vent_columns
-    job.getState = vent_getState
-    job.minSupport = 0.5
-    job.maxGap = pa.to_timedelta('24:00:00')
+    # Run
+    results = job.run()
 
-    job.useGenericPreprocessor()
+    # View results
+    results.print()
 
-    patterns = job.run()
-
-    resultPrinting.PrintResults(
-        job.minSupport,
-        job.maxGap,
-        patterns,
-        [], [],
-        job.dataset)
-
-    # Display the number of different patterns
-    count = resultPrinting.CountNPatterns(patterns)
-    resultPrinting.PrintPatternCount(count)
-
-    return
-    # Vent preprocessing
-    pre = GenericPreprocessor(PATH, ';', colOfInterest,
-        getState, logger)
-    # Load preprocessor
-    # pre = GenericPreprocessor(PATH_LOAD, ',', LOAD_colOfInterest,
-        # LOAD_getState, logger)
-
-    mdb, skippedDays = pre.GenerateTemporalMdb()
-
-    # Generating and computing support for states
-    supportList = Support.GenerateStateSupportList(mdb)
-
-    # Set support variables
-    minSupport = 0.6
-    maxGap = pa.to_timedelta('24:00:00')  # hh:mm:ss
-
-    # TPMiner Call
-
-
-    # Armada Call
-    mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
-    frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
-
-    log = Log('Frequent states removed', Severity.INFO)
-    logger.log(log)
-
-    patterns = Armada(mdb, frequentStates, minSupport, maxGap, logger)
-
-    # Print last 10 patterns
-    resultPrinting.PrintNPatterns(10, patterns)
-    resultPrinting.PrintResults(minSupport, maxGap, patterns, skippedDays, frequentStates, PATH)
-
-    # Display the number of different patterns
-    count = resultPrinting.CountNPatterns(patterns)
-    resultPrinting.PrintPatternCount(count)
 
 
 if __name__ == '__main__':

@@ -1,4 +1,5 @@
 import pandas as pa
+from models.result import Result
 from logging import Log, Severity
 from exceptions import *
 from preprocessors import Support
@@ -37,9 +38,12 @@ class Job:
             self.logger.log(log)
 
         mdb, skippedDays = self.preprocessor.GenerateTemporalMdb()
-
         supportList = Support.GenerateStateSupportList(mdb)
 
-        results = self.algorithm(mdb, supportList, self.logger,
-                                 self.minSupport, self.maxGap)
-        return results
+        results = self.algorithm(mdb, supportList, self.logger, self.minSupport, self.maxGap)
+
+        results.skippedDays = skippedDays
+        results.path = self.dataset
+
+        self.results = results
+        return self.results
