@@ -1,28 +1,28 @@
-from algorithms.tpminer.tpminer import TDBToEndpointSequenceList
-from tpmmodels.Ep_sup import Ep_sup
-from algorithms.tpminer.db_construct import db_construct
-from algorithms.tpminer.TPSpan import TPSpan
-from tpmmodels.Endpoint import Endpoint
+from logging import *
 from tpmmodels.DB import DB
+from tpmmodels.Ep_sup import Ep_sup
+from tpmmodels.Endpoint import Endpoint
+from algorithms.tpminer.TPSpan import TPSpan
 from tpmmodels.Projected_cs import Projected_cs
+from algorithms.tpminer.db_construct import db_construct
+from algorithms.tpminer.tpminer import TDBToEndpointSequenceList
 
-def tpminer_main(mdb, min_sup):
+
+def tpminer_main(mdb, min_sup, logger):
+    # Logging
+    log = Log('Starting TPMiner', Severity.NOTICE)
+    logger.log(log)
+
     TP = set()
-    print("bitch")
     temp = TDBToEndpointSequenceList(mdb)
-
-    print("bitch22")
-
-    for ep in temp[0]:
-        print(ep)
 
     db = convert_to_db(temp)
 
     FE = FindFE(db.ES, min_sup)
 
-    #for s in FE:
-        #db_s = db_construct(db, [s])
-        #TPSpan([s], db_s, min_sup, TP)
+    for s in FE:
+        db_s = db_construct(db, [s])
+        TPSpan([s], db_s, min_sup, TP)
 
     return TP
 
@@ -51,7 +51,6 @@ def FindFE(mdb, min_sup):
             FE.add(Endpoint(e.Label, e.IsStart, 0))
 
     return FE
-
 
 
 def find_in_supp_list(ep, suppList):
