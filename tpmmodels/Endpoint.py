@@ -8,7 +8,7 @@ class Endpoint:
 
     def __str__(self):
         #return "true" if self.Prune else "false"
-        return str(self.Label) + str("+" if self.IsStart else '-') + str(self.parenthesis)
+        return str(self.Label) + str("+" if self.IsStart else '-') + str(self.Parenthesis)
 
     def __repr__(self):
     	return self.__str__()
