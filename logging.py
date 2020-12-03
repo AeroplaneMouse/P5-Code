@@ -1,5 +1,6 @@
-from enum import Enum
 import os
+import time
+from enum import Enum
 
 
 class Severity(Enum):
@@ -20,6 +21,9 @@ class Log:
 
 
 class Logger:
+    INSERT_TIMESTAMP = False
+    INSERT_DATE = False
+
     def __init__(self, severity):
         self.severity = severity
 
@@ -27,10 +31,14 @@ class Logger:
 class PrintLogger(Logger):
     def log(self, log):
         if (log.severity.value <= self.severity.value):
-            m = '[{}] {}'.format(
-                log.severity.name,
+            logTime = getTime(self.INSERT_TIMESTAMP)
+            logDate = getDate(self.INSERT_DATE)
+            msg = '{:<12}{}{}| {}'.format(
+                '['+log.severity.name+']',
+                logDate,
+                logTime,
                 log.message)
-            print(m)
+            print(msg)
 
 class FileLogger(Logger):
     LOG_FOLDER = 'logs/'
@@ -46,8 +54,34 @@ class FileLogger(Logger):
 
     def log(self, log):
         if log.severity.value <= self.severity.value:
-            msg = '[{}] {}\n'.format(log.severity.name, log.message)
+            logTime = getTime(self.INSERT_TIMESTAMP)
+            logDate = getDate(self.INSERT_DATE)
+            msg = '{:<12}{}{}| {}\n'.format(
+                '['+log.severity.name+']',
+                logDate,
+                logTime,
+                log.message)
 
             # Write to file
             with open(self.filename, "a") as f:
                 f.write(msg)
+
+def getDate(flag):
+    if flag:
+        localtime = time.localtime(time.time())
+        return '{}-{:02}-{:02} '.format(
+            localtime[0],
+            localtime[1],
+            localtime[2])
+    else:
+        return ''
+
+def getTime(flag):
+    if flag:
+        localtime = time.localtime(time.time())
+        return '{:02}:{:02}:{:02} '.format(
+            localtime[3],
+            localtime[4],
+            localtime[5])
+    else:
+        return ''
