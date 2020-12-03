@@ -6,7 +6,7 @@ class Result:
     algorithmTime = -1
     frequentStates = None
     skippedDays = None
-    path = ""
+    dataset = ""
     minSupport = None
     maxGap = None
 
@@ -31,10 +31,10 @@ class Result:
 
     def print(self):
         # Remove extension and dataset folder
-        path = self.path[9:-4]
+        dataset = self.dataset[9:-4]
 
         print('#'*42)
-        print('# Dataset: {:>29} #'.format(path))
+        print('# Dataset: {:>29} #'.format(dataset))
         print('# Minimum support: {:>21} #'.format(self.minSupport))
         print('# Maximum gap: {:>25} #'.format(str(self.maxGap)))
         print('# Patterns found: {:>22} #'.format(len(self.patterns)))

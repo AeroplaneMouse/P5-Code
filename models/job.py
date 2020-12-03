@@ -8,16 +8,18 @@ from preprocessors.Preprocessor import GenericPreprocessor
 
 
 class Job:
+    algorithm = None
+    dataset = None
+    getState = None
+    columns = None
+    results = None
+    minSupport = None
+    maxGap = None
+    preprocessor = None
+
     def __init__(self, seperator=',', logger=None):
-        self.algorithm = None
-        self.dataset = None
-        self.getState = None
         self.seperator = seperator
         self.logger = logger
-        self.columns = []
-        self.results = None
-        self.minSupport = 0.5
-        self.maxGap = pa.to_timedelta('24:00:00')
 
     def useGenericPreprocessor(self):
         # Check properties
@@ -49,7 +51,7 @@ class Job:
         results.algorithmTime = perf_counter() - t0
 
         results.skippedDays = skippedDays
-        results.path = self.dataset
+        results.dataset = self.dataset
         results.preprocessingTime = preTime
 
         self.results = results

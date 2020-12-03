@@ -6,12 +6,10 @@ from methods import *
 from logging import *
 from preprocessors import Support, columns as col
 from algorithms.tpminer import tpminer
+from algorithms.tpminer.tpminer_main import tpminer_main
 from algorithms.armada.Armada import Armada
 from preprocessors.Preprocessor import GenericPreprocessor
 
-
-PATH = 'datasets/vent-minute.csv'
-PATH_LOAD = 'datasets/Load-minute.csv'
 
 def processArguemnts(args):
     job = Job()
@@ -49,11 +47,37 @@ def armada(mdb, supportList, logger, minSupport, maxGap):
     return Result(minSupport, maxGap, patterns, frequentStates)
 
 
-def defaultSetup(logger):
+def tpminer_stu(mdb, supportList, logger, minSupport, maxGap):
+    patternSets = tpminer_main(mdb, minSupport, logger)
+
+    # Convert set to list
+    patterns = []
+    for p in patternSets:
+        patterns.append(p)
+
+    return Result(minSupport, maxGap, patterns, [])
+
+
+def armadaSetup(logger):
     job = Job(logger=logger)
     job.algorithm = armada
-    job.seperator = ';'
-    job.dataset = 'datasets/vent-minute.csv'
+    job.seperator = ','
+    job.dataset = 'datasets/Vent-minute.csv'
+    job.columns = col.vent_columns
+    job.getState = vent_getState
+    job.minSupport = 0.5
+    job.maxGap = pa.to_timedelta('24:00:00')
+
+    job.useGenericPreprocessor()
+
+    return job
+
+
+def tpminerSetup(logger):
+    job = Job(logger=logger)
+    job.algorithm = tpminer_stu
+    job.seperator = ','
+    job.dataset = 'datasets/Vent-minute-short.csv'
     job.columns = col.vent_columns
     job.getState = vent_getState
     job.minSupport = 0.5
@@ -65,27 +89,25 @@ def defaultSetup(logger):
 
 
 def Main():
-    # Starting the logger
+    # Logger setup
     logger = PrintLogger(Severity.INFO)
     log = Log('Start', Severity.NOTICE)
     logger.log(log)
-
-    # The number of arguments
-    # len(sys.argv)
-    # fileName = sys.argv[0] # File name
-    # firstArgument = sys.argv[1] # First argument
 
     # job = processArguments(sys.argv)
     # job.logger = logger
 
     # Setup
-    job = defaultSetup(logger)
+    arJob = armadaSetup(logger)
+    tpJob = tpminerSetup(logger)
 
-    # Run
-    results = job.run()
+    # Run jobs
+    arResults = arJob.run()
+    tpResults = tpJob.run()
 
     # View results
-    results.print()
+    arResults.print()
+    tpResults.print()
 
 
 
