@@ -1,8 +1,8 @@
-from algorithms.armada import Storage
-from algorithms.armada.CreateIndexSet import CreateIndexSet
-from algorithms.armada.CreatePattern import CreatePattern
-from algorithms.armada.MineIndexSet import MineIndexSet
 from logging import *
+from algorithms.armada import Storage
+from algorithms.armada.MineIndexSet import MineIndexSet
+from algorithms.armada.CreatePattern import CreatePattern
+from algorithms.armada.CreateIndexSet import CreateIndexSet
 
 def Armada(mdb, frequentStates, minSupport, maxGap, logger):
     # Initialize

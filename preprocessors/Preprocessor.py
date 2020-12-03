@@ -4,15 +4,17 @@ from logging import *
 
 
 class GenericPreprocessor:
-    def __init__(self, csvPath, seperator, colOfInterest, getState, logger):
+    def __init__(self, csvPath, seperator, colOfInterest, getState, logger, timestamp='Timestamp'):
         self.logger = logger
+        log = Log('Initializing Generic Preprocessor', Severity.NOTICE)
+        self.logger.log(log)
 
         # Load data from CSV
         self.df = pa.read_csv(csvPath, sep=seperator)
 
         # Set timestamps as index and convert to UTC time
         self.df.index = pa.to_datetime(
-            self.df.pop('Timestamp'),
+            self.df.pop(timestamp),
             utc=True)
 
         # Remove unwanted columns

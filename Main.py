@@ -1,72 +1,41 @@
-import helper
+import sys
 import pandas as pa
+from models.job import Job
+from models.result import Result
+from methods import *
 from logging import *
-from preprocessors import Support
+from preprocessors import Support, columns as col
 from algorithms.tpminer import tpminer
+from algorithms.tpminer.tpminer_main import tpminer_main
 from algorithms.armada.Armada import Armada
 from preprocessors.Preprocessor import GenericPreprocessor
-from preprocessors.loadData import goodColumns as LOAD_colOfInterest
 
 
-PATH = 'datasets/vent-minute.csv'
-PATH_LOAD = 'datasets/Load-minute.csv'
-colOfInterest = [
-    'Vent_HRVTempExhaustOut',
-    'Vent_HRVTempOutdoorin',
-    'Vent_HRVTempReturnIn',
-    'Vent_HRVTempSupplyOut']
+def processArguemnts(args):
+    job = Job()
+
+    # No arguments given. Use default settings
+    if len(args) == 1:
+        job.algorithm = None
+        job.getState = None
+        job.dataset = 'datasets/vent-minute.csv'
+        job.columns = [
+            'Vent_HRVTempExhaustOut',
+            'Vent_HRVTempOutdoorin',
+            'Vent_HRVTempReturnIn',
+            'Vent_HRVTempSupplyOut']
+        job.seperator = ';'
+        job.minSupport = 0.5
 
 
-def getState(value, columnName):
-    # Convert name to number
-    columnName = colOfInterest.index(columnName)
-
-    INTERVAL = 5
-    # Compute distance to range start
-    r = value % INTERVAL
-
-    # Compute range start and end
-    rangeStart = value - r
-    rangeEnd = rangeStart + INTERVAL
-
-    return '{}_{:.0f}->{:.0f}'.format(
-        columnName,
-        rangeStart,
-        rangeEnd)
-
-
-def LOAD_getState(value, columnName):
-    if value == '1' or value == 1:
-        return '{}_{}'.format(columnName, value)
     else:
-        return None
+        for arg in args:
+            print(arg)
+
+    return job
 
 
-def Main():
-    logger = PrintLogger(Severity.NOTICE)
-    log = Log('Start', Severity.NOTICE)
-    logger.log(log)
-
-    # Vent preprocessing
-    pre = GenericPreprocessor(PATH, ';', colOfInterest,
-        getState, logger)
-    # Load preprocessor
-    # pre = GenericPreprocessor(PATH_LOAD, ',', LOAD_colOfInterest,
-        # LOAD_getState, logger)
-
-    mdb, skippedDays = pre.GenerateTemporalMdb()
-
-    # Generating and computing support for states
-    supportList = Support.GenerateStateSupportList(mdb)
-
-    # Set support variables
-    minSupport = 0.6
-    maxGap = pa.to_timedelta('24:00:00')  # hh:mm:ss
-
-    # TPMiner Call
-
-
-    # Armada Call
+def armada(mdb, supportList, logger, minSupport, maxGap):
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
 
@@ -75,13 +44,71 @@ def Main():
 
     patterns = Armada(mdb, frequentStates, minSupport, maxGap, logger)
 
-    # Print last 10 patterns
-    helper.PrintNPatterns(10, patterns)
-    helper.PrintResults(minSupport, maxGap, patterns, skippedDays, frequentStates, PATH)
+    return Result(minSupport, maxGap, patterns, frequentStates)
 
-    # Display the number of different patterns
-    count = helper.CountNPatterns(patterns)
-    helper.PrintPatternCount(count)
+
+def tpminer_stu(mdb, supportList, logger, minSupport, maxGap):
+    patternSets = tpminer_main(mdb, minSupport, logger)
+
+    # Convert set to list
+    patterns = []
+    for p in patternSets:
+        patterns.append(p)
+
+    return Result(minSupport, maxGap, patterns, [])
+
+
+def armadaSetup(logger):
+    job = Job(logger=logger)
+    job.algorithm = armada
+    job.seperator = ','
+    job.dataset = 'datasets/Vent-minute.csv'
+    job.columns = col.vent_columns
+    job.getState = vent_getState
+    job.minSupport = 0.5
+    job.maxGap = pa.to_timedelta('24:00:00')
+
+    job.useGenericPreprocessor()
+
+    return job
+
+
+def tpminerSetup(logger):
+    job = Job(logger=logger)
+    job.algorithm = tpminer_stu
+    job.seperator = ','
+    job.dataset = 'datasets/Vent-minute-short.csv'
+    job.columns = col.vent_columns
+    job.getState = vent_getState
+    job.minSupport = 0.5
+    job.maxGap = pa.to_timedelta('24:00:00')
+
+    job.useGenericPreprocessor()
+
+    return job
+
+
+def Main():
+    # Logger setup
+    logger = PrintLogger(Severity.INFO)
+    log = Log('Start', Severity.NOTICE)
+    logger.log(log)
+
+    # job = processArguments(sys.argv)
+    # job.logger = logger
+
+    # Setup
+    arJob = armadaSetup(logger)
+    tpJob = tpminerSetup(logger)
+
+    # Run jobs
+    arResults = arJob.run()
+    tpResults = tpJob.run()
+
+    # View results
+    arResults.print()
+    tpResults.print()
+
 
 
 if __name__ == '__main__':

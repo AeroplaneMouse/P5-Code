@@ -30,6 +30,8 @@ if len(sys.argv) == 1:
     from tests import TPSpan_Tests
     print()
     from tests import GenericPreprocessor_Tests
+    print()
+    from tests import job_Tests
 
 
 # Run specific test
@@ -71,6 +73,9 @@ else:
 
     elif fileName == 'GenericPreprocessor_Tests' or fileName == 'GenericPreprocessor':
         from tests import GenericPreprocessor_Tests
+
+    elif fileName == 'job_Tests' or fileName == 'job':
+        from tests import job_Tests
 
     # elif fileName == '#FileNameForTest_Tests#' or fileName == '#FileNameForTest#':
         # Put import stuff here
