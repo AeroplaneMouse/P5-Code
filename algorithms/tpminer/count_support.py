@@ -18,8 +18,8 @@ def count_support(db_a, min_sup):
     for ep in suppList:
         if ep.Support / cs_n >= min_sup:
             FE.add(Endpoint(ep.Label, ep.IsStart, 0))
-        if ep.In_paren_supp / cs_n >= min_sup:
-            FE.add(Endpoint(ep.Label, ep.IsStart, 1))
+        #if ep.In_paren_supp / cs_n >= min_sup:
+            #FE.add(Endpoint(ep.Label, ep.IsStart, 1))
 
 
     return FE
@@ -51,7 +51,8 @@ def acc_sup(cs, suppList, paren_num):
     i = 0
 
     #in parenthesis support
-    if paren_num > 0:
+    if False:
+    #if paren_num > 0:
         while i < len(cs):
             if cs[i].Parenthesis == paren_num:
                 is_in_list = False
