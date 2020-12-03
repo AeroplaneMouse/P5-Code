@@ -1,6 +1,7 @@
-import pandas as pa
 import numpy as np
+import pandas as pa
 from logging import *
+from os import path
 
 
 class GenericPreprocessor:
@@ -8,6 +9,11 @@ class GenericPreprocessor:
         self.logger = logger
         log = Log('Initializing Generic Preprocessor', Severity.NOTICE)
         self.logger.log(log)
+
+        # Check if file exists
+        if not path.exists(csvPath):
+            log = Log('Dataset not found: {}'.format(csvPath), Severity.ERROR)
+            return
 
         # Load data from CSV
         self.df = pa.read_csv(csvPath, sep=seperator)

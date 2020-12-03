@@ -9,6 +9,7 @@ from algorithms.tpminer import tpminer
 from algorithms.tpminer.tpminer_main import tpminer_main
 from algorithms.armada.Armada import Armada
 from preprocessors.Preprocessor import GenericPreprocessor
+from armadaExperimentJobs import getAllArmadaExperiments
 
 
 def processArguemnts(args):
@@ -88,6 +89,19 @@ def tpminerSetup(logger):
     return job
 
 
+def runExperiments(logger):
+    jobs = getAllArmadaExperiments(logger)
+    results = []
+
+    for job in jobs:
+        result = job.run()
+        results.append(result)
+        result.print()
+
+    # with open('result.log', 'w') as f:
+
+
+
 def Main():
     # Logger setup
     logger = PrintLogger(Severity.INFO)
@@ -97,17 +111,20 @@ def Main():
     # job = processArguments(sys.argv)
     # job.logger = logger
 
+    # runExperiments(logger)
+    # return
+
     # Setup
     arJob = armadaSetup(logger)
-    tpJob = tpminerSetup(logger)
+    # tpJob = tpminerSetup(logger)
 
     # Run jobs
     arResults = arJob.run()
-    tpResults = tpJob.run()
+    # tpResults = tpJob.run()
 
     # View results
     arResults.print()
-    tpResults.print()
+    # tpResults.print()
 
 
 

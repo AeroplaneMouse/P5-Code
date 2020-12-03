@@ -9,12 +9,14 @@ class Result:
     dataset = ""
     minSupport = None
     maxGap = None
+    errors = None
 
-    def __init__(self, minSupport, maxGap, patterns, frequentStates):
+    def __init__(self, minSupport, maxGap, patterns=[], frequentStates=[], errors=[]):
         self.patterns = patterns
-        self.frequentStates = []
+        self.frequentStates = frequentStates
         self.minSupport = minSupport
         self.maxGap = maxGap
+        self.errors = errors
 
     # Print the last 'n' patterns
     def printPatterns(self, n=-1):
@@ -30,26 +32,33 @@ class Result:
             i += 1
 
     def print(self):
-        # Remove extension and dataset folder
-        dataset = self.dataset[9:-4]
+        out = '#'*42 + '\n'
+        if len(self.errors) > 0:
+            out += '# {:<38} #\n'.format('Errors:')
+            for e in self.errors:
+                out += '# {:<38} #\n'.format(e)
+        else:
+            # Remove extension and dataset folder
+            dataset = self.dataset[9:-4]
 
-        print('#'*42)
-        print('# Dataset: {:>29} #'.format(dataset))
-        print('# Minimum support: {:>21} #'.format(self.minSupport))
-        print('# Maximum gap: {:>25} #'.format(str(self.maxGap)))
-        print('# Patterns found: {:>22} #'.format(len(self.patterns)))
-        print('# Skipped days: {:>24} #'.format(len(self.skippedDays)))
-        print('# Frequent states: {:>21} #'.format(len(self.frequentStates)))
-        print('# Preprocessing: {:>21.1f} s #'.format(self.preprocessingTime))
-        print('# Algorithm time: {:>20.1f} s #'.format(self.algorithmTime))
+            out +='# Dataset: {:>29} #\n'.format(dataset)
+            out +='# Minimum support: {:>21} #\n'.format(self.minSupport)
+            out +='# Maximum gap: {:>25} #\n'.format(str(self.maxGap))
+            out +='# Patterns found: {:>22} #\n'.format(len(self.patterns))
+            out +='# Skipped days: {:>24} #\n'.format(len(self.skippedDays))
+            out +='# Frequent states: {:>21} #\n'.format(len(self.frequentStates))
+            out +='# Preprocessing: {:>21.1f} s #\n'.format(self.preprocessingTime)
+            out +='# Algorithm time: {:>20.1f} s #\n'.format(self.algorithmTime)
 
-        count = CountNPatterns(self.patterns)
-        print('#' + ' '*40 + '#')
-        for key in count:
-            print('# {:>2}-patterns: {:>25} #'.format(
-                key,
-                count[key]))
-        print('#'*42)
+            count = CountNPatterns(self.patterns)
+            out += '#' + ' '*40 + '#\n'
+            for key in count:
+                out += '# {:>2}-patterns: {:>25} #\n'.format(
+                    key,
+                    count[key])
+
+        out += '#'*42 + '\n'
+        print(out)
 
 
 # Counts the number of different pattern types

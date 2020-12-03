@@ -16,10 +16,12 @@ class Job:
     minSupport = None
     maxGap = None
     preprocessor = None
+    label = None
 
-    def __init__(self, seperator=',', logger=None):
+    def __init__(self, seperator=',', logger=None, label=""):
         self.seperator = seperator
         self.logger = logger
+        self.label = label
 
     def useGenericPreprocessor(self):
         # Check properties
@@ -35,10 +37,17 @@ class Job:
             self.getState,
             self.logger)
 
-    def run(self):
+    def __log(self, log):
         if self.logger is not None:
-            log = Log('Starting algorithm: {}'.format(self.algorithm.__name__), Severity.INFO)
             self.logger.log(log)
+
+    def run(self):
+        # Check preprocessor
+        if self.preprocessor == None:
+            self.__log(Log('No preprocessor', Severity.ERROR))
+            return Result(self.minSupport, self.maxGap, errors=['No preprocessor'])
+
+        self.__log(Log('Starting algorithm: {}'.format(self.algorithm.__name__), Severity.INFO))
 
         t0 = perf_counter()
         mdb, skippedDays = self.preprocessor.GenerateTemporalMdb()
