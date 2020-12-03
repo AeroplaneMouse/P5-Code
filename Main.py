@@ -74,6 +74,21 @@ def armadaSetup(logger):
     return job
 
 
+def testSetup(logger):
+    job = Job(logger=logger)
+    job.algorithm = armada
+    job.seperator = ','
+    job.dataset = 'datasets/Vent-minute-shorter.csv'
+    job.columns = col.vent_columns[:-1]
+    job.getState = vent_getState
+    job.minSupport = 0.7
+    job.maxGap = pa.to_timedelta('24:00:00')
+
+    job.useGenericPreprocessor()
+
+    return job
+
+
 def tpminerSetup(logger):
     job = Job(logger=logger)
     job.algorithm = tpminer_stu
@@ -89,6 +104,15 @@ def tpminerSetup(logger):
     return job
 
 
+def saveResults(results):
+    # Make folder
+    # l
+    pass
+    # Filename
+    # filename = ''
+    # while
+
+
 def runExperiments(logger):
     jobs = getAllArmadaExperiments(logger)
     results = []
@@ -98,8 +122,7 @@ def runExperiments(logger):
         results.append(result)
         result.print()
 
-    # with open('result.log', 'w') as f:
-
+    saveResults(results)
 
 
 def Main():
@@ -115,7 +138,8 @@ def Main():
     # return
 
     # Setup
-    arJob = armadaSetup(logger)
+    arJob = testSetup(logger)
+    # arJob = armadaSetup(logger)
     # tpJob = tpminerSetup(logger)
 
     # Run jobs
