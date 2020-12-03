@@ -49,7 +49,7 @@ def armada(mdb, supportList, logger, minSupport, maxGap):
     return Result(minSupport, maxGap, patterns, frequentStates)
 
 
-def setup(logger):
+def defaultSetup(logger):
     job = Job(logger=logger)
     job.algorithm = armada
     job.seperator = ';'
@@ -79,7 +79,7 @@ def Main():
     # job.logger = logger
 
     # Setup
-    job = setup(logger)
+    job = defaultSetup(logger)
 
     # Run
     results = job.run()

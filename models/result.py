@@ -1,13 +1,18 @@
 
 
 class Result:
+    patterns = None
+    preprocessingTime = -1
+    algorithmTime = -1
+    frequentStates = None
+    skippedDays = None
+    path = ""
+    minSupport = None
+    maxGap = None
+
     def __init__(self, minSupport, maxGap, patterns, frequentStates):
         self.patterns = patterns
-        self.preprocessingTime = -1
-        self.algorithmTime = -1
         self.frequentStates = []
-        self.skippedDays = []
-        self.path = ""
         self.minSupport = minSupport
         self.maxGap = maxGap
 
@@ -59,3 +64,8 @@ def CountNPatterns(patterns):
             count[pSize] += 1
 
     return count
+
+def Test():
+    a = Result(1, 2, 3, 4)
+
+    a.algorithmTime
