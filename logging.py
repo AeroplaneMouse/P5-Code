@@ -1,4 +1,5 @@
 from enum import Enum
+import os
 
 
 class Severity(Enum):
@@ -30,3 +31,23 @@ class PrintLogger(Logger):
                 log.severity.name,
                 log.message)
             print(m)
+
+class FileLogger(Logger):
+    LOG_FOLDER = 'logs/'
+
+    def __init__(self, severity, filename):
+        Logger.__init__(self, severity)
+
+        self.filename = self.LOG_FOLDER + filename
+
+        # Create log folder
+        if not os.path.exists(self.LOG_FOLDER):
+            os.mkdir('logs/')
+
+    def log(self, log):
+        if log.severity.value <= self.severity.value:
+            msg = '[{}] {}\n'.format(log.severity.name, log.message)
+
+            # Write to file
+            with open(self.filename, "a") as f:
+                f.write(msg)
