@@ -33,6 +33,7 @@ def create_db(db_a, a_p):
             i += 1
             if ep.Label == a_last.Label and ep.IsStart == a_last.IsStart:
                 new_cs = Projected_cs(cs.Prefix_instance + [ep])
+                new_cs.cs_id = cs.cs_id
                 new_cs.Ep_list.extend(cs.Ep_list[i:])
                 db_a_p.ES.append(new_cs)
                 break

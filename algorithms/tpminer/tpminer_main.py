@@ -16,13 +16,27 @@ def tpminer_main(mdb, min_sup, logger):
     TP = set()
     temp = TDBToEndpointSequenceList(mdb)
 
+    log = Log('Converted to Endpoints', Severity.NOTICE)
+    logger.log(log)
+
+
     db = convert_to_db(temp)
 
     FE = FindFE(db.ES, min_sup)
 
+    i = 1
+    n = len(FE)
+
     for s in FE:
         db_s = db_construct(db, [s])
+
         TPSpan([s], db_s, min_sup, TP)
+
+        m = 'TPMiner {:0.1f}%'.format((i/n)*100)
+        log = Log(m, Severity.INFO)
+        logger.log(log)
+
+        i += 1
 
     return TP
 
@@ -63,10 +77,12 @@ def find_in_supp_list(ep, suppList):
 
 def convert_to_db(mdb):
     temp = DB([])
-
+    i = 1
     for l in mdb:
         cs = Projected_cs([])
         cs.Ep_list = l
+        cs.cs_id = i
         temp.ES.append(cs)
+        i += 1
 
     return temp

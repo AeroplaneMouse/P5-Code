@@ -11,7 +11,7 @@ def count_support(db_a, min_sup):
 
     for cs in db_a.ES:
         if len(cs.Ep_list) > 0:
-            j = find_stop_pos(cs.Ep_list, prfx_trimmed)
+            j = find_stop_pos(cs.Ep_list, prfx_trimmed, cs.cs_id)
             acc_sup(cs.Ep_list[:j], suppList, cs.Prefix_instance[-1].Parenthesis)
 
     cs_n = len(db_a.ES)
@@ -24,14 +24,15 @@ def count_support(db_a, min_sup):
 
     return FE
 
-def find_stop_pos(ep_list, prfx_s_ep):
+def find_stop_pos(ep_list, prfx_s_ep, id):
     cs_len = len(ep_list)
     if len(prfx_s_ep) > 0:
         i = 0
         while not is_stop_ep(ep_list[i], prfx_s_ep):
             i += 1
         p = ep_list[i].Parenthesis
-        if p > 0:
+        #if p > 0:
+        if False:
             while i < cs_len - 1 and ep_list[i + 1].Parenthesis == p:
                 i += 1
         return i + 1
