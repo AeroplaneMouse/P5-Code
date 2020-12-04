@@ -1,4 +1,5 @@
 from logging import Log, Severity
+from tpmmodels.Endpoint import Endpoint
 
 
 class Result:
@@ -77,7 +78,10 @@ class Result:
 def CountNPatterns(patterns):
     count = {}
     for p in patterns:
-        pSize = len(p[0][1:])
+        if type(p) == type(Endpoint):
+            pSize = len(p)
+        else:
+            pSize = len(p[0][1:])
 
         if pSize not in count:
             count[pSize] = 1
