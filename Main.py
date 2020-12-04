@@ -9,7 +9,7 @@ from algorithms.tpminer import tpminer
 from algorithms.tpminer.tpminer_main import tpminer_main
 from algorithms.armada.Armada import Armada
 from preprocessors.Preprocessor import GenericPreprocessor
-from armadaExperimentJobs import getAllArmadaExperiments
+from experiments import main as xp
 
 
 def processArguemnts(args):
@@ -104,38 +104,23 @@ def tpminerSetup(logger):
     return job
 
 
-def saveResults(results):
-    # Make folder
-    # l
-    pass
-    # Filename
-    # filename = ''
-    # while
-
-
-def runExperiments(logger):
-    jobs = getAllArmadaExperiments(logger)
-    results = []
-
-    for job in jobs:
-        result = job.run()
-        results.append(result)
-        result.print()
-
-    saveResults(results)
-
 
 def Main():
     # Logger setup
     logger = PrintLogger(Severity.INFO)
+    # logger = FileLogger(Severity.INFO, 'test.log')
+    logger.INSERT_TIMESTAMP = True
     log = Log('Start', Severity.NOTICE)
     logger.log(log)
 
     # job = processArguments(sys.argv)
     # job.logger = logger
 
+    xp.run(logger)
+
+
     # runExperiments(logger)
-    # return
+    return
 
     # Setup
     arJob = testSetup(logger)
@@ -147,7 +132,7 @@ def Main():
     # tpResults = tpJob.run()
 
     # View results
-    arResults.print()
+    arResults.print(logger)
     # tpResults.print()
 
 

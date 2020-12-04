@@ -5,23 +5,23 @@ from preprocessors.columns import vent_columns
 
 
 min_5_seq_6 = Job(label='min_5_seq_6')
-min_5_seq_6.minSupport = 0.05
+min_5_seq_6.minSupport = 0.5
 
 min_4_seq_6 = Job(label='min_4_seq_6')
-min_4_seq_6.minSupport = 0.04
+min_4_seq_6.minSupport = 0.4
 
 min_3_seq_6 = Job(label='min_3_seq_6')
-min_3_seq_6.minSupport = 0.03
+min_3_seq_6.minSupport = 0.3
 
 min_2_seq_6 = Job(label='min_2_seq_6')
-min_2_seq_6.minSupport = 0.02
+min_2_seq_6.minSupport = 0.2
 
 min_1_seq_6 = Job(label='min_1_seq_6')
-min_1_seq_6.minSupport = 0.01
+min_1_seq_6.minSupport = 0.1
 
 
 
-def getAllArmadaExperiments(logger):
+def initializeJobs(logger):
     # 6 sequence jobs
     jobs_seq_6 = [
         min_5_seq_6,

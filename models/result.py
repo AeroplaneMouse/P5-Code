@@ -1,3 +1,4 @@
+from logging import Log, Severity
 
 
 class Result:
@@ -10,6 +11,7 @@ class Result:
     minSupport = None
     maxGap = None
     errors = None
+    job = None
 
     def __init__(self, minSupport, maxGap, patterns=[], frequentStates=[], errors=[]):
         self.patterns = patterns
@@ -18,20 +20,7 @@ class Result:
         self.maxGap = maxGap
         self.errors = errors
 
-    # Print the last 'n' patterns
-    def printPatterns(self, n=-1):
-        if n == -1 or n > len(self.patterns):
-            n = len(self.patterns)
-
-        print('Last {} patterns:'.format(n))
-        i = len(self.patterns) - n - 1
-        for p in self.patterns[-n:]:
-            print(i)
-            print(p)
-            print()
-            i += 1
-
-    def print(self):
+    def __str__(self):
         out = '#'*42 + '\n'
         if len(self.errors) > 0:
             out += '# {:<38} #\n'.format('Errors:')
@@ -58,7 +47,30 @@ class Result:
                     count[key])
 
         out += '#'*42 + '\n'
-        print(out)
+        return out
+
+    # Print the last 'n' patterns
+    def printPatterns(self, n=-1):
+        if n == -1 or n > len(self.patterns):
+            n = len(self.patterns)
+
+        print('Last {} patterns:'.format(n))
+        i = len(self.patterns) - n - 1
+        for p in self.patterns[-n:]:
+            print(i)
+            print(p)
+            print()
+            i += 1
+
+    def print(self, logger):
+        # Log message
+        msg = 'Results '
+        if self.job is not None:
+            msg += 'for: ' + self.job.label
+
+        # Results
+        msg += '\n' + self.__str__()
+        logger.log(Log(msg, Severity.NOTICE))
 
 
 # Counts the number of different pattern types
@@ -73,8 +85,3 @@ def CountNPatterns(patterns):
             count[pSize] += 1
 
     return count
-
-def Test():
-    a = Result(1, 2, 3, 4)
-
-    a.algorithmTime

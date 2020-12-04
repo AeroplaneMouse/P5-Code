@@ -61,6 +61,7 @@ class Job:
         results.skippedDays = skippedDays
         results.dataset = self.dataset
         results.preprocessingTime = preTime
+        results.job = self
 
         self.results = results
         return self.results

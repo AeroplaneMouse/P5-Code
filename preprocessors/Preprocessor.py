@@ -34,6 +34,7 @@ class GenericPreprocessor:
         self.__getState__ = getState
 
     def GenerateTemporalMdb(self):
+        self.logger.log(Log('Preprocessing started', Severity.NOTICE))
         mdb = []
 
         # Generate date series
@@ -73,8 +74,7 @@ class GenericPreprocessor:
             self.logger.log(log)
             progress += 1
 
-        log = Log('Preprocessing finished', Severity.NOTICE)
-        self.logger.log(log)
+        self.logger.log(Log('Preprocessing finished', Severity.NOTICE))
         return mdb, skippedDays
 
     def __getState(self, value, columnName):

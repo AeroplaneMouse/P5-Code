@@ -40,6 +40,7 @@ class PrintLogger(Logger):
                 log.message)
             print(msg)
 
+
 class FileLogger(Logger):
     LOG_FOLDER = 'logs/'
 
@@ -65,6 +66,16 @@ class FileLogger(Logger):
             # Write to file
             with open(self.filename, "a") as f:
                 f.write(msg)
+
+
+class MultiLogger(Logger):
+    def __init__(self, loggers=[]):
+        self.loggers = loggers
+
+    def log(self, log):
+        for logger in self.loggers:
+            logger.log(log)
+
 
 def getDate(flag):
     if flag:
