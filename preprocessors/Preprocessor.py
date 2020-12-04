@@ -12,7 +12,7 @@ class GenericPreprocessor:
 
         # Check if file exists
         if not path.exists(csvPath):
-            log = Log('Dataset not found: {}'.format(csvPath), Severity.ERROR)
+            self.logger.log(Log('Dataset not found: {}'.format(csvPath), Severity.ERROR))
             return
 
         # Load data from CSV
