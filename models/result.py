@@ -78,8 +78,9 @@ class Result:
 def CountNPatterns(patterns):
     count = {}
     for p in patterns:
+        # Compute pattern size
         if type(p[0]) == Endpoint:
-            pSize = len(p)
+            pSize = len(p) / 2
         else:
             pSize = len(p[0][1:])
 
