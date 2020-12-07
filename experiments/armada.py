@@ -69,7 +69,9 @@ def initializeJobs(logger=None):
         job.maxGap = pa.to_timedelta('24:00:00')
 
         if logger is None:
-            job.logger = FileLogger(Severity.INFO, job.label+'.log')
+            fLog = FileLogger(Severity.INFO, job.label+'.log')
+            fLog.INSERT_TIMESTAMP = True
+            job.logger = fLog
         else:
             job.logger = logger
 

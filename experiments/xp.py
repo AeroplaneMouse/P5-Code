@@ -73,6 +73,7 @@ def helper(logger, id, lock, rLock, job, results):
 def run(logger):
     MULTITHREAD = False
     fLog = FileLogger(Severity.NOTICE, 'experiment_results.log')
+    fLog.INSERT_TIMESTAMP = True
     mLog = MultiLogger([fLog, logger])
 
 

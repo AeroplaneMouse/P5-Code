@@ -9,7 +9,8 @@ from algorithms.tpminer import tpminer
 from algorithms.tpminer.tpminer_main import tpminer_main
 from algorithms.armada.Armada import Armada
 from preprocessors.Preprocessor import GenericPreprocessor
-from experiments import main as xp
+from experiments import xp
+import pdb, traceback, sys
 
 
 def processArguemnts(args):
@@ -63,10 +64,10 @@ def armadaSetup(logger):
     job = Job(logger=logger)
     job.algorithm = armada
     job.seperator = ','
-    job.dataset = 'datasets/Vent-minute.csv'
+    job.dataset = 'datasets/Vent-minute-12.csv'
     job.columns = col.vent_columns
     job.getState = vent_getState
-    job.minSupport = 0.5
+    job.minSupport = 0.7
     job.maxGap = pa.to_timedelta('24:00:00')
 
     job.useGenericPreprocessor()
@@ -116,26 +117,28 @@ def Main():
     # job = processArguments(sys.argv)
     # job.logger = logger
 
-    xp.run(logger)
 
+    if len(sys.argv) > 1 and (sys.argv[1] == '-e' or sys.argv == '--experiments'):
+        xp.run(logger)
+    else:
+        # Setup
+        arJob = armadaSetup(logger)
+        # tpJob = tpminerSetup(logger)
 
-    # runExperiments(logger)
-    return
+        # Run jobs
+        arResults = arJob.run()
+        # tpResults = tpJob.run()
 
-    # Setup
-    arJob = testSetup(logger)
-    # arJob = armadaSetup(logger)
-    # tpJob = tpminerSetup(logger)
-
-    # Run jobs
-    arResults = arJob.run()
-    # tpResults = tpJob.run()
-
-    # View results
-    arResults.print(logger)
-    # tpResults.print()
+        # View results
+        arResults.print(logger)
+        # tpResults.print()
 
 
 
 if __name__ == '__main__':
-    Main()
+    try:
+        Main()
+    except:
+        extype, value, tb = sys.exc_info()
+        traceback.print_exc()
+        pdb.post_mortem(tb)
