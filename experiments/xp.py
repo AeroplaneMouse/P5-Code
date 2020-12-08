@@ -1,9 +1,12 @@
 import time
 import _thread
 # import threading
+import methods
+import pandas as pa
 from models.job import Job
-from experiments import armada
-from logging import FileLogger, MultiLogger, Log, Severity
+from preprocessors import columns
+from experiments import armada_jobs
+from logging2 import FileLogger, MultiLogger, Log, Severity
 
 
 def startWorkerThreads(jobs, rLock, logger, results):
@@ -78,13 +81,16 @@ def run(logger):
 
 
     if MULTITHREAD:
-        jobs = armada.initializeJobs()
+        jobs = armada_jobs.initializeJobs()
         results = shitMultithreading(jobs, logger)
 
         for result in results:
             result.print(mLog)
     else:
-        jobs = armada.initializeJobs(mLog)
+        jobs = armada_jobs.initializeJobs(mLog)
+        # jobs = [
+        #     test(logger)
+        # ]
 
         results = []
         for job in jobs:
@@ -94,3 +100,18 @@ def run(logger):
 
 
     logger.log(Log('Exiting Thread-Main', Severity.INFO))
+
+
+def test(logger):
+    job = Job(logger=logger)
+    job.algorithm = methods.armada
+    job.seperator = ','
+    job.dataset = 'datasets/Vent-minute-3.csv'
+    job.columns = columns.vent_columns
+    job.getState = methods.vent_getState
+    job.minSupport = 0.7
+    job.maxGap = pa.to_timedelta('24:00:00')
+
+    job.useGenericPreprocessor()
+
+    return job
