@@ -1,4 +1,4 @@
-from logging2 import *
+from logging import *
 from tpmmodels.DB import DB
 from tpmmodels.Ep_sup import Ep_sup
 from tpmmodels.Endpoint import Endpoint
@@ -31,8 +31,6 @@ def tpminer_main(mdb, min_sup, logger):
         #db_s = db_construct(db, [s], [s])
         db_pruned, db_s = db_construct(db, [s])
 
-        print(s)
-
         #TPSpan([s], db_s, min_sup, TP, [s])
         TPSpan([s], db_s, min_sup, TP, db_pruned)
 
@@ -42,8 +40,6 @@ def tpminer_main(mdb, min_sup, logger):
 
         i += 1
 
-    for ptn in TP:
-        print(ptn)
     return TP
 
 

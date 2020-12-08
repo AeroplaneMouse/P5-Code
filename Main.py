@@ -12,7 +12,6 @@ from preprocessors.Generic import GenericPreprocessor
 from experiments import xp
 import pdb, traceback, sys
 
-
 def processArguemnts(args):
     job = Job()
 
@@ -77,9 +76,9 @@ def armadaSetup(logger):
 
 def testSetup(logger):
     job = Job(logger=logger)
-    job.algorithm = armada
+    job.algorithm = tpminer_stu
     job.seperator = ','
-    job.dataset = 'datasets/Vent-minute-shorter.csv'
+    job.dataset = 'datasets/Vent-minute.csv'
     job.columns = col.vent_columns[:-1]
     job.getState = vent_getState
     job.minSupport = 0.7
@@ -117,12 +116,21 @@ def Main():
     # job = processArguments(sys.argv)
     # job.logger = logger
 
-
     if len(sys.argv) > 1 and (sys.argv[1] == '-e' or sys.argv == '--experiments'):
         xp.run(logger)
     else:
         # Setup
-        arJob = armadaSetup(logger)
+        # arJob = armadaSetup(logger)
+        # tpJob = tpminerSetup(logger)
+        #xp.run(logger)
+
+
+        # runExperiments(logger)
+        #return
+
+        # Setup
+        arJob = testSetup(logger)
+        # arJob = armadaSetup(logger)
         # tpJob = tpminerSetup(logger)
 
         # Run jobs
