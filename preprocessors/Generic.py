@@ -17,6 +17,7 @@ class GenericPreprocessor:
 
         # Load data from CSV
         self.df = pa.read_csv(csvPath, sep=seperator)
+        self.folder, self.filename = extractFolderFile(csvPath)
 
         # Set timestamps as index and convert to UTC time
         self.df.index = pa.to_datetime(
@@ -140,3 +141,16 @@ class GenericPreprocessor:
         df.reset_index(drop=True, inplace=True)
 
         return df
+
+def extractFolderFile(csvPath):
+    parts = csvPath.split('/')
+
+    filename = parts[:-1][0]
+    folder = ""
+
+    # Extract folders
+    if len(parts) > 1:
+        for dirName in parts[:-1]:
+            folder += dirName + '/'
+
+    return folder, filename
