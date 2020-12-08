@@ -12,7 +12,6 @@ from preprocessors.Generic import GenericPreprocessor
 from experiments import xp
 import pdb, traceback, sys
 
-
 def processArguemnts(args):
     job = Job()
 
@@ -60,11 +59,11 @@ def tpminer_stu(mdb, supportList, logger, minSupport, maxGap):
     return Result(minSupport, maxGap, patterns, [])
 
 
-def armadaSetup(logger):
+def armadaVentSetup(logger):
     job = Job(logger=logger)
     job.algorithm = armada
     job.seperator = ','
-    job.dataset = 'datasets/Vent-minute-12.csv'
+    job.dataset = 'datasets/Vent-minute-short.csv'
     job.columns = col.vent_columns
     job.getState = vent_getState
     job.minSupport = 0.7
@@ -77,9 +76,9 @@ def armadaSetup(logger):
 
 def testSetup(logger):
     job = Job(logger=logger)
-    job.algorithm = armada
+    job.algorithm = tpminer_stu
     job.seperator = ','
-    job.dataset = 'datasets/Vent-minute-shorter.csv'
+    job.dataset = 'datasets/Vent-minute.csv'
     job.columns = col.vent_columns[:-1]
     job.getState = vent_getState
     job.minSupport = 0.7
@@ -90,7 +89,7 @@ def testSetup(logger):
     return job
 
 
-def tpminerSetup(logger):
+def tpminerVentSetup(logger):
     job = Job(logger=logger)
     job.algorithm = tpminer_stu
     job.seperator = ','
@@ -104,7 +103,7 @@ def tpminerSetup(logger):
 
     return job
 
-
+    
 
 def Main():
     # Logger setup
@@ -117,22 +116,41 @@ def Main():
     # job = processArguments(sys.argv)
     # job.logger = logger
 
-
     if len(sys.argv) > 1 and (sys.argv[1] == '-e' or sys.argv == '--experiments'):
         xp.run(logger)
+    elif len(sys.argv) == 3:        
+        if(sys.argv[1] == 'armada'):
+            if(sys.argv[2] == 'vent'):
+                #ARMADA VENT
+                arJob = armadaVentSetup(logger)
+                arResults = arJob.run()
+                arResults.print(logger)
+                
+            elif(sys.argv[2] == 'weathercrash'):
+                #ARMADA WEATHERCRASH
+                pass
+            else:
+                print('These are not the datasets you are looking for.')
+        
+        elif(sys.argv[1] == 'tpminer'):
+            if(sys.argv[2] == 'vent'):
+                #TPMINER VENT
+                tpJob = tpminerVentSetup(logger)
+                tpResults = tpJob.run()
+                tpResults.print()
+                
+            elif(sys.argv[2] == 'weathercrash'):
+                #TPMINER WEATHERCRASH
+                pass
+                
+            else:
+                print('These are not the datasets you are looking for.')
+            
+        else:
+            print('Dr. WrongArg or: The Dataset Which Never Was.')
+                      
     else:
-        # Setup
-        arJob = armadaSetup(logger)
-        # tpJob = tpminerSetup(logger)
-
-        # Run jobs
-        arResults = arJob.run()
-        # tpResults = tpJob.run()
-
-        # View results
-        arResults.print(logger)
-        # tpResults.print()
-
+        print('Invalid Arguments.')
 
 
 if __name__ == '__main__':

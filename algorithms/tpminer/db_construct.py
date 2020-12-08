@@ -2,11 +2,11 @@ from tpmmodels.DB import DB
 from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 from tpmmodels.Projected_cs import Projected_cs
 
-
+#def db_construct(db_a, a_p, lone_eps):
 def db_construct(db_a, a_p):
     temp_seq = DB(a_p)
 
-    prfx_starting_ep = remove_corresponding_eps(a_p)
+    lone_eps = remove_corresponding_eps(a_p)
 
     #in_paren = False
     #if len(a_p) > 1:
@@ -18,10 +18,10 @@ def db_construct(db_a, a_p):
     db_a_p = create_db(db_a, a_p)
 
     for cs in db_a_p.ES:
-        #postfix_prune(cs.Ep_list, a_p, prfx_starting_ep)
-        temp_seq.ES.append(cs)
+        new_cs = postfix_prune(cs, a_p, lone_eps)
+        temp_seq.ES.append(new_cs)
 
-    return temp_seq
+    return temp_seq, db_a_p
 
 def create_db(db_a, a_p):
     db_a_p = DB(a_p)
@@ -62,17 +62,21 @@ def create_db_paren(db_a, a_p):
     return db_a_p
 
 def postfix_prune(cs, a_p, s_ep):
-    for ep in cs:
+    for ep in cs.Ep_list:
         if ep.IsStart == False:
             ep.Prune = True
             for s in s_ep:
                 if ep.Label == s.Label:
                     ep.Prune = False
                     break
-            
-    prune(cs)
+    new_cs = Projected_cs(cs.Prefix_instance)
+    new_cs.Ep_list = prune(cs.Ep_list)
+    return new_cs
 
 def prune(cs):
-    for ep in reversed(cs):
-        if ep.Prune == True:
-            cs.remove(ep)
+    new_cs = []
+    for ep in cs:
+        if not ep.Prune:
+            new_cs.append(ep)
+
+    return new_cs

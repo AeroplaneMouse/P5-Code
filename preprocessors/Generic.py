@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pa
 from logging2 import *
 from os import path
-from memory_profiler import profile
 
 
 class GenericPreprocessor:
@@ -86,6 +85,8 @@ class GenericPreprocessor:
             return None
         else:
             return self.__getState__(value, columnName)
+
+    
 
     def __generateClientSequence(self, clientId, data):
         df = pa.DataFrame(columns=['ClientID', 'State', 'Start', 'End'])

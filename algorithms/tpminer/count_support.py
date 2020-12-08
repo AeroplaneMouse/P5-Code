@@ -3,15 +3,16 @@ from tpmmodels.Ep_sup import Ep_sup
 from tpmmodels.Endpoint import Endpoint
 from tpmmodels.Projected_cs import Projected_cs
 
+#def count_support(db_a, min_sup, lone_eps):
 def count_support(db_a, min_sup):
-
-    prfx_trimmed = remove_corresponding_eps(db_a.Pattern)
     suppList = []
     FE = set()
 
+    lone_eps = remove_corresponding_eps(db_a.Pattern)
+
     for cs in db_a.ES:
         if len(cs.Ep_list) > 0:
-            j = find_stop_pos(cs.Ep_list, prfx_trimmed, cs.cs_id)
+            j = find_stop_pos(cs.Ep_list, lone_eps, cs.cs_id)
             acc_sup(cs.Ep_list[:j], suppList, cs.Prefix_instance[-1].Parenthesis)
 
     cs_n = len(db_a.ES)
@@ -74,6 +75,7 @@ def acc_sup(cs, suppList, paren_num):
     while i < len(cs):
         is_in_list = False
         for j in range(len(suppList)):
+            #if not cs[i].Prune and cs[i].Label == suppList[j].Label and cs[i].IsStart == suppList[j].IsStart:
             if cs[i].Label == suppList[j].Label and cs[i].IsStart == suppList[j].IsStart:
                 if not suppList[j].Has_been_counted:
                     suppList[j].Support += 1
