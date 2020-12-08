@@ -54,3 +54,14 @@ load_columns = [
     'Load_StatusPlugLoadFan',
     'Load_StatusPlugLoadHeatingPad',
     'Load_StatusPlugLoadIron']
+
+weather_columns = [
+    'fog',
+    'rain',
+    'snow',
+    'hail',
+    'thunder',
+    'tornado']
+
+crash_columns = [
+    'CRASH TIME']
