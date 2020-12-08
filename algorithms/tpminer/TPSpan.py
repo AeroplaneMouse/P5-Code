@@ -7,7 +7,7 @@ import pdb, traceback, sys
 
 def TPSpan(a, db_a, min_occ, TP, db_pruned, db):
     FE = count_support(db_pruned, min_occ)
-    FE = point_pruning(FE, a)
+    FE = point_pruning(FE, a, db_a.Prfx_s_ep)
 
     FE = set(filter(lambda x : eligible(a, x), FE))
     for s in FE:
