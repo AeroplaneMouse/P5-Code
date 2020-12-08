@@ -1,4 +1,4 @@
-from logging import *
+from logging2 import *
 from tpmmodels.DB import DB
 from tpmmodels.Ep_sup import Ep_sup
 from tpmmodels.Endpoint import Endpoint

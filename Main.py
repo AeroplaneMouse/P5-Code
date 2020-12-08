@@ -3,12 +3,12 @@ import pandas as pa
 from models.job import Job
 from models.result import Result
 from methods import *
-from logging import *
+from logging2 import *
 from preprocessors import Support, columns as col
 from algorithms.tpminer import tpminer
 from algorithms.tpminer.tpminer_main import tpminer_main
 from algorithms.armada.Armada import Armada
-from preprocessors.Preprocessor import GenericPreprocessor
+from preprocessors.Generic import GenericPreprocessor
 from experiments import xp
 import pdb, traceback, sys
 

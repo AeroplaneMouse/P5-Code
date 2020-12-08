@@ -1,7 +1,7 @@
 import pandas as pa
 import testSuite as t
-from logging import *
-from preprocessors.Preprocessor import GenericPreprocessor
+from logging2 import *
+from preprocessors.Generic import GenericPreprocessor
 
 CSV_PATH = 'tests/TestSet.csv'
 COLUMNS = ['Test1', 'Test2', 'Test3', 'Test4']

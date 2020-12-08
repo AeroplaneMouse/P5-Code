@@ -1,6 +1,6 @@
 from preprocessors.Load import LoadPreprocessor
 from preprocessors import Support, loadData
-from preprocessors.Preprocessor import GenericPreprocessor
+from preprocessors.Generic import GenericPreprocessor
 from algorithms.armada.Armada import Armada
 import pandas as pa
 import helper

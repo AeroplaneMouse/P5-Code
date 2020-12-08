@@ -1,4 +1,4 @@
-from logging import Log, Severity
+from logging2 import Log, Severity
 from tpmmodels.Endpoint import Endpoint
 
 

@@ -1,10 +1,10 @@
 from time import perf_counter
 import pandas as pa
 from models.result import Result
-from logging import Log, Severity
+from logging2 import Log, Severity
 from exceptions import *
 from preprocessors import Support
-from preprocessors.Preprocessor import GenericPreprocessor
+from preprocessors.Generic import GenericPreprocessor
 
 
 class Job:

@@ -1,4 +1,4 @@
-from logging import *
+from logging2 import *
 from algorithms.armada import Storage
 from algorithms.armada.MineIndexSet import MineIndexSet
 from algorithms.armada.CreatePattern import CreatePattern

@@ -1,4 +1,4 @@
-from logging import *
+from logging2 import *
 from models.result import Result
 from algorithms.armada.Armada import Armada
 from preprocessors import Support, columns as col

@@ -2,7 +2,7 @@ import pandas as pa
 import testSuite as t
 from preprocessors import Support
 from algorithms.tpminer import tpminer
-from preprocessors.Preprocessor import GenericPreprocessor
+from preprocessors.Generic import GenericPreprocessor
 
 
 #####################################################
