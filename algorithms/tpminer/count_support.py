@@ -2,88 +2,54 @@ from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 from tpmmodels.Ep_sup import Ep_sup
 from tpmmodels.Endpoint import Endpoint
 from tpmmodels.Projected_cs import Projected_cs
+import pdb, traceback, sys
 
-#def count_support(db_a, min_sup, lone_eps):
-def count_support(db_a, min_sup):
-    suppList = []
+def count_support(db_a, min_occ):
     FE = set()
+    support_list = []
 
-    lone_eps = remove_corresponding_eps(db_a.Pattern)
+    for eps in db_a.ES:
+        stop_pos = find_stop_pos(eps.Ep_list, db_a.Prfx_s_ep)
+        support_list = acc_sup(eps.Ep_list, support_list, stop_pos)
 
-    for cs in db_a.ES:
-        if len(cs.Ep_list) > 0:
-            j = find_stop_pos(cs.Ep_list, lone_eps, cs.cs_id)
-            acc_sup(cs.Ep_list[:j], suppList, cs.Prefix_instance[-1].Parenthesis)
-
-    cs_n = len(db_a.ES)
-    for ep in suppList:
-        if ep.Support / cs_n >= min_sup:
-            FE.add(Endpoint(ep.Label, ep.IsStart, 0))
-        #if ep.In_paren_supp / cs_n >= min_sup:
-            #FE.add(Endpoint(ep.Label, ep.IsStart, 1))
-
-
+    for ep in support_list:
+        if ep.Support >= min_occ:
+            FE.add(ep)
+    #pdb.set_trace()
     return FE
 
-def find_stop_pos(ep_list, prfx_s_ep, id):
-    cs_len = len(ep_list)
-    if len(prfx_s_ep) > 0:
-        i = 0
-        while not is_stop_ep(ep_list[i], prfx_s_ep):
-            i += 1
-        p = ep_list[i].Parenthesis
-        #if p > 0:
-        if False:
-            while i < cs_len - 1 and ep_list[i + 1].Parenthesis == p:
-                i += 1
-        return i + 1
+
+def find_stop_pos(eps, prfx_s):
+    if len(prfx_s) > 0:
+        for ep in eps:
+            if not ep.IsStart:
+                if is_in_prfx(ep, prfx_s):
+                    return eps.index(ep)
     else:
-        return cs_len
+        return len(eps) - 1
 
-def is_stop_ep(ep, prfx_s_ep):
-    if not ep.IsStart:
-        for s_ep in prfx_s_ep:
-            if ep.Label == s_ep.Label:
-                return True
-        return False
-    else:
-        return False
+def is_in_prfx(ep, prfx_s):
+    for p in prfx_s:
+        if ep.Label == p.Label:
+            return True
+    return False
 
-def acc_sup(cs, suppList, paren_num):
-    i = 0
-
-    #in parenthesis support
-    if False:
-    #if paren_num > 0:
-        while i < len(cs):
-            if cs[i].Parenthesis == paren_num:
-                is_in_list = False
-                for j in range(len(suppList)):
-                    if cs[i].Label == suppList[j].Label and cs[i].IsStart == suppList[j].IsStart:
-                        if not suppList[j].Has_been_counted:
-                            suppList[j].In_paren_supp += 1
-                            suppList[j].Has_been_counted = True
-                        is_in_list = True
-
-                if not is_in_list:
-                    suppList.append(Ep_sup(cs[i].Label, cs[i].IsStart, 0, 1))
-                i += 1
+def acc_sup(eps, support_list, stop_pos):
+    if len(eps) > 0:
+        for ep in eps[:stop_pos+1]:
+            for s in support_list:
+                if s == ep:
+                    if not s.Counted:
+                        s.Support = s.Support + 1
+                        s.Counted = True
+                    break
             else:
-                break
-    
-    #not in parenthesis support
-    while i < len(cs):
-        is_in_list = False
-        for j in range(len(suppList)):
-            #if not cs[i].Prune and cs[i].Label == suppList[j].Label and cs[i].IsStart == suppList[j].IsStart:
-            if cs[i].Label == suppList[j].Label and cs[i].IsStart == suppList[j].IsStart:
-                if not suppList[j].Has_been_counted:
-                    suppList[j].Support += 1
-                    suppList[j].Has_been_counted = True
-                is_in_list = True
-        if not is_in_list:
-            suppList.append(Ep_sup(cs[i].Label, cs[i].IsStart, 1, 0))
-        i += 1
+                s_new = Endpoint(ep.Label, ep.IsStart, 0)
+                s_new.Support = s_new.Support + 1
+                s_new.Counted = True
+                support_list.append(s_new)
 
-    for e in suppList:
-        e.Has_been_counted = False
+        for s in support_list:
+            s.Counted = False
+
+    return support_list

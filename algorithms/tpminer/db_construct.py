@@ -30,13 +30,13 @@ def create_db(db_a, a_p):
     for cs in db_a.ES:
         i = 0
         for ep in cs.Ep_list:
-            i += 1
             if ep.Label == a_last.Label and ep.IsStart == a_last.IsStart:
                 new_cs = Projected_cs(cs.Prefix_instance + [ep])
                 new_cs.cs_id = cs.cs_id
-                new_cs.Ep_list.extend(cs.Ep_list[i:])
+                new_cs.Ep_list = cs.Ep_list[i+1:]
                 db_a_p.ES.append(new_cs)
                 break
+            i += 1
     return db_a_p
 
 def create_db_paren(db_a, a_p):
@@ -69,8 +69,11 @@ def postfix_prune(cs, a_p, s_ep):
                 if ep.Label == s.Label:
                     ep.Prune = False
                     break
+
+
     new_cs = Projected_cs(cs.Prefix_instance)
     new_cs.Ep_list = prune(cs.Ep_list)
+    new_cs.cs_id = cs.cs_id
     return new_cs
 
 def prune(cs):
