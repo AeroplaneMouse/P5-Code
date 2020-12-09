@@ -86,7 +86,7 @@ def Main():
                 #TPMINER VENT
                 tpJob = tpminerVentSetup(logger)
                 tpResults = tpJob.run()
-                tpResults.print()
+                tpResults.print(logger)
 
             elif(sys.argv[2] == 'weathercrash'):
                 #TPMINER WEATHERCRASH
