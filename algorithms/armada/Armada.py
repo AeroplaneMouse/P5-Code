@@ -18,6 +18,7 @@ def Armada(mdb, frequentStates, minSupport, maxGap, logger):
     # Run the algorithm
     i = 1
     n = len(frequentStates)
+    logger.log(ProgressLog('ARMADA: '))
     for s in frequentStates:
         # Create and save pattern
         p = CreatePattern(None, s)
@@ -26,9 +27,8 @@ def Armada(mdb, frequentStates, minSupport, maxGap, logger):
         MineIndexSet(p, p_idx)
 
         # Logging
-        m = 'ARMADA {:0.1f}%'.format((i/n)*100)
-        log = Log(m, Severity.INFO)
-        logger.log(log)
+        m = 'ARMADA {:0.1f}%'.format((i/n))
+        logger.log(ProgressLog('ARMADA: ', progress=(i/n)))
 
         i += 1
 
