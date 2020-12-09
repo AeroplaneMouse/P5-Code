@@ -40,7 +40,7 @@ def prune(cs, s_ep):
         if ep.IsStart:
             new_eps.append(ep)
         elif not ep.IsStart:
-            if has_correpsponding_ep(ep, s_ep):
+            if has_corresponding_ep(ep, s_ep):
                 new_eps.append(ep)
 
     pruned_cs.Ep_list = new_eps
@@ -49,7 +49,7 @@ def prune(cs, s_ep):
 
 
 
-def has_correpsponding_ep(ep, s_ep):
+def has_corresponding_ep(ep, s_ep):
     for s in s_ep:
         if ep.Label == s.Label:
             return True
