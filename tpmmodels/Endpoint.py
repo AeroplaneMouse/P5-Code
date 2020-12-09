@@ -6,15 +6,18 @@ class Endpoint:
         self.Parenthesis = parenthesis
         self.Prune = False
 
+        self.Support = 0
+        self.Counted = False
+
     def __str__(self):
         #return "true" if self.Prune else "false"
         return str(self.Label) + str("+" if self.IsStart else '-') + str(self.Parenthesis)
 
     def __repr__(self):
-    	return self.__str__()
+        return self.__str__()
 
     def __hash__(self):
-        return hash(self.Label)
+        return hash((self.Label, self.IsStart))
 
     def __eq__(self, other):
         return (

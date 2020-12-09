@@ -3,46 +3,33 @@ from algorithms.tpminer.db_construct import db_construct
 from algorithms.tpminer.point_pruning import point_pruning
 from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 import copy
+import pdb, traceback, sys
 
-#def TPSpan(a, db_a, min_sup, TP, lone_eps):
-#def TPSpan(a, db_a, min_sup, TP):
-def TPSpan(a, db_a, min_sup, TP, db_pruned):
-    #FE = count_support(db_a, min_sup, lone_eps)
-    #FE = point_pruning(FE, a, lone_eps)
-    FE = count_support(db_pruned, min_sup)
-    FE = point_pruning(FE, a)
+def TPSpan(a, db_a, min_occ, TP, db_pruned, db):
+    FE = count_support(db_pruned, min_occ)
+    FE = point_pruning(FE, a, db_a.Prfx_s_ep)
 
-    for s in set(filter(lambda x : not in_pattern(a, x), FE)):
-    #for s in FE:
-        a_prime = a + [s]
+    FE = set(filter(lambda x : eligible(a, x), FE))
+    for s in FE:
+        a_p = a + [s]
 
-        #lone_eps = append_lone_eps(lone_eps, s)
-        lone_eps = remove_corresponding_eps(a_prime)
-        if len(lone_eps) == 0:	
-            TP.add(tuple(a_prime))
+        db_pruned, db_a_p = db_construct(db_a, s)
 
-        #db_a_prime = db_construct(db_a, a_prime, lone_eps)
-        db_pruned, db_a_prime = db_construct(db_a, a_prime)
-
-        #TPSpan(a_prime, db_a_prime, min_sup, TP, lone_eps)
-        TPSpan(a_prime, db_a_prime, min_sup, TP, db_pruned)
+        if len(db_a_p.Prfx_s_ep) == 0:	
+            TP.add(tuple(a_p))
+            if len(TP) % 5000 == 0:
+                pdb.set_trace()
+    
+        TPSpan(a_p, db_a_p, min_occ, TP, db_pruned, db)
 
 
-def in_pattern(a, x):
+def eligible(a, x):
     if x.IsStart:
         for ep in a:
-            if ep == x:
-                return True
-        return False
+            if ep.Label == x.Label:
+                return False
+        else:
+            return True
     else:
-        return False
+        return True
 
-def append_lone_eps(lone_eps, s):
-    if s.IsStart:
-        lone_eps.append(s)
-    elif not s.IsStart:
-        for ep in lone_eps:
-            if ep.Label == s.Label and ep.IsStart:
-                lone_eps.remove(ep)
-                break
-    return lone_eps

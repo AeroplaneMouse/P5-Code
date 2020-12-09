@@ -1,13 +1,16 @@
+import copy
 
 
 def remove_corresponding_eps(prfx):
-    s_ep = list(filter(lambda x : x.IsStart, prfx))
-    f_ep = list(filter(lambda x : not x.IsStart, prfx))
+    s_ep = set(filter(lambda x: x.IsStart, prfx))
+    f_ep = set(filter(lambda x: not x.IsStart, prfx))
+
+    temp = list(copy.copy(s_ep))
 
     for f in f_ep:
         i = 0
-        while f.Label != s_ep[i].Label:
-            i += 1
-        del s_ep[i]
+        while temp[i].Label != f.Label:
+            i = i + 1
+        del temp[i]
 
-    return s_ep
+    return temp
