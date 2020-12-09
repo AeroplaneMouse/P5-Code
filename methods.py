@@ -1,6 +1,7 @@
 from logging2 import *
 from models.result import Result
 from algorithms.armada.Armada import Armada
+from algorithms.tpminer.tpminer_main import tpminer_main
 from preprocessors import Support, columns as col
 
 ########################################
@@ -45,3 +46,15 @@ def armada(mdb, supportList, logger, minSupport, maxGap):
 
     return Result(minSupport, maxGap, patterns, frequentStates)
 
+
+########################################
+# TPMiner
+def tpminer(mdb, supportList, logger, minSupport, maxGap):
+    patternSets = tpminer_main(mdb, minSupport, logger)
+
+    # Convert set to list
+    patterns = []
+    for p in patternSets:
+        patterns.append(p)
+
+    return Result(minSupport, maxGap, patterns, [])
