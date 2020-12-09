@@ -10,13 +10,13 @@ import pdb, traceback, sys
 
 
 def armadaVentSetup(logger):
-    job = Job(logger=logger)
+    job = Job(logger=logger, label='Armada main vent')
     job.algorithm = armada
     job.seperator = ','
     job.dataset = 'datasets/Vent-minute-short.csv'
     job.columns = col.vent_columns
     job.getState = vent_getState
-    job.minSupport = 0.7
+    job.minSupport = 0.5
     job.maxGap = pa.to_timedelta('24:00:00')
 
     job.useGenericPreprocessor()
@@ -40,7 +40,7 @@ def testSetup(logger):
 
 
 def tpminerVentSetup(logger):
-    job = Job(logger=logger)
+    job = Job(logger=logger, label='TPMiner main vent')
     job.algorithm = tpminer
     job.seperator = ','
     job.dataset = 'datasets/Vent-minute-short.csv'
