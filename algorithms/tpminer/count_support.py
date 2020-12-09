@@ -2,7 +2,6 @@ from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 from tpmmodels.Ep_sup import Ep_sup
 from tpmmodels.Endpoint import Endpoint
 from tpmmodels.Projected_cs import Projected_cs
-import pdb, traceback, sys
 
 def count_support(db_a, min_occ):
     FE = set()
@@ -10,23 +9,24 @@ def count_support(db_a, min_occ):
 
     for eps in db_a.ES:
         stop_pos = find_stop_pos(eps.Ep_list, db_a.Prfx_s_ep)
+        if stop_pos == None:
+            stop_pos = len(eps.Ep_list)-1
         support_list = acc_sup(eps.Ep_list, support_list, stop_pos)
 
     for ep in support_list:
         if ep.Support >= min_occ:
             FE.add(ep)
-    #pdb.set_trace()
     return FE
 
 
 def find_stop_pos(eps, prfx_s):
+    pos = len(eps)-1
     if len(prfx_s) > 0:
         for ep in eps:
             if not ep.IsStart:
                 if is_in_prfx(ep, prfx_s):
-                    return eps.index(ep)
-    else:
-        return len(eps) - 1
+                    pos = eps.index(ep)
+    return pos
 
 def is_in_prfx(ep, prfx_s):
     for p in prfx_s:

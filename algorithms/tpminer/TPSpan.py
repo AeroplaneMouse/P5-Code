@@ -3,7 +3,6 @@ from algorithms.tpminer.db_construct import db_construct
 from algorithms.tpminer.point_pruning import point_pruning
 from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 import copy
-import pdb, traceback, sys
 
 def TPSpan(a, db_a, min_occ, TP, db_pruned, db):
     FE = count_support(db_pruned, min_occ)
@@ -17,8 +16,6 @@ def TPSpan(a, db_a, min_occ, TP, db_pruned, db):
 
         if len(db_a_p.Prfx_s_ep) == 0:	
             TP.add(tuple(a_p))
-            if len(TP) % 5000 == 0:
-                pdb.set_trace()
     
         TPSpan(a_p, db_a_p, min_occ, TP, db_pruned, db)
 
