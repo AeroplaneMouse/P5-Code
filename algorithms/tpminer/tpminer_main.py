@@ -2,10 +2,11 @@ from logging2 import *
 from tpmmodels.DB import DB
 from tpmmodels.Ep_sup import Ep_sup
 from tpmmodels.Endpoint import Endpoint
-from algorithms.tpminer.TPSpan import TPSpan
 from tpmmodels.Projected_cs import Projected_cs
+from algorithms.tpminer.TPSpan import TPSpan
 from algorithms.tpminer.db_construct import db_construct
 from algorithms.tpminer.tpminer import TDBToEndpointSequenceList
+
 
 def tpminer_main(mdb, min_sup, logger):
     # Logging
@@ -30,6 +31,7 @@ def tpminer_main(mdb, min_sup, logger):
 
     i = 0
     j = len(FE)
+    logger.log(ProgressLog('TPMiner:', progress=0))
     for s in FE:
         #db_s = db_construct(db, [s], [s])
         db_pruned, db_s = db_construct(db, s)
@@ -38,11 +40,9 @@ def tpminer_main(mdb, min_sup, logger):
         log = Log("Calling tpspan with ep {} in {} client sequences".format(s, s.Support), Severity.INFO)
         logger.log(log)
         TPSpan([s], db_s, min_occ, TP, db_pruned, db)
-        i += 1
 
-        m = 'TPMiner {:0.1f}%'.format((i/j)*100)
-        log = Log(m, Severity.INFO)
-        logger.log(log)
+        i += 1
+        logger.log(ProgressLog('TPMiner:', progress=(i/j)))
 
     return TP
 
@@ -60,6 +60,7 @@ def FindFE(mdb, min_sup, min_occ, logger):
         if ep.Support >= min_occ:
             FE.add(ep)
     return FE
+
 
 def acc_sup(eps, support_list):
     for ep in list(filter(lambda x: x.IsStart, eps)):

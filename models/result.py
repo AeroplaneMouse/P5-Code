@@ -43,7 +43,7 @@ class Result:
             count = CountNPatterns(self.patterns)
             out += '#' + ' '*40 + '#\n'
             for key in count:
-                out += '# {:>2}-patterns: {:>25} #\n'.format(
+                out += '# {:>2.0f}-patterns: {:>25} #\n'.format(
                     key,
                     count[key])
 
