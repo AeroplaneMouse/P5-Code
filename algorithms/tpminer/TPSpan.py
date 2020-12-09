@@ -13,7 +13,7 @@ def TPSpan(a, db_a, min_occ, TP, db_pruned, db):
     for s in FE:
         a_p = a + [s]
 
-        db_pruned, db_a_p = db_construct(db_a, a_p)
+        db_pruned, db_a_p = db_construct(db_a, s)
 
         if len(db_a_p.Prfx_s_ep) == 0:	
             TP.add(tuple(a_p))

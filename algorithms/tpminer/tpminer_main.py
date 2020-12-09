@@ -28,7 +28,7 @@ def tpminer_main(mdb, min_sup, logger):
     n = len(FE)
     for s in FE:
         #db_s = db_construct(db, [s], [s])
-        db_pruned, db_s = db_construct(db, [s])
+        db_pruned, db_s = db_construct(db, s)
 
         #TPSpan([s], db_s, min_sup, TP, [s])
         TPSpan([s], db_s, min_occ, TP, db_pruned, db)
@@ -84,7 +84,7 @@ def find_in_supp_list(ep, suppList):
 def convert_to_db(mdb):
     temp = DB([])
     i = 0
-    for l in [mdb[9], mdb[10], mdb[11], mdb[22], mdb[36], mdb[44], mdb[55]]:
+    for l in mdb:
         cs = Projected_cs([])
         cs.Ep_list = l
         cs.cs_id = i
