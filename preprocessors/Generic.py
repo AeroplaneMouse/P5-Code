@@ -58,7 +58,6 @@ class GenericPreprocessor:
                 cs.index = pa.to_numeric(cs.pop('Indexes'))
                 cs['Start'] = pa.to_datetime(cs.pop('Start'))
                 cs['End'] = pa.to_datetime(cs.pop('End'))
-
                 self.mdb.append(cs)
 
 

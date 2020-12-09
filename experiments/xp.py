@@ -87,10 +87,7 @@ def run(logger):
         for result in results:
             result.print(mLog)
     else:
-        jobs = armada_jobs.initializeJobs(mLog)
-        # jobs = [
-        #     test(logger)
-        # ]
+        jobs = armada_jobs.initializeJobs(logger)
 
         results = []
         for job in jobs:
