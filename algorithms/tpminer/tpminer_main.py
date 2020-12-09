@@ -22,33 +22,40 @@ def tpminer_main(mdb, min_sup, logger):
     db = convert_to_db(temp)
     n = len(db.ES)
     min_occ = n * min_sup
-    FE = FindFE(db.ES, min_sup, min_occ)
-    
-    i = 1
-    n = len(FE)
+
+    FE = FindFE(db.ES, min_sup, min_occ, logger)
+
+    log = Log("{} frequent endpoints discovered with {} min_sup".format(len(FE), min_sup), Severity.NOTICE)
+    logger.log(log)
+
+    i = 0
+    j = len(FE)
     for s in FE:
         #db_s = db_construct(db, [s], [s])
         db_pruned, db_s = db_construct(db, s)
 
         #TPSpan([s], db_s, min_sup, TP, [s])
+        log = Log("Calling tpspan with ep {} in {} client sequences".format(s, s.Support), Severity.INFO)
+        logger.log(log)
         TPSpan([s], db_s, min_occ, TP, db_pruned, db)
+        i += 1
 
-        m = 'TPMiner {:0.1f}%'.format((i/n)*100)
+        m = 'TPMiner {:0.1f}%'.format((i/j)*100)
         log = Log(m, Severity.INFO)
         logger.log(log)
-
-        i += 1
 
     return TP
 
 
-def FindFE(mdb, min_sup, min_occ):
+def FindFE(mdb, min_sup, min_occ, logger):
     FE = set()
     support_list = []
 
     for eps in mdb:
         support_list = acc_sup(eps.Ep_list, support_list)
 
+    log = Log("{} unique endpoints found in database".format(len(support_list)), Severity.NOTICE)
+    logger.log(log)
     for ep in support_list:
         if ep.Support >= min_occ:
             FE.add(ep)
@@ -72,13 +79,6 @@ def acc_sup(eps, support_list):
         s.Counted = False
 
     return support_list
-
-def find_in_supp_list(ep, suppList):
-    for i in range(len(suppList)):
-        if ep.Label == suppList[i].Label and ep.IsStart == suppList[i].IsStart:
-            return i
-
-    return None
 
 
 def convert_to_db(mdb):

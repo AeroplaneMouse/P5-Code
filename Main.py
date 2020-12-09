@@ -31,7 +31,7 @@ def testSetup(logger):
     job.dataset = 'datasets/Vent-minute.csv'
     job.columns = col.vent_columns[:-1]
     job.getState = vent_getState
-    job.minSupport = 0.7
+    job.minSupport = 0.1
     job.maxGap = pa.to_timedelta('24:00:00')
 
     job.useGenericPreprocessor()
@@ -85,6 +85,11 @@ def Main():
             if(sys.argv[2] == 'vent'):
                 #TPMINER VENT
                 tpJob = tpminerVentSetup(logger)
+                tpResults = tpJob.run()
+                tpResults.print(logger)
+            elif(sys.argv[2] == 'test'):
+                #TPMINER VENT
+                tpJob = testSetup(logger)
                 tpResults = tpJob.run()
                 tpResults.print(logger)
 
