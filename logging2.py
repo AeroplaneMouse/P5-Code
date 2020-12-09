@@ -88,6 +88,9 @@ class MultiLogger(Logger):
         for logger in self.loggers:
             logger.log(log)
 
+    def add(self, logger):
+        self.loggers.append(logger)
+
 
 def getDate(flag):
     if flag:
