@@ -140,3 +140,5 @@ dmypy.json
 
 # Datasets
 datasets/
+.vscode/launch.json
+.vscode/settings.json
