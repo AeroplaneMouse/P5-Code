@@ -28,12 +28,15 @@ def find_stop_pos(eps, prfx_s):
                     pos = eps.index(ep)
     return pos
 
+
 def is_in_prfx(ep, prfx_s):
     for p in prfx_s:
         if ep.Label == p.Label:
             return True
     return False
 
+
+# Accumulated support
 def acc_sup(eps, support_list, stop_pos):
     if len(eps) > 0:
         for ep in eps[:stop_pos+1]:
