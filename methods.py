@@ -28,9 +28,12 @@ def vent_getState(value, columnName):
 # Load
 def load_getState(value, columnName):
     if value == '1' or value == 1:
-        return '{}_{}'.format(columnName, value)
+        strValue = 'ON'
     else:
-        return None
+        strValue = 'OFF'
+
+    return '{}_{}'.format(columnName, strValue)
+
 
 
 ########################################
