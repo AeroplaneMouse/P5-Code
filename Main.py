@@ -43,9 +43,23 @@ def tpminerVentSetup(logger):
     job = Job(logger=logger, label='TPMiner main vent')
     job.algorithm = tpminer
     job.seperator = ','
-    job.dataset = 'datasets/Vent-minute-short.csv'
+    job.dataset = 'datasets/Vent-minute-12.csv'
     job.columns = col.vent_columns
     job.getState = vent_getState
+    job.minSupport = 0.1
+    job.maxGap = pa.to_timedelta('24:00:00')
+
+    job.useGenericPreprocessor()
+
+    return job
+
+def tpminerLoadSetup(logger):
+    job = Job(logger=logger, label='TPMiner load')
+    job.algorithm = tpminer
+    job.seperator = ','
+    job.dataset = 'datasets/Load-minute-12.csv'
+    job.columns = col.load_columns
+    job.getState = load_getState
     job.minSupport = 0.5
     job.maxGap = pa.to_timedelta('24:00:00')
 
@@ -87,9 +101,15 @@ def Main():
                 tpJob = tpminerVentSetup(logger)
                 tpResults = tpJob.run()
                 tpResults.print(logger)
+
             elif(sys.argv[2] == 'test'):
                 #TPMINER VENT
                 tpJob = testSetup(logger)
+                tpResults = tpJob.run()
+                tpResults.print(logger)
+
+            elif sys.argv[2] == 'load':
+                tpJob = tpminerLoadSetup(logger)
                 tpResults = tpJob.run()
                 tpResults.print(logger)
 
