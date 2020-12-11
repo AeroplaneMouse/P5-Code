@@ -20,15 +20,18 @@ def create_db_a_p(db_a, p):
     db_a_p = DB(db_a.Pattern + [p])
 
     for cs in db_a.ES:
-        for ep in cs.Ep_list:
+        stop_pos = find_stop_pos(cs.Ep_list, db_a.Prfx_s_ep)
+        i = 0
+        for ep in cs.Ep_list[:stop_pos+1]:
+            i = i + 1
             if ep == p:
-                i = cs.Ep_list.index(ep)
-                if i < len(cs.Ep_list) - 1:
-                    p_cs = Projected_cs(copy.deepcopy(cs.Prefix_instance) + [ep])
-                    p_cs.cs_id = cs.cs_id
-                    p_cs.Ep_list = cs.Ep_list[i+1:]
-                    db_a_p.ES.append(p_cs)
-                    break
+                new_eps = cs.Ep_list[i:]
+                if len(new_eps) > 0:
+                        p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [ep])
+                        p_cs.Ep_list = new_eps
+                        p_cs.cs_id = cs.cs_id
+                        db_a_p.ES.append(p_cs)
+                break
     return db_a_p
 
 def prune(cs, s_ep):
@@ -55,4 +58,20 @@ def has_corresponding_ep(ep, s_ep):
             return True
     else:
         return False
+
+def find_stop_pos(eps, prfx_s):
+    if len(prfx_s) > 0:
+        for ep in eps:
+            if not ep.IsStart:
+                if is_in_prfx(ep, prfx_s):
+                    return eps.index(ep)
+    else:
+        return len(eps)-1
+
+
+def is_in_prfx(ep, prfx_s):
+    for p in prfx_s:
+        if ep.Label == p.Label:
+            return True
+    return False
 
