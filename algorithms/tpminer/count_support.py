@@ -44,7 +44,7 @@ def acc_sup(eps, support_list, stop_pos):
                         s.Counted = True
                     break
             else:
-                s_new = Endpoint(ep.Label, ep.IsStart, 0)
+                s_new = Endpoint(ep.Label, ep.IsStart)
                 s_new.Support = s_new.Support + 1
                 s_new.Counted = True
                 support_list.append(s_new)

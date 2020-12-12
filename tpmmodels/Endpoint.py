@@ -1,9 +1,9 @@
 class Endpoint:
-    def __init__(self, label, isStart, parenthesis):
+    def __init__(self, label, isStart, time):
+        self.Time = time
         self.Label = label
         self.OccurNum = 0
         self.IsStart = isStart
-        self.Parenthesis = parenthesis
         self.Prune = False
 
         self.Support = 0
@@ -11,7 +11,7 @@ class Endpoint:
 
     def __str__(self):
         #return "true" if self.Prune else "false"
-        return str(self.Label) + str("+" if self.IsStart else '-') + str(self.Parenthesis)
+        return str(self.Label) + str("+" if self.IsStart else '-') + str(self.Time)
 
     def __repr__(self):
         return self.__str__()

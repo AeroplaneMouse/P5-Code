@@ -31,24 +31,22 @@ def TDBToEndpointSequenceList(mdb):
         TempEPlist.sort(key=lambda tempEP: tempEP.Time)
         
         #make EPs for EndpointSequence and add them.
-        lastTime = -1
-        counted = False
-        p = 0
-        
-        for ep in TempEPlist:
-            if(ep.Time == lastTime):
-                if(counted == False):
-                    p = p + 1
-                    EndpointSequence[-1].Parenthesis = p
-                    EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, p))
-                    counted = True
-                else:
-                    EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, p))
+        eps_len = len(TempEPlist)
+        i = 0
+        while i < eps_len:
+            j = 0
+            cur_time = TempEPlist[i].Time
+
+            while i+j+1 < eps_len and TempEPlist[i+j+1].Time == cur_time:
+                j = j + 1
+
+            if j > 0:
+                EndpointSequence.append(set([Endpoint(x.Label, x.IsStart, x.Time) for x in TempEPlist[i:i+j+1]]))
             else:
-                EndpointSequence.append(Endpoint(ep.Label, ep.IsStart, 0))
-                lastTime = ep.Time
-                counted = False
-            
+                EndpointSequence.append(Endpoint(TempEPlist[i].Label, TempEPlist[i].IsStart, TempEPlist[i].Time))
+            i = i + j + 1
+        
         EndpointSequenceList.append(EndpointSequence)
 
+    print(EndpointSequenceList[0])
     return EndpointSequenceList
