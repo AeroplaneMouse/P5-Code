@@ -3,6 +3,7 @@ from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 from tpmmodels.Projected_cs import Projected_cs
 import copy
 
+#Calls the auxillary functions responsible for creating the pruned database and the a' database
 def db_construct(db_a, p):
 
     db_a_p = create_db_a_p(db_a, p)
@@ -15,7 +16,7 @@ def db_construct(db_a, p):
 
     return pruned_db, db_a_p
 
-
+#Used to create the a' database, using the projected database and a prefix
 def create_db_a_p(db_a, p):
     db_a_p = DB(db_a.Pattern + [p])
 
@@ -34,6 +35,8 @@ def create_db_a_p(db_a, p):
                 break
     return db_a_p
 
+#prunes a ENDPOINT SEQUENCE (cs) using a list of starting endpoints, to check that finishing endpoints have
+#a corresponding starting endpoint
 def prune(cs, s_ep):
     pruned_cs = Projected_cs(copy.deepcopy(cs.Prefix_instance))
     pruned_cs.cs_id = cs.cs_id
@@ -51,7 +54,8 @@ def prune(cs, s_ep):
     return pruned_cs
 
 
-
+#Just compares the given endpoint (ep) to a list of starting endpoint, to make sure that the endpoint has
+#a corresponding endpoint with the same label, in the list of starting endpoints
 def has_corresponding_ep(ep, s_ep):
     for s in s_ep:
         if ep.Label == s.Label:
@@ -59,6 +63,7 @@ def has_corresponding_ep(ep, s_ep):
     else:
         return False
 
+#Finds the stop position for a given prefix, in a endpoint sequence (eps)
 def find_stop_pos(eps, prfx_s):
     if len(prfx_s) > 0:
         for ep in eps:
@@ -68,7 +73,7 @@ def find_stop_pos(eps, prfx_s):
     else:
         return len(eps)-1
 
-
+#Used in above function to ensure that the given endpoint has the same label as the one in the prefix
 def is_in_prfx(ep, prfx_s):
     for p in prfx_s:
         if ep.Label == p.Label:

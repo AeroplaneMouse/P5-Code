@@ -3,6 +3,7 @@ from tpmmodels.Ep_sup import Ep_sup
 from tpmmodels.Endpoint import Endpoint
 from tpmmodels.Projected_cs import Projected_cs
 
+#Calls the auxillary functions responsible for creating the Frequent Endpoint list
 def count_support(db_a, min_occ):
     FE = set()
     support_list = []
@@ -16,6 +17,7 @@ def count_support(db_a, min_occ):
             FE.add(ep)
     return FE
 
+#uses a list of endpoint sequences and the starting prefix, to find the stop position
 def find_stop_pos(eps, prfx_s):
     if len(prfx_s) > 0:
         for ep in eps:
@@ -25,7 +27,7 @@ def find_stop_pos(eps, prfx_s):
     else:
         return len(eps)-1
 
-
+#Used to check that a given endpoint is in the prefix, by comparing labels
 def is_in_prfx(ep, prfx_s):
     for p in prfx_s:
         if ep.Label == p.Label:
