@@ -5,7 +5,7 @@ import methods
 import pandas as pa
 from models.job import Job
 from preprocessors import columns
-from experiments import armada_jobs
+from experiments import experiment_jobs
 from logging2 import FileLogger, MultiLogger, Log, Severity
 
 
@@ -75,19 +75,21 @@ def helper(logger, id, lock, rLock, job, results):
 
 def run(logger):
     MULTITHREAD = False
-    fLog = FileLogger(Severity.NOTICE, 'experiment_results.log')
+    ALGORITHM = methods.tpminer
+
+    fLog = FileLogger(Severity.NOTICE, str(ALGORITHM.__name__) + '_experiment_results.log')
     fLog.INSERT_TIMESTAMP = True
     mLog = MultiLogger([fLog, logger])
 
 
     if MULTITHREAD:
-        jobs = armada_jobs.initializeJobs()
+        jobs = experiment_jobs.initializeJobs(ALGORITHM)
         results = shitMultithreading(jobs, logger)
 
         for result in results:
             result.print(mLog)
     else:
-        jobs = armada_jobs.initializeJobs(logger)
+        jobs = experiment_jobs.initializeJobs(ALGORITHM, logger)
 
         results = []
         for job in jobs:
@@ -96,7 +98,7 @@ def run(logger):
             res.print(fLog)
 
 
-    logger.log(Log('Exiting Thread-Main', Severity.INFO))
+    logger.log(Log('Experiments done', Severity.INFO))
 
 
 def test(logger):

@@ -44,7 +44,7 @@ min_5_seq_3.dataset = 'datasets/Vent-minute-3.csv'
 min_5_seq_3.minSupport = 0.05
 
 
-def initializeJobs(logger=None):
+def initializeJobs(algorithm, logger=None):
     allJobs = []
 
     # allJobs.append(min_5_seq_12)
@@ -83,7 +83,7 @@ def initializeJobs(logger=None):
     #     allJobs.append(job)
 
     for job in allJobs:
-        job.algorithm = armada
+        job.algorithm = algorithm
         job.getState = vent_getState
         job.columns = vent_columns
         job.maxGap = pa.to_timedelta('24:00:00')
