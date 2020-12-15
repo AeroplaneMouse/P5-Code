@@ -39,7 +39,7 @@ def tpminer_main(mdb, min_sup, logger):
         #TPSpan([s], db_s, min_sup, TP, [s])
         log = Log("Calling tpspan with ep {} in {} client sequences".format(s, s.Support), Severity.INFO)
         logger.log(log)
-        TPSpan([s], db_s, min_occ, TP, db_pruned, db)
+        TPSpan([s], db_s, min_occ, TP, db_pruned)
 
         i += 1
         logger.log(ProgressLog('TPMiner:', progress=(i/j)))
