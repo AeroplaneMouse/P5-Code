@@ -86,7 +86,40 @@ class Result:
         with open(FOLDER + filename, 'a') as f:
             for p in self.patterns:
                 pSize = len(p) / 2
+
+                if type(p[0]) == Endpoint:
+                    p = tpPatternToStr(p)
+
                 f.write('{:2.0f} | {}\n'.format(pSize, p))
+
+
+def tpPatternToStr(pattern):
+    out = ''
+    inParen = False
+
+    for i in range(len(pattern)):
+        p = pattern[i]
+        if i + 1 < len(pattern):
+            pNext = pattern[i + 1]
+
+            if not p.In_paren and pNext.In_paren:
+                out += '(' + str(p)
+
+            elif p.In_paren and not pNext.In_paren:
+                out += str(p) + ')'
+
+            else:
+                out += str(p)
+
+        else:
+            if p.In_paren:
+                out += str(p) + ')'
+            else:
+                out += str(p)
+
+        out += ' '
+
+    return out
 
 
 # Counts the number of different pattern types
