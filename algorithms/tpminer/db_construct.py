@@ -41,9 +41,11 @@ def create_db_a_p(db_a, p):
             i = 0
             while i < stop_pos and cs.Ep_list[i].Parenthesis == paren_num:
                 if cs.Ep_list[i] == p:
-                    new_eps = cs.Ep_list[i+1:]
+                    temp_ep = copy.copy(cs.Ep_list[i])
+                    del cs.Ep_list[i]
+                    new_eps = cs.Ep_list
                     if len(new_eps) > 0:
-                            p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [cs.Ep_list[i]])
+                            p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [temp_ep])
                             p_cs.Ep_list = new_eps
                             p_cs.cs_id = cs.cs_id
                             db_a_p.ES.append(p_cs)
