@@ -140,5 +140,6 @@ dmypy.json
 
 # Datasets
 datasets/
+patterns/
 .vscode/launch.json
 .vscode/settings.json

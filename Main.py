@@ -88,6 +88,7 @@ def Main():
                 arJob = armadaVentSetup(logger)
                 arResults = arJob.run()
                 arResults.print(logger)
+                arResults.savePatterns('ARMADA_vent_Patterns.txt')
 
             elif(sys.argv[2] == 'weathercrash'):
                 #ARMADA WEATHERCRASH
@@ -101,17 +102,20 @@ def Main():
                 tpJob = tpminerVentSetup(logger)
                 tpResults = tpJob.run()
                 tpResults.print(logger)
+                tpResults.savePatterns('TP_vent_Patterns.txt')
 
             elif(sys.argv[2] == 'test'):
                 #TPMINER VENT
                 tpJob = testSetup(logger)
                 tpResults = tpJob.run()
                 tpResults.print(logger)
+                tpResults.savePatterns('TP_vent_TestPatterns.txt')
 
             elif sys.argv[2] == 'load':
                 tpJob = tpminerLoadSetup(logger)
                 tpResults = tpJob.run()
                 tpResults.print(logger)
+                tpResults.savePatterns('TP_load_TestPatterns.txt')
 
             elif(sys.argv[2] == 'weathercrash'):
                 #TPMINER WEATHERCRASH

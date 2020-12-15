@@ -1,3 +1,4 @@
+import os
 from logging2 import Log, Severity
 from tpmmodels.Endpoint import Endpoint
 
@@ -72,6 +73,20 @@ class Result:
         # Results
         msg += '\n' + self.__str__()
         logger.log(Log(msg, Severity.NOTICE))
+
+    # Appends patterns to file, creates file if not exists
+    def savePatterns(self, filename):
+        FOLDER = 'patterns/'
+
+        # Create folder
+        if not os.path.exists(FOLDER):
+            os.mkdir(FOLDER)
+
+        # Write patterns to file
+        with open(FOLDER + filename, 'a') as f:
+            for p in self.patterns:
+                pSize = len(p) / 2
+                f.write('{:2.0f} | {}\n'.format(pSize, p))
 
 
 # Counts the number of different pattern types
