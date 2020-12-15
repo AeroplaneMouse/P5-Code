@@ -10,7 +10,7 @@ def count_support(db_a, min_occ):
 
     for eps in db_a.ES:
         stop_pos = find_stop_pos(eps.Ep_list, db_a.Prfx_s_ep)
-        support_list = acc_sup(eps.Ep_list, support_list, stop_pos)
+        support_list = acc_sup(eps, support_list, stop_pos)
 
     for ep in support_list:
         if ep.Support >= min_occ:
@@ -37,10 +37,28 @@ def is_in_prfx(ep, prfx_s):
 
 # Accumulated support
 def acc_sup(eps, support_list, stop_pos):
-    if len(eps) > 0:
-        for ep in eps[:stop_pos+1]:
+    paren_num = eps.Prefix_instance[-1].Parenthesis
+    i = 0
+    if len(eps.Ep_list) > 0:
+        while i <= stop_pos and eps.Ep_list[i].Parenthesis == paren_num:
             for s in support_list:
-                if s == ep:
+                if s == eps.Ep_list[i] and s.In_paren:
+                    if not s.Counted:
+                        s.Support = s.Support + 1
+                        s.Counted = True
+                    break
+            else:
+                s_new = Endpoint(eps.Ep_list[i].Label, eps.Ep_list[i].IsStart, 0)
+                s_new.In_paren = True
+                s_new.Support = s_new.Support + 1
+                s_new.Counted = True
+                support_list.append(s_new)
+
+            i = i + 1
+
+        for ep in eps.Ep_list[i:stop_pos+1]:
+            for s in support_list:
+                if s == ep and not s.In_paren:
                     if not s.Counted:
                         s.Support = s.Support + 1
                         s.Counted = True

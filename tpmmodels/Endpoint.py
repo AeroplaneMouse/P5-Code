@@ -5,6 +5,7 @@ class Endpoint:
         self.IsStart = isStart
         self.Parenthesis = parenthesis
         self.Prune = False
+        self.In_paren = False
 
         self.Support = 0
         self.Counted = False
@@ -17,7 +18,7 @@ class Endpoint:
         return self.__str__()
 
     def __hash__(self):
-        return hash((self.Label, self.IsStart))
+        return hash((self.Label, self.IsStart, self.In_paren))
 
     def __eq__(self, other):
         return (

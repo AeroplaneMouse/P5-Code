@@ -20,19 +20,35 @@ def db_construct(db_a, p):
 def create_db_a_p(db_a, p):
     db_a_p = DB(db_a.Pattern + [p])
 
-    for cs in db_a.ES:
-        stop_pos = find_stop_pos(cs.Ep_list, db_a.Prfx_s_ep)
-        i = 0
-        for ep in cs.Ep_list[:stop_pos+1]:
-            i = i + 1
-            if ep == p:
-                new_eps = cs.Ep_list[i:]
-                if len(new_eps) > 0:
-                        p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [ep])
-                        p_cs.Ep_list = new_eps
-                        p_cs.cs_id = cs.cs_id
-                        db_a_p.ES.append(p_cs)
-                break
+    if not p.In_paren:
+        for cs in db_a.ES:
+            stop_pos = find_stop_pos(cs.Ep_list, db_a.Prfx_s_ep)
+            i = 0
+            for ep in cs.Ep_list[:stop_pos+1]:
+                i = i + 1
+                if ep == p:
+                    new_eps = cs.Ep_list[i:]
+                    if len(new_eps) > 0:
+                            p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [ep])
+                            p_cs.Ep_list = new_eps
+                            p_cs.cs_id = cs.cs_id
+                            db_a_p.ES.append(p_cs)
+                    break
+    else:
+        for cs in db_a.ES:
+            stop_pos = find_stop_pos(cs.Ep_list, db_a.Prfx_s_ep)
+            paren_num = cs.Prefix_instance[-1].Parenthesis
+            i = 0
+            while i < stop_pos and cs.Ep_list[i].Parenthesis == paren_num:
+                if cs.Ep_list[i] == p:
+                    new_eps = cs.Ep_list[i+1:]
+                    if len(new_eps) > 0:
+                            p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [cs.Ep_list[i]])
+                            p_cs.Ep_list = new_eps
+                            p_cs.cs_id = cs.cs_id
+                            db_a_p.ES.append(p_cs)
+                    break
+                i = i + 1
     return db_a_p
 
 #prunes a ENDPOINT SEQUENCE (cs) using a list of starting endpoints, to check that finishing endpoints have
