@@ -3,59 +3,74 @@ from algorithms.tpminer.remove_corresponding_eps import remove_corresponding_eps
 from tpmmodels.Projected_cs import Projected_cs
 import copy
 
-#Calls the auxillary functions responsible for creating the pruned database and the a' database
-def db_construct(db_a, p):
 
-    db_a_p = create_db_a_p(db_a, p)
+#Calls the auxillary functions responsible for creating the pruned database and the a' database
+def db_construct(db_a, p, temp):
+
+    db_a_p = create_db_a_p(db_a, p, temp)
     pruned_db = DB(db_a.Pattern + [p])
 
     for cs in db_a_p.ES:
-        new_cs = prune(cs, db_a_p.Prfx_s_ep)
+        new_cs = prune(cs, db_a_p.Prfx_s_ep, temp)
         if len(new_cs.Ep_list) > 0:
             pruned_db.ES.append(new_cs)
 
     return pruned_db, db_a_p
 
+
 #Used to create the a' database, using the projected database and a prefix
-def create_db_a_p(db_a, p):
+def create_db_a_p(db_a, p, temp):
     db_a_p = DB(db_a.Pattern + [p])
 
     if not p.In_paren:
         for cs in db_a.ES:
+            prefix = cs.Prefix_instance
+            paren_num = prefix[-1].Parenthesis if len(prefix) > 0 else 0
             stop_pos = find_stop_pos(cs.Ep_list, db_a.Prfx_s_ep)
             i = 0
-            for ep in cs.Ep_list[:stop_pos+1]:
+            while i < stop_pos and cs.Ep_list[i].Parenthesis == paren_num:
+                i = i + 1
+            for ep in cs.Ep_list[i:stop_pos+1]:
                 i = i + 1
                 if ep == p:
                     new_eps = cs.Ep_list[i:]
                     if len(new_eps) > 0:
-                            p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [ep])
-                            p_cs.Ep_list = new_eps
-                            p_cs.cs_id = cs.cs_id
-                            db_a_p.ES.append(p_cs)
+                        #debugging
+                        #ep_new = copy.deepcopy(ep)
+                        #ep_new.Stop_pos = stop_pos
+                        #ep_new.Ep_list = copy.copy(new_eps)
+                        p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [ep])
+                        p_cs.Ep_list = new_eps
+                        p_cs.cs_id = cs.cs_id
+                        db_a_p.ES.append(p_cs)
                     break
     else:
         for cs in db_a.ES:
-            stop_pos = find_stop_pos(cs.Ep_list, db_a.Prfx_s_ep)
             paren_num = cs.Prefix_instance[-1].Parenthesis
+            stop_pos = find_stop_pos(cs.Ep_list, db_a.Prfx_s_ep)
             i = 0
             while i < stop_pos and cs.Ep_list[i].Parenthesis == paren_num:
                 if cs.Ep_list[i] == p:
-                    temp_ep = copy.copy(cs.Ep_list[i])
+                    ep_new = cs.Ep_list[i]
                     del cs.Ep_list[i]
                     new_eps = cs.Ep_list
                     if len(new_eps) > 0:
-                            p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [temp_ep])
-                            p_cs.Ep_list = new_eps
-                            p_cs.cs_id = cs.cs_id
-                            db_a_p.ES.append(p_cs)
+                        #debugging
+                        #ep_new.Stop_pos = stop_pos
+                        #ep_new.Ep_list = copy.copy(new_eps)
+                        p_cs = Projected_cs(copy.copy(cs.Prefix_instance) + [ep_new])
+                        p_cs.Ep_list = new_eps
+                        p_cs.cs_id = cs.cs_id
+                        db_a_p.ES.append(p_cs)
                     break
                 i = i + 1
+
     return db_a_p
+
 
 #prunes a ENDPOINT SEQUENCE (cs) using a list of starting endpoints, to check that finishing endpoints have
 #a corresponding starting endpoint
-def prune(cs, s_ep):
+def prune(cs, s_ep, temp):
     pruned_cs = Projected_cs(copy.deepcopy(cs.Prefix_instance))
     pruned_cs.cs_id = cs.cs_id
 
@@ -81,6 +96,7 @@ def has_corresponding_ep(ep, s_ep):
     else:
         return False
 
+
 #Finds the stop position for a given prefix, in a endpoint sequence (eps)
 def find_stop_pos(eps, prfx_s):
     if len(prfx_s) > 0:
@@ -91,10 +107,10 @@ def find_stop_pos(eps, prfx_s):
     else:
         return len(eps)-1
 
+
 #Used in above function to ensure that the given endpoint has the same label as the one in the prefix
 def is_in_prfx(ep, prfx_s):
     for p in prfx_s:
         if ep.Label == p.Label:
             return True
     return False
-

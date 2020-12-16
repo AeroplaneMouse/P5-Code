@@ -28,7 +28,7 @@ def TDBToEndpointSequenceList(mdb):
             i = i + 1
         
         #sort TempEPs by time.
-        TempEPlist.sort(key=lambda tempEP: tempEP.Time)
+        TempEPlist.sort(key=lambda x: (x.Time, x.IsStart))
         
         #make EPs for EndpointSequence and add them.
         lastTime = -1

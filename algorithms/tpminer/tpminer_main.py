@@ -15,7 +15,7 @@ def tpminer_main(mdb, min_sup, logger):
 
     TP = set()
     temp = TDBToEndpointSequenceList(mdb)
-    validate_data(temp)
+    #validate_data(temp)
 
     log = Log('Converted to Endpoints', Severity.NOTICE)
     logger.log(log)
@@ -26,6 +26,7 @@ def tpminer_main(mdb, min_sup, logger):
 
     FE = FindFE(db.ES, min_sup, min_occ, logger)
 
+
     log = Log("{} frequent endpoints discovered with {} min_sup".format(len(FE), min_sup), Severity.NOTICE)
     logger.log(log)
 
@@ -34,12 +35,12 @@ def tpminer_main(mdb, min_sup, logger):
     logger.log(ProgressLog('TPMiner:', progress=0))
     for s in FE:
         #db_s = db_construct(db, [s], [s])
-        db_pruned, db_s = db_construct(db, s)
+        db_pruned, db_s = db_construct(db, s, None)
 
         #TPSpan([s], db_s, min_sup, TP, [s])
         log = Log("Calling tpspan with ep {} in {} client sequences".format(s, s.Support), Severity.INFO)
         logger.log(log)
-        TPSpan([s], db_s, min_occ, TP, db_pruned)
+        TPSpan([s], db_s, min_occ, TP, db_pruned, temp)
 
         i += 1
         logger.log(ProgressLog('TPMiner:', progress=(i/j)))

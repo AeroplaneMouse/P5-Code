@@ -10,6 +10,10 @@ class Endpoint:
         self.Support = 0
         self.Counted = False
 
+        #debugging
+        self.Stop_pos = None
+        self.Ep_list = None
+
     def __str__(self):
         #return "true" if self.Prune else "false"
         return str(self.Label) + str("+" if self.IsStart else '-')

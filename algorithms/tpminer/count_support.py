@@ -4,13 +4,13 @@ from tpmmodels.Endpoint import Endpoint
 from tpmmodels.Projected_cs import Projected_cs
 
 #Calls the auxillary functions responsible for creating the Frequent Endpoint list
-def count_support(db_a, min_occ):
+def count_support(db_a, min_occ, temp):
     FE = set()
     support_list = []
 
     for eps in db_a.ES:
         stop_pos = find_stop_pos(eps.Ep_list, db_a.Prfx_s_ep)
-        support_list = acc_sup(eps, support_list, stop_pos)
+        support_list = acc_sup(eps, support_list, stop_pos, temp)
 
     for ep in support_list:
         if ep.Support >= min_occ:
@@ -36,7 +36,7 @@ def is_in_prfx(ep, prfx_s):
 
 
 # Accumulated support
-def acc_sup(eps, support_list, stop_pos):
+def acc_sup(eps, support_list, stop_pos, temp):
     paren_num = eps.Prefix_instance[-1].Parenthesis
     i = 0
     if len(eps.Ep_list) > 0:
