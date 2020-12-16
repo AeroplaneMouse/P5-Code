@@ -165,13 +165,16 @@ class GenericPreprocessor:
         for col in data.columns:
             if hRegister[col]['State'] is not None:
                 hRegister[col]['End'] = time
-                df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
-                lastIndex += 1
+
+                # Only add states that did not start in the last minute of the day
+                if hRegister[col]['Start'] != hRegister[col]['End']:
+                    df = pa.concat([df, pa.DataFrame(data=hRegister[col], index=[lastIndex])])
+                    lastIndex += 1
 
         # Sort DataFrame by start and end time
         df.sort_values(by=['Start', 'End'], inplace=True)
 
-        # Fixed indexes
+        # Fixed indexes scrambled by sort
         df.reset_index(drop=True, inplace=True)
 
         return df
