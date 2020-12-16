@@ -30,7 +30,7 @@ def load_getState(value, columnName):
     if value == '1' or value == 1:
         strValue = 'ON'
     else:
-        strValue = 'OFF'
+        return None
 
     return '{}_{}'.format(columnName, strValue)
 
