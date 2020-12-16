@@ -55,32 +55,8 @@ def initializeJobs(algorithm, logger=None):
     # allJobs.append(min_5_seq_6)
     # allJobs.append(min_4_seq_6)
     # allJobs.append(min_3_seq_6)
-    # allJobs.append(min_2_seq_6)
-    allJobs.append(min_1_seq_6)
-
-
-    # # 5_min support jobs
-    # jobs_min_5 = [
-    #     min_5_seq_12,
-    #     min_5_seq_9,
-    #     min_5_seq_6,
-    #     min_5_seq_3
-    # ]
-    # for job in jobs_min_5:
-    #     job.minSupport = 0.05
-    #     allJobs.append(job)
-
-    # # 6_sequence jobs
-    # jobs_seq_6 = [
-    #     min_1_seq_6,
-    #     min_2_seq_6,
-    #     min_3_seq_6,
-    #     min_4_seq_6,
-    #     min_5_seq_6
-    # ]
-    # for job in jobs_seq_6:
-    #     job.dataset = 'datasets/Vent-minute-6.csv'
-    #     allJobs.append(job)
+    allJobs.append(min_2_seq_6)
+    # allJobs.append(min_1_seq_6)
 
     for job in allJobs:
         job.algorithm = algorithm

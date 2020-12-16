@@ -95,7 +95,6 @@ class Result:
 
 def tpPatternToStr(pattern):
     out = ''
-    inParen = False
 
     for i in range(len(pattern)):
         p = pattern[i]
