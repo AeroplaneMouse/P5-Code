@@ -1,6 +1,5 @@
 from logging2 import *
 from tpmmodels.DB import DB
-from tpmmodels.Ep_sup import Ep_sup
 from tpmmodels.Endpoint import Endpoint
 from tpmmodels.Projected_cs import Projected_cs
 from algorithms.tpminer.TPSpan import TPSpan
