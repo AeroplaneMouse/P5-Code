@@ -6,7 +6,7 @@ def TPSpan(a, db_a, min_occ, TP, db_pruned, temp):
     FE = count_support(db_pruned, min_occ, temp)
     FE = point_pruning(FE, a, db_a.Prfx_s_ep)
 
-    FE = set(filter(lambda x : eligible(a, x), FE))
+    #FE = set(filter(lambda x : eligible(a, x), FE))
     for s in FE:
         a_p = a + [s]
 
