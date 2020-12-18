@@ -5,6 +5,7 @@ from models.job import Job
 from models.result import Result
 from preprocessors import columns as col
 from preprocessors.Generic import GenericPreprocessor
+from preprocessors.WeatherCrash import WeatherCrashPreprocessor
 from experiments import xp
 import pdb, traceback, sys
 
@@ -20,6 +21,20 @@ def armadaVentSetup(logger):
     job.maxGap = pa.to_timedelta('24:00:00')
 
     job.useGenericPreprocessor()
+
+    return job
+
+def armadaWeatherSetup(logger):
+    job = Job(logger=logger, label='Armada main weather-crash')
+    job.algorithm = armada
+    job.minSupport = 0.2
+    job.maxGap = pa.to_timedelta('24:00:00')
+    job.dataset = 'datasets/Weather-Crash.csv'
+    preprocessor = WeatherCrashPreprocessor(
+        'datasets/weather.csv',
+        'datasets/Motor_Vehicle_Collisions_-_Crashes.csv',
+        logger)
+    job.preprocessor = preprocessor
 
     return job
 
@@ -67,6 +82,19 @@ def tpminerLoadSetup(logger):
 
     return job
 
+def tpminerWeatherSetup(logger):
+    job = Job(logger=logger, label='TPMiner weather-crash')
+    job.algorithm = tpminer
+    job.minSupport = 0.5
+    job.maxGap = pa.to_timedelta('24:00:00')
+    job.dataset = 'datasets/Weather-Crash.csv'
+    preprocessor = WeatherCrashPreprocessor(
+        'datasets/weather.csv',
+        'datasets/Motor_Vehicle_Collisions_-_Crashes.csv',
+        logger)
+    job.preprocessor = preprocessor
+
+    return job
 
 def Main():
     # Logger setup
@@ -92,6 +120,10 @@ def Main():
 
             elif(sys.argv[2] == 'weathercrash'):
                 #ARMADA WEATHERCRASH
+                arJob = armadaWeatherSetup(logger)
+                arResults = arJob.run()
+                arResults.print(logger)
+                arResults.savePatterns('ARMADA_weather-crash_patterns.txt')
                 pass
             else:
                 print('These are not the datasets you are looking for.')
@@ -105,7 +137,7 @@ def Main():
                 tpResults.savePatterns('TP_vent_Patterns.txt')
 
             elif(sys.argv[2] == 'test'):
-                #TPMINER VENT
+                #TPMINER VENT\
                 tpJob = testSetup(logger)
                 tpResults = tpJob.run()
                 tpResults.print(logger)
@@ -118,8 +150,10 @@ def Main():
                 tpResults.savePatterns('TP_load_TestPatterns.txt')
 
             elif(sys.argv[2] == 'weathercrash'):
-                #TPMINER WEATHERCRASH
-                pass
+                tpJob = tpminerWeatherSetup(logger)
+                tpResults = tpJob.run()
+                tpResults.print(logger)
+                tpResults.savePatterns('TP_Weather-Crash_Patterns.txt')
 
             else:
                 print('These are not the datasets you are looking for.')

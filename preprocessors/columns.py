@@ -56,12 +56,20 @@ load_columns = [
     'Load_StatusPlugLoadIron']
 
 weather_columns = [
+    'pickup_datetime',
     'fog',
     'rain',
     'snow',
     'hail',
     'thunder',
-    'tornado']
+    'tornado',
+    'tempm',
+    'hum',
+    'windchillm',
+    'heatindexm',
+    'precipm'
+]
 
 crash_columns = [
+    'CRASH DATE',
     'CRASH TIME']

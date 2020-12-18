@@ -18,7 +18,7 @@ class GenericPreprocessor:
             self.logger.log(Log('Dataset not found: {}'.format(csvPath), Severity.ERROR))
             return
 
-        # Check if dataset has already been preprocessed
+    # Check if dataset has already been preprocessed
         self.folder, self.filename = extractFolderFile(csvPath)
         if not path.exists(self.folder + PROCESSED_PREFIX + self.filename):
             # Load data from CSV
@@ -47,17 +47,26 @@ class GenericPreprocessor:
             # Use ClientID as index
             processedData.index = processedData.pop('ClientID')
 
-            startID = processedData.index[0]
-            endID = processedData.tail(1).index[0]
+            clientIDs = processedData.index.drop_duplicates().tolist()
 
             # Extract mdb
             self.mdb = []
-            for i in range(startID, endID + 1):
+            for i in clientIDs:
                 cs = processedData.loc[i].copy(deep=True)
-                cs['ClientID'] = pa.to_numeric(cs.index)
-                cs.index = pa.to_numeric(cs.pop('Indexes'))
-                cs['Start'] = pa.to_datetime(cs.pop('Start'))
-                cs['End'] = pa.to_datetime(cs.pop('End'))
+
+                if type(cs) is pa.Series:
+                    d = {
+                        'ClientID': i,
+                        'State': cs['State'],
+                        'Start': cs['Start'],
+                        'End': cs['End']}
+                    cs = pa.DataFrame(data=d, index=[0])
+                else:
+                    cs['ClientID'] = pa.to_numeric(cs.index)
+                    cs.index = pa.to_numeric(cs.pop('Indexes'))
+                    cs['Start'] = pa.to_datetime(cs.pop('Start'))
+                    cs['End'] = pa.to_datetime(cs.pop('End'))
+
                 self.mdb.append(cs)
 
 
@@ -76,7 +85,7 @@ class GenericPreprocessor:
 
             n = len(days)
             progress = 1
-            self.logger.log(ProgressLog('Preprocessing: ', progress=0))
+            self.logger.log(ProgressLog('Preprocessing:', progress=0))
 
             # Generate client sequence for every day
             skippedDays = []
@@ -100,7 +109,7 @@ class GenericPreprocessor:
 
                 # Logging progress
                 procent = progress / n
-                self.logger.log(ProgressLog('Preprocessing: ', progress=procent))
+                self.logger.log(ProgressLog('Preprocessing:', progress=procent))
                 # log = Log('Preprocessing {:.1f}%'.format(procent), Severity.INFO)
                 # self.logger.log(log)
                 progress += 1
@@ -172,10 +181,7 @@ class GenericPreprocessor:
                     lastIndex += 1
 
         # Sort DataFrame by start and end time
-        df.sort_values(by=['Start', 'End'], inplace=True)
-
-        # Fixed indexes scrambled by sort
-        df.reset_index(drop=True, inplace=True)
+        df.sort_values(by=['Start', 'End'], inplace=True, ignore_index=True)
 
         return df
 
