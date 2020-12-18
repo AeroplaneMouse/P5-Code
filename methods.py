@@ -38,7 +38,8 @@ def load_getState(value, columnName):
 
 ########################################
 # ARMADA
-def armada(mdb, supportList, logger, minSupport, maxGap):
+def armada(mdb, logger, minSupport, maxGap):
+    supportList = Support.GenerateStateSupportList(mdb)
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
     frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
 
@@ -52,7 +53,7 @@ def armada(mdb, supportList, logger, minSupport, maxGap):
 
 ########################################
 # TPMiner
-def tpminer(mdb, supportList, logger, minSupport, maxGap):
+def tpminer(mdb, logger, minSupport, maxGap):
     patternSets = tpminer_main(mdb, minSupport, logger)
 
     # Convert set to list

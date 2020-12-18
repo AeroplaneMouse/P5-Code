@@ -51,11 +51,10 @@ class Job:
 
         t0 = perf_counter()
         mdb, skippedDays = self.preprocessor.GenerateTemporalMdb()
-        supportList = Support.GenerateStateSupportList(mdb)
         preTime = perf_counter() - t0
 
         t0 = perf_counter()
-        results = self.algorithm(mdb, supportList, self.logger, self.minSupport, self.maxGap)
+        results = self.algorithm(mdb, self.logger, self.minSupport, self.maxGap)
         results.algorithmTime = perf_counter() - t0
 
         results.skippedDays = skippedDays
