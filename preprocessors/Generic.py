@@ -69,7 +69,7 @@ class GenericPreprocessor:
                 day = str(day)[0:10]
 
                 # Get dataframe for current day
-                data = self.df[day]
+                data = self.df.loc[day]
 
                 # Check if day is empty
                 if data.empty:
