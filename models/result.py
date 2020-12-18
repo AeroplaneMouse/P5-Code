@@ -83,9 +83,12 @@ class Result:
             os.mkdir(FOLDER)
 
         # Write patterns to file
-        with open(FOLDER + filename, 'a') as f:
+        with open(FOLDER + filename, 'w') as f:
             for p in self.patterns:
-                pSize = len(p) / 2
+                if type(p[0]) is Endpoint:
+                    pSize = len(p) / 2
+                else:
+                    pSize = len(p[0]) - 1
 
                 if type(p[0]) == Endpoint:
                     p = tpPatternToStr(p)

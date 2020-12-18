@@ -34,7 +34,7 @@ def GenerateStateSupportList(mdb):
             if index is None:
                 supportList.append(SState(
                     stateName=clientRecord.State,
-                    appearsIn=[clientRecord.ClientID]))
+                    appearsIn=[clientCount - 1]))
 
             # Update state with current clientID if not in AppearsIn
             else:
