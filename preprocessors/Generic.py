@@ -18,7 +18,7 @@ class GenericPreprocessor:
             self.logger.log(Log('Dataset not found: {}'.format(csvPath), Severity.ERROR))
             return
 
-    # Check if dataset has already been preprocessed
+        # Check if dataset has already been preprocessed
         self.folder, self.filename = extractFolderFile(csvPath)
         if not path.exists(self.folder + PROCESSED_PREFIX + self.filename):
             # Load data from CSV
@@ -42,32 +42,7 @@ class GenericPreprocessor:
         # Load preprocessed dataset
         else:
             self.logger.log(Log('Found preprocessed data for dataset: ' + self.filename, Severity.NOTICE))
-            processedData = pa.read_csv(self.folder + PROCESSED_PREFIX + self.filename)
-
-            # Use ClientID as index
-            processedData.index = processedData.pop('ClientID')
-
-            clientIDs = processedData.index.drop_duplicates().tolist()
-
-            # Extract mdb
-            self.mdb = []
-            for i in clientIDs:
-                cs = processedData.loc[i].copy(deep=True)
-
-                if type(cs) is pa.Series:
-                    d = {
-                        'ClientID': i,
-                        'State': cs['State'],
-                        'Start': cs['Start'],
-                        'End': cs['End']}
-                    cs = pa.DataFrame(data=d, index=[0])
-                else:
-                    cs['ClientID'] = pa.to_numeric(cs.index)
-                    cs.index = pa.to_numeric(cs.pop('Indexes'))
-                    cs['Start'] = pa.to_datetime(cs.pop('Start'))
-                    cs['End'] = pa.to_datetime(cs.pop('End'))
-
-                self.mdb.append(cs)
+            self.mdb = loadMdbFromFile(self.folder + PROCESSED_PREFIX + self.filename)
 
 
     def GenerateTemporalMdb(self):
@@ -213,3 +188,34 @@ def saveMdbToFile(mdb, folder, filename, prefix):
 
 
     combined.to_csv(folder + prefix + filename)
+
+
+def loadMdbFromFile(filepath):
+    processedData = pa.read_csv(filepath)
+
+    # Use ClientID as index
+    processedData.index = processedData.pop('ClientID')
+
+    clientIDs = processedData.index.drop_duplicates().tolist()
+
+    # Extract mdb
+    mdb = []
+    for i in clientIDs:
+        cs = processedData.loc[i].copy(deep=True)
+
+        if type(cs) is pa.Series:
+            d = {
+                'ClientID': i,
+                'State': cs['State'],
+                'Start': cs['Start'],
+                'End': cs['End']}
+            cs = pa.DataFrame(data=d, index=[0])
+        else:
+            cs['ClientID'] = pa.to_numeric(cs.index)
+            cs.index = pa.to_numeric(cs.pop('Indexes'))
+            cs['Start'] = pa.to_datetime(cs.pop('Start'))
+            cs['End'] = pa.to_datetime(cs.pop('End'))
+
+        mdb.append(cs)
+
+    return mdb

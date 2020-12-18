@@ -1,8 +1,8 @@
 import pandas as pa
+from os import path
 from logging2 import *
 from preprocessors import columns
-from preprocessors.Generic import GenericPreprocessor
-
+from preprocessors.Generic import *
 
 class WeatherCrashPreprocessor:
     mdb = None
@@ -12,35 +12,41 @@ class WeatherCrashPreprocessor:
         self.logger.log(Log('Initializing Weather Crash Preprocessor', Severity.NOTICE))
 
         # Check if dataset has already been preprocessed
-        # ...
+        self.folder = extractFolderFile(weatherPath)[0]
+        self.filename = 'Weather-Crash.csv'
+        if not path.exists(self.folder + PROCESSED_PREFIX + self.filename):
+            # Load dataset to be preprocessed
+            self.weather = GenericPreprocessor(
+                weatherPath,
+                ',',
+                columns.weather_columns,
+                weather_getState,
+                logger,
+                'pickup_datetime')
 
-        # Load dataset to be preprocessed
-        self.weather = GenericPreprocessor(
-            weatherPath,
-            ',',
-            columns.weather_columns,
-            weather_getState,
-            logger,
-            'pickup_datetime')
+            # self.df_weather = pa.read_csv(weatherPath, sep=',', low_memory=False)
+            self.df_crash = pa.read_csv(crashPath, sep=',', low_memory=False)
 
-        # self.df_weather = pa.read_csv(weatherPath, sep=',', low_memory=False)
-        self.df_crash = pa.read_csv(crashPath, sep=',', low_memory=False)
+            # Remove columns from crash
+            for col in self.df_crash.columns:
+                if col not in columns.crash_columns:
+                    self.df_crash.pop(col)
 
-        # Remove columns from crash
-        for col in self.df_crash.columns:
-            if col not in columns.crash_columns:
-                self.df_crash.pop(col)
+            firstDate, lastDate = extractFirstAndLastDate(self.weather)
 
-        firstDate, lastDate = extractFirstAndLastDate(self.weather)
+            # Combining date and time on crash
+            self.df_crash.index = pa.to_datetime(self.df_crash.pop('CRASH DATE'), utc=True)
+            self.df_crash['CRASH TIME'] = self.df_crash['CRASH TIME'].add(':00')
+            self.df_crash = self.df_crash.tz_convert(None)
 
-        # Combining date and time on crash
-        self.df_crash.index = pa.to_datetime(self.df_crash.pop('CRASH DATE'), utc=True)
-        self.df_crash['CRASH TIME'] = self.df_crash['CRASH TIME'].add(':00')
-        self.df_crash = self.df_crash.tz_convert(None)
+            # Truncate crashes before and after weather data
+            self.df_crash.sort_index(ascending=True, inplace=True)
+            self.df_crash = self.df_crash.truncate(before=firstDate, after=lastDate, copy=False)
 
-        # Truncate crashes before and after weather data
-        self.df_crash.sort_index(ascending=True, inplace=True)
-        self.df_crash = self.df_crash.truncate(before=firstDate, after=lastDate, copy=False)
+        else:
+            self.logger.log(Log('Found preprocessed data for dataset: ' + self.filename, Severity.NOTICE))
+            self.mdb = loadMdbFromFile(self.folder + PROCESSED_PREFIX + self.filename)
+
 
     def GenerateTemporalMdb(self):
         if self.mdb is None:
@@ -80,10 +86,12 @@ class WeatherCrashPreprocessor:
                 current += 1
 
             mdb = combinedMdb
+            saveMdbToFile(mdb, self.folder, self.filename, PROCESSED_PREFIX)
 
         else:
-            mdb = []
+            mdb = self.mdb
             skippedDays = []
+            self.logger.log(Log('Loaded preprocessed data', Severity.NOTICE))
 
         return mdb, skippedDays
 
