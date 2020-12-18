@@ -13,7 +13,7 @@ def TPSpan(a, db_a, min_occ, TP, db_pruned, temp):
         db_pruned, db_a_p = db_construct(db_a, s, temp)
 
         if len(db_a_p.Prfx_s_ep) == 0:	
-            TP.add(tuple(a_p))
+            TP.add(tuple(filter(lambda x: (x.Parenthesis, x.IsStart, x.Label), a_p)))
     
         TPSpan(a_p, db_a_p, min_occ, TP, db_pruned, temp)
 
