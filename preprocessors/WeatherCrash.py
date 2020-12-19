@@ -24,7 +24,6 @@ class WeatherCrashPreprocessor:
                 logger,
                 'pickup_datetime')
 
-            # self.df_weather = pa.read_csv(weatherPath, sep=',', low_memory=False)
             self.df_crash = pa.read_csv(crashPath, sep=',', low_memory=False)
 
             # Remove columns from crash
