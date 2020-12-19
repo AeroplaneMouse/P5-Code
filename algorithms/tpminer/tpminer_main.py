@@ -34,12 +34,12 @@ def tpminer_main(mdb, min_sup, logger):
     logger.log(ProgressLog('TPMiner:', progress=0))
     for s in FE:
         #db_s = db_construct(db, [s], [s])
-        db_pruned, db_s = db_construct(db, s, None)
+        db_s = db_construct(db, s, None)
 
         #TPSpan([s], db_s, min_sup, TP, [s])
         log = Log("Calling tpspan with ep {} in {} client sequences".format(s, s.Support), Severity.INFO)
         logger.log(log)
-        TPSpan([s], db_s, min_occ, TP, db_pruned, temp)
+        TPSpan([s], db_s, min_occ, TP, temp)
 
         i += 1
         logger.log(ProgressLog('TPMiner:', progress=(i/j)))
@@ -48,7 +48,7 @@ def tpminer_main(mdb, min_sup, logger):
 
 
 def FindFE(mdb, min_sup, min_occ, logger):
-    FE = set()
+    FE = list()
     support_list = []
 
     for eps in mdb:
@@ -58,7 +58,7 @@ def FindFE(mdb, min_sup, min_occ, logger):
     logger.log(log)
     for ep in support_list:
         if ep.Support >= min_occ:
-            FE.add(ep)
+            FE.append(ep)
     return FE
 
 
