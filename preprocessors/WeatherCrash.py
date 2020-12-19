@@ -49,11 +49,10 @@ class WeatherCrashPreprocessor:
 
     def GenerateTemporalMdb(self):
         if self.mdb is None:
-            self.logger.log(Log('Preprocessing started', Severity.NOTICE))
-
             # Preprocesses weather
             mdb, skippedDays = self.weather.GenerateTemporalMdb()
 
+            self.logger.log(Log('Preprocessing started on: ' + self.filename, Severity.NOTICE))
             self.logger.log(ProgressLog('Preprocessing:', progress=0))
             total = len(mdb)
             current = 1
@@ -110,8 +109,38 @@ def extractFirstAndLastDate(preprocessor):
     return firstDate, lastDate
 
 
+
 def weather_getState(value, columnName):
-    if value == 1 or value == '1':
-        return columnName
-    else:
-        return None
+    # Handle boolean columns
+    if columnName in columns.weather_rain_columns:
+        if value == 1 or value == '1':
+            return columnName
+        else:
+            return None
+
+    # Handle temperature
+    if columnName == 'tempm':
+        value = int(value)
+
+        if value > -3:
+            return 'Frost'
+        elif value >= -3 and value <= 3:
+            return 'IceRisk'
+        else:
+            return 'Warm'
+
+    # Handle wind
+    elif columnName == 'wspdm':
+        value = int(value)
+
+        if value < 11:
+            return 'NoWind'
+        elif value >= 11 and value < 38:
+            return 'SlightWind'
+        elif value >= 38 and value < 74:
+            return 'StrongWind'
+        else:
+            return 'Storm'
+
+    # Handle visibility
+    # elif columnName == 'vism':

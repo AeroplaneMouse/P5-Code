@@ -47,7 +47,7 @@ class GenericPreprocessor:
 
     def GenerateTemporalMdb(self):
         if self.mdb is None:
-            self.logger.log(Log('Preprocessing started', Severity.NOTICE))
+            self.logger.log(Log('Preprocessing started on: {}' + self.filename, Severity.NOTICE))
             mdb = []
 
             # Generate date series
@@ -85,8 +85,6 @@ class GenericPreprocessor:
                 # Logging progress
                 procent = progress / n
                 self.logger.log(ProgressLog('Preprocessing:', progress=procent))
-                # log = Log('Preprocessing {:.1f}%'.format(procent), Severity.INFO)
-                # self.logger.log(log)
                 progress += 1
 
             self.logger.log(Log('Preprocessing finished', Severity.NOTICE))
@@ -145,10 +143,11 @@ class GenericPreprocessor:
 
         # Save end time for remaining active states
         # and insert into DataFrame
-        time = data.tail(1).index[0]
+        endDate = str(data.tail(1).index[0])[:10]
+        endTime = pa.to_datetime(endDate + ' 23:59:00')
         for col in data.columns:
             if hRegister[col]['State'] is not None:
-                hRegister[col]['End'] = time
+                hRegister[col]['End'] = endTime
 
                 # Only add states that did not start in the last minute of the day
                 if hRegister[col]['Start'] != hRegister[col]['End']:

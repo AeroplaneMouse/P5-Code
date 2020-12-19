@@ -64,11 +64,19 @@ weather_columns = [
     'thunder',
     'tornado',
     'tempm',
-    'hum',
-    'windchillm',
-    'heatindexm',
-    'precipm'
+    'wspdm'
+    # 'vism'
 ]
+
+weather_rain_columns = [
+    'fog',
+    'rain',
+    'snow',
+    'hail',
+    'thunder',
+    'tornado'
+]
+
 
 crash_columns = [
     'CRASH DATE',

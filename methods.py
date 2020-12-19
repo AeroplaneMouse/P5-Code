@@ -41,10 +41,10 @@ def load_getState(value, columnName):
 def armada(mdb, logger, minSupport, maxGap):
     supportList = Support.GenerateStateSupportList(mdb)
     mdb = Support.RemoveNonSupported(minSupport, supportList, mdb)
-    frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
+    logger.log(Log('Non-Supported states removed', Severity.INFO))
 
-    log = Log('Frequent states removed', Severity.INFO)
-    logger.log(log)
+    frequentStates = Support.ExtractFrequentStates(minSupport, supportList, mdb)
+    logger.log(Log('Frequent states found: '+str(len(frequentStates)), Severity.INFO))
 
     patterns = Armada(mdb, frequentStates, minSupport, maxGap, logger)
 
