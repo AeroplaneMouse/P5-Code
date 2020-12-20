@@ -122,9 +122,9 @@ def weather_getState(value, columnName):
     if columnName == 'tempm':
         value = int(value)
 
-        if value > -3:
+        if value < -3:
             return 'Frost'
-        elif value >= -3 and value <= 3:
+        elif value >= -3 and value < 3:
             return 'IceRisk'
         else:
             return 'Warm'

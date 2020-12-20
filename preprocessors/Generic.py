@@ -47,7 +47,7 @@ class GenericPreprocessor:
 
     def GenerateTemporalMdb(self):
         if self.mdb is None:
-            self.logger.log(Log('Preprocessing started on: {}' + self.filename, Severity.NOTICE))
+            self.logger.log(Log('Preprocessing started on: ' + self.filename, Severity.NOTICE))
             mdb = []
 
             # Generate date series
