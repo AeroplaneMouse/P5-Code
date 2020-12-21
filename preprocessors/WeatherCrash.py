@@ -60,17 +60,22 @@ class WeatherCrashPreprocessor:
             # Insert crash data into mdb
             combinedMdb = []
             for cs in mdb:
+                if cs.empty:
+                    continue
+
                 # Extract date only
                 date = str(cs.at[0, 'Start'])[:10]
 
                 crashes = self.df_crash.loc[date]
+                crashes['CRASH TIME'] = pa.to_timedelta(crashes['CRASH TIME'])
+                crashes.where(cond=crashes['CRASH TIME'] > pa.to_timedelta('01:00:00'), inplace=True)
+                crashes.dropna(inplace=True)
 
                 # Convert to TDB
                 crashes['ClientID'] = cs.at[0, 'ClientID']
                 crashes['State'] = 'Crash'
-                crashes['Start'] = crashes.index + pa.to_timedelta(crashes['CRASH TIME'])
+                crashes['Start'] = crashes.index + crashes['CRASH TIME']
                 crashes['End'] = crashes['Start'] + pa.to_timedelta('00:01:00')
-                # crashes.index = range(len(cs), len(crashes) + 1)
                 crashes.pop('CRASH TIME')
 
                 # Insert into weather DataFrame
@@ -127,16 +132,19 @@ def weather_getState(value, columnName):
         elif value >= -3 and value < 3:
             return 'IceRisk'
         else:
-            return 'Warm'
+            # return 'Warm'
+            return None
 
     # Handle wind
     elif columnName == 'wspdm':
         value = int(value)
 
         if value < 11:
-            return 'NoWind'
+            # return 'NoWind'
+            return None
         elif value >= 11 and value < 38:
-            return 'SlightWind'
+            # return 'SlightWind'
+            return None
         elif value >= 38 and value < 74:
             return 'StrongWind'
         else:

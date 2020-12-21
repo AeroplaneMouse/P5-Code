@@ -27,7 +27,7 @@ def armadaVentSetup(logger):
 def armadaWeatherSetup(logger):
     job = Job(logger=logger, label='Armada main weather-crash')
     job.algorithm = armada
-    job.minSupport = 0.3
+    job.minSupport = 0.10
     job.maxGap = pa.to_timedelta('24:00:00')
     job.dataset = 'datasets/Weather-Crash.csv'
     preprocessor = WeatherCrashPreprocessor(
@@ -85,7 +85,7 @@ def tpminerLoadSetup(logger):
 def tpminerWeatherSetup(logger):
     job = Job(logger=logger, label='TPMiner weather-crash')
     job.algorithm = tpminer
-    job.minSupport = 0.3
+    job.minSupport = 0.15
     job.maxGap = pa.to_timedelta('24:00:00')
     job.dataset = 'datasets/Weather-Crash.csv'
     preprocessor = WeatherCrashPreprocessor(
